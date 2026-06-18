@@ -108,8 +108,9 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 /* WEEKS GRID */
 .sec-title{font-size:13px;font-weight:600;color:var(--g900);margin-bottom:10px;padding-bottom:8px;border-bottom:.5px solid var(--bd)}
 .wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;margin-bottom:1.25rem}
-.witem{background:var(--sf);border-radius:10px;border:.5px solid var(--bd);padding:10px 12px;display:flex;align-items:center;gap:10px}
+.witem{background:var(--sf);border-radius:10px;border:.5px solid var(--bd);padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color .15s}
 .witem.wdn{background:var(--t50);border-color:rgba(29,158,117,.25)}
+.witem:hover{border-color:var(--t400)}
 .witem.wac{border-color:var(--t400)}
 .wnum{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0}
 .wnum.dn{background:var(--t400);color:#fff}
@@ -344,9 +345,9 @@ function renderDash(){
     return `<div class="ccard" onclick="openDet(${c.id})">
       <div class="ccard-top">
         <div class="cavatar" style="background:${phaseBg};color:${phaseColor}">${c.nombre.charAt(0).toUpperCase()}</div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
           <span class="cbadge ${done?'off':'on'}">${done?'Completado':'Activo'}</span>
-          ${!(c.semana||0)?'':`<span style="font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px;background:${phaseBg};color:${phaseColor}">${phaseLabel}</span>`}
+          ${!(c.semana||0)?'':`<span style="font-size:10px;font-weight:500;padding:3px 9px;border-radius:20px;background:${phaseBg};color:${phaseColor};letter-spacing:.03em">${phaseLabel}</span>`}
         </div>
       </div>
       <div class="cname">${c.nombre}</div>
@@ -999,6 +1000,8 @@ function toggleGuionCheck(storageKey, key, boxId, lblId) {
 function showWeekGuion(weekIdx, clientId, clientNombre) {
   const guionEl = document.getElementById('guionContainer');
   if (!guionEl) return;
+  // Update active week highlight
+  document.querySelectorAll('.witem').forEach(el => el.style.borderColor = '');
   guionEl.innerHTML = renderGuion(clientId, weekIdx, clientNombre);
   guionEl.scrollIntoView({behavior:'smooth', block:'start'});
 }
