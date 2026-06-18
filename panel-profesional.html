@@ -89,6 +89,13 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .det-name{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-bottom:5px}
 .det-meta{font-size:13px;color:var(--g400);line-height:1.7}
 .det-actions{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.act-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:1rem}
+.act-bar-sep{flex:1}
+.btn-action{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:10px;font-size:13px;font-weight:500;padding:9px 14px;cursor:pointer;font-family:var(--f);transition:opacity .15s}
+.btn-action:hover{opacity:.85}
+.btn-action.primary{background:var(--t400);color:#fff;font-weight:600}
+.btn-action.warning{background:#FFF7ED;color:#C2600A}
+.btn-action.danger{background:var(--red-bg);color:var(--red)}
 .btn-unlock{display:inline-flex;align-items:center;gap:7px;background:var(--t400);border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:600;padding:10px 16px;cursor:pointer;font-family:var(--f)}
 .btn-del{display:inline-flex;align-items:center;gap:7px;background:var(--red-bg);border:none;border-radius:10px;color:var(--red);font-size:13px;font-weight:500;padding:9px 14px;cursor:pointer;font-family:var(--f)}
 .btn-relock{display:inline-flex;align-items:center;gap:7px;background:#FFF7ED;border:none;border-radius:10px;color:#C2600A;font-size:13px;font-weight:500;padding:9px 14px;cursor:pointer;font-family:var(--f)}
@@ -325,14 +332,31 @@ function renderDash(){
   if(!clients.length){g.innerHTML='<div class="empty"><p class="empty-t">Sin clientes todavía</p><p class="empty-s">Pulsa "Nuevo cliente" para empezar.<br>Se generará un enlace personalizado automáticamente.</p></div>';return;}
   g.innerHTML=clients.map(c=>{
     const pct=Math.round((c.semana||0)/12*100);
-    const done=c.semana>=12;
-    const wlbl=!c.semana?'Sin empezar':done?'Completado':`Semana ${c.semana+1} activa`;
+    const done=(c.semana||0)>=12;
+    const wNum=Math.min((c.semana||0)+1,12);
+    const phase=(c.semana||0)<=4?1:(c.semana||0)<=8?2:3;
+    const phaseColor=phase===1?'#1D9E75':phase===2?'#534AB7':'#BA7517';
+    const phaseBg=phase===1?'#E1F5EE':phase===2?'#EEEDFE':'#FAEEDA';
+    const phaseLabel=phase===1?'Fase 1':phase===2?'Fase 2':'Fase 3';
+    const wlbl=!(c.semana||0)?'Sin empezar':done?'Programa completado':`Semana ${wNum} activa`;
+    const remaining=12-(c.semana||0);
+    const startDate=c.started_at?new Date(c.started_at).toLocaleDateString('es-ES',{day:'numeric',month:'short'}):'—';
     return `<div class="ccard" onclick="openDet(${c.id})">
-      <div class="ccard-top"><div class="cavatar">${c.nombre.charAt(0).toUpperCase()}</div><span class="cbadge ${done?'off':'on'}">${done?'Completado':'Activo'}</span></div>
+      <div class="ccard-top">
+        <div class="cavatar" style="background:${phaseBg};color:${phaseColor}">${c.nombre.charAt(0).toUpperCase()}</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <span class="cbadge ${done?'off':'on'}">${done?'Completado':'Activo'}</span>
+          ${!(c.semana||0)?'':`<span style="font-size:10px;font-weight:500;padding:2px 7px;border-radius:20px;background:${phaseBg};color:${phaseColor}">${phaseLabel}</span>`}
+        </div>
+      </div>
       <div class="cname">${c.nombre}</div>
       <div class="cweek">${wlbl}</div>
-      <div class="ctrack"><div class="cfill" style="width:${pct}%"></div></div>
-      <div class="cpct">${c.semana||0} / 12 semanas</div>
+      <div class="ctrack" style="margin-top:10px"><div class="cfill" style="width:${pct}%;background:${phaseColor}"></div></div>
+      <div style="display:flex;justify-content:space-between;margin-top:5px">
+        <span class="cpct">${c.semana||0} / 12 semanas</span>
+        ${done?'':`<span class="cpct">${remaining} semana${remaining===1?'':'s'} restantes</span>`}
+      </div>
+      ${c.email?`<div style="font-size:11px;color:var(--g400);margin-top:6px;border-top:.5px solid var(--bd);padding-top:6px">📧 ${c.email}</div>`:''}
     </div>`;
   }).join('');
 }
@@ -363,30 +387,35 @@ function openDet(id){
             ${(c.semana||0)<12?' · Semana '+((c.semana||0)+1)+' activa':''}
           </div>
         </div>
-        <div class="det-actions">
-          <button class="btn-unlock" onclick="openUnlock(${id})">
+        <div class="act-bar">
+          <button class="btn-action primary" onclick="openUnlock(${id})">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            Desbloquear semana
+            Desbloquear
           </button>
-          <button class="btn-relock" onclick="openRelock(${id})" ${(c.semana||0)===0?'style="display:none"':''}>
+          ${(c.semana||0)>0?`<button class="btn-action warning" onclick="openRelock(${id})">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><line x1="12" y1="15" x2="12" y2="17"/></svg>
-            Rebloquear semana
-          </button>
-          <button class="btn-del" onclick="openDel(${id})">
+            Rebloquear
+          </button>`:''}
+          <div class="act-bar-sep"></div>
+          <button class="btn-action danger" onclick="openDel(${id})">
             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
-            Eliminar cliente
+            Eliminar
           </button>
         </div>
       </div>
     </div>
     <div class="url-box">
       <span class="url-txt">${url}</span>
-      <button class="btn-copy" id="cbtn" onclick="copyUrl('${url}')">Copiar enlace</button>
+      <a href="${url}" target="_blank" class="btn-copy" style="text-decoration:none;background:var(--t50);color:var(--t600);margin-right:4px">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Abrir
+      </a>
+      <button class="btn-copy" id="cbtn" onclick="copyUrl('${url}')">Copiar</button>
     </div>
     <p class="sec-title">Progreso de las 12 semanas</p>
     <div class="wgrid">${whtml}</div>
-    <p class="sec-title">Guión de la sesión</p>
-    ${renderGuion(c.id, c.semana||0, c.nombre)}
+    <p class="sec-title">Guión de la sesión <span style="font-size:11px;color:var(--g400);font-weight:400">— pulsa cualquier semana para ver su guión</span></p>
+    <div id="guionContainer">${renderGuion(c.id, c.semana||0, c.nombre)}</div>
     <p class="sec-title" style="margin-top:1.25rem">Notas del cliente</p>
     <textarea class="notes-ta" id="nta" placeholder="Observaciones, ajustes al programa, notas personales del cliente…">${c.notas||''}</textarea>
     <div class="notes-foot">
@@ -415,7 +444,7 @@ async function createClient(){
   const nombre=document.getElementById('mNombre').value.trim();
   if(!nombre){document.getElementById('mAddErr').textContent='El nombre es obligatorio';return;}
   try{
-    await insert({nombre,email:document.getElementById('mEmail').value.trim()||null,semana:0,checks:{},notas:''});
+    await insert({nombre,email:document.getElementById('mEmail').value.trim()||null,semana:0,checks:{},notas:'',started_at:new Date().toISOString()});
     closeAdd();await load();
   }catch(e){document.getElementById('mAddErr').textContent='Error al crear el cliente. Inténtalo de nuevo.';}
 }
@@ -965,6 +994,13 @@ function toggleGuionCheck(storageKey, key, boxId, lblId) {
   const lbl = document.getElementById(lblId);
   if (box) box.className = 'gchk' + (saved[key] ? ' on' : '');
   if (lbl) lbl.className = 'gtxt' + (saved[key] ? ' dn' : '');
+}
+
+function showWeekGuion(weekIdx, clientId, clientNombre) {
+  const guionEl = document.getElementById('guionContainer');
+  if (!guionEl) return;
+  guionEl.innerHTML = renderGuion(clientId, weekIdx, clientNombre);
+  guionEl.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 function resetGuion(storageKey, clientId, semana, nombre) {
