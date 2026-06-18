@@ -164,6 +164,12 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .aext{background:rgba(255,255,255,.07);border:.5px solid rgba(255,255,255,.18);border-radius:8px;color:rgba(255,255,255,.75);font-size:12px;padding:8px 12px;cursor:pointer;font-family:var(--f)}
 .accbtn{position:fixed;bottom:1.5rem;right:1.5rem;z-index:90;background:var(--sf);border:.5px solid var(--bdm);border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.1)}
 .bsp{height:5rem}
+.note-wrap{margin-top:1rem}
+.note-label{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin-bottom:8px;padding-bottom:6px;border-bottom:.5px solid var(--bd);display:block}
+.note-ta{width:100%;min-height:90px;padding:10px 12px;border:.5px solid var(--bdm);border-radius:10px;font-size:14px;font-family:var(--f);outline:none;resize:vertical;line-height:1.6;background:var(--bg);transition:border-color .15s;color:var(--g900)}
+.note-ta:focus{border-color:var(--t400)}
+.note-ta::placeholder{color:var(--g400)}
+.note-saving{font-size:11px;color:var(--g400);margin-top:5px;min-height:14px;transition:opacity .3s}
 
 @media(max-width:600px){
   .nav,.prog-strip,.astrip{padding-left:1.25rem;padding-right:1.25rem}
@@ -258,7 +264,7 @@ const SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 
 // Supabase helpers
 async function dbGet(id){
-  const r=await fetch(`${SURL}/rest/v1/clientes?id=eq.${id}&select=semana,checks`,{
+  const r=await fetch(`${SURL}/rest/v1/clientes?id=eq.${id}&select=semana,checks,client_notes`,{
     headers:{'apikey':SKEY,'Authorization':'Bearer '+SKEY}
   });
   const d=await r.json();
@@ -269,6 +275,16 @@ async function dbSet(id,semana,checks){
     method:'PATCH',
     headers:{'apikey':SKEY,'Authorization':'Bearer '+SKEY,'Content-Type':'application/json','Prefer':'return=minimal'},
     body:JSON.stringify({semana,checks})
+  });
+}
+async function dbSaveNote(id,weekNum,text){
+  const current=S.cn||{};
+  current[weekNum]=text;
+  S.cn=current;
+  await fetch(`${SURL}/rest/v1/clientes?id=eq.${id}`,{
+    method:'PATCH',
+    headers:{'apikey':SKEY,'Authorization':'Bearer '+SKEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({client_notes:current})
   });
 }
 
@@ -343,8 +359,36 @@ function renderD(i){
     w.ch.forEach((c,ci)=>{const on=chs[ci];h+=`<div class="chi" onclick="tgCh(${i},${ci})"><div class="chb${on?' on':''}" id="cb-${i}-${ci}"></div><span class="chl${on?' dn':''}" id="cl-${i}-${ci}">${c}</span></div>`;});
     h+=`</div>`;
   }
+  // Notes section — only for unlocked weeks
+  if(dn||ac){
+    const noteVal=(S.cn&&S.cn[n])||'';
+    h+=`<div class="det-wrap" style="margin-top:0">
+      <div class="note-wrap">
+        <span class="note-label">Mis notas de esta semana</span>
+        <textarea class="note-ta" id="nta-${n}" placeholder="Escribe aquí tus observaciones, reflexiones o lo que quieras recordar de esta semana…" oninput="scheduleNoteSave(${n})">${noteVal}</textarea>
+        <div class="note-saving" id="nsav-${n}"></div>
+      </div>
+    </div>`;
+  }
   h+=`</div>`;
   document.getElementById('dcont').innerHTML=h;
+  // Restore textarea value after innerHTML (to avoid encoding issues)
+  const nta=document.getElementById('nta-${n}');
+  if(nta) nta.value=(S.cn&&S.cn[n])||'';
+}
+
+// Note saving with debounce
+let _noteTimer={};
+function scheduleNoteSave(weekNum){
+  const savEl=document.getElementById('nsav-'+weekNum);
+  if(savEl){savEl.textContent='Guardando…';savEl.style.opacity='1';}
+  clearTimeout(_noteTimer[weekNum]);
+  _noteTimer[weekNum]=setTimeout(async()=>{
+    const ta=document.getElementById('nta-'+weekNum);
+    if(!ta||!window._CID)return;
+    await dbSaveNote(window._CID,weekNum,ta.value).catch(()=>{});
+    if(savEl){savEl.textContent='✓ Guardado';setTimeout(()=>{savEl.style.opacity='0';},1500);}
+  },1200);
 }
 
 function tgCh(wi,ci){
@@ -369,7 +413,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementB
   if(!CID){document.getElementById('vload').style.display='none';document.getElementById('verr').style.display='flex';return;}
   const data=await dbGet(CID).catch(()=>null);
   if(!data){document.getElementById('vload').style.display='none';document.getElementById('verr').style.display='flex';return;}
-  S.u=data.semana||0;S.ch=data.checks||{};window._CID=CID;
+  S.u=data.semana||0;S.ch=data.checks||{};S.cn=data.client_notes||{};window._CID=CID;
   document.getElementById('vload').style.display='none';
   document.getElementById('app').style.display='block';
   renderI();
