@@ -138,6 +138,29 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
   .det-actions{align-items:flex-start}
   .nav{padding:0 1.25rem}
 }
+
+/* GUIÓN */
+.guion-wrap{margin-top:1.25rem}
+.guion-header{background:var(--t900);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1rem;display:flex;align-items:center;gap:10px}
+.guion-icon{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.guion-title{font-size:14px;font-weight:600;color:#fff}
+.guion-week{font-size:11px;color:rgba(255,255,255,.5);margin-top:1px}
+.guion-section{background:var(--sf);border-radius:10px;border:.5px solid var(--bd);margin-bottom:10px;overflow:hidden}
+.guion-sec-header{padding:.875rem 1rem;border-bottom:.5px solid var(--bd);display:flex;align-items:center;gap:8px}
+.guion-sec-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.guion-sec-label{font-size:12px;font-weight:600;color:var(--g900)}
+.guion-items{padding:.625rem 1rem}
+.guion-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:.5px solid var(--bd);cursor:pointer}
+.guion-item:last-child{border-bottom:none}
+.gchk{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--bdm);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.gchk.on{background:var(--t400);border-color:var(--t400)}
+.gchk.on::after{content:'';width:8px;height:4px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translateY(-1px)}
+.gtxt{font-size:13px;color:var(--g700);line-height:1.4;flex:1}
+.gtxt.dn{text-decoration:line-through;color:var(--g400)}
+.guion-bloque{margin-bottom:8px}
+.guion-bloque-label{font-size:11px;font-weight:500;color:var(--g400);text-transform:uppercase;letter-spacing:.06em;padding:.5rem 1rem;background:var(--g100)}
+.reset-btn{margin-top:10px;padding:8px 14px;background:var(--g100);border:none;border-radius:8px;color:var(--g500);font-size:12px;cursor:pointer;font-family:var(--f)}
+
 </style>
 </head>
 <body>
@@ -362,7 +385,9 @@ function openDet(id){
     </div>
     <p class="sec-title">Progreso de las 12 semanas</p>
     <div class="wgrid">${whtml}</div>
-    <p class="sec-title">Notas del cliente</p>
+    <p class="sec-title">Guión de la sesión</p>
+    ${renderGuion(c.id, c.semana||0, c.nombre)}
+    <p class="sec-title" style="margin-top:1.25rem">Notas del cliente</p>
     <textarea class="notes-ta" id="nta" placeholder="Observaciones, ajustes al programa, notas personales del cliente…">${c.notas||''}</textarea>
     <div class="notes-foot">
       <button class="btn-save" onclick="saveNote(${id})">Guardar notas</button>
@@ -450,6 +475,505 @@ document.addEventListener('keydown',e=>{
 document.getElementById('vload').style.display='none';
 if(sessionStorage.getItem('auth')==='1'){show('vdash');load();}
 else show('vlogin');
+const GUION = [
+  // S1
+  {
+    titulo: '¿Dónde estás ahora?',
+    antes: [
+      'Cuestionario de diagnóstico revisado',
+      'Patrón identificado — por qué dejó dietas anteriores',
+      'Emoción ligada a la comida detectada',
+      'Nivel de actividad anotado'
+    ],
+    bloques: [
+      {
+        label: 'Bloque 1 · 15 min · Bienvenida',
+        items: [
+          'Pregunta cómo llega: ¿qué esperas del programa?',
+          'Devolución breve del cuestionario — 2 observaciones sin juicio',
+          '¿Qué sería un éxito para ti al terminar?'
+        ]
+      },
+      {
+        label: 'Bloque 2 · 30 min · Diagnóstico + menú',
+        items: [
+          'Cuéntame un día normal desde que te levantas',
+          '¿Qué comida controlas bien y cuál se te escapa?',
+          'Cuando dejaste X, ¿qué fue lo primero que volviste a hacer? ← clave',
+          'Identificar la comida que quiere mejorar — solo nombrarla',
+          'Presentar lista base Fase 1: frutas y verduras · cereales integrales · legumbres · frutos secos y semillas',
+          '"Esta semana solo quiero que los tengas en mente. La semana que viene empezamos a incorporarlos."'
+        ]
+      },
+      {
+        label: 'Bloque 3 · 15 min · Cierre',
+        items: [
+          'Explicar el registro de 3 días — datos reales, no perfectos',
+          'Presentar protocolo: sesiones, canal entre llamadas, contingencias',
+          '¿Algo de hoy te ha sorprendido?',
+          'Desbloquear semana 2 en la app'
+        ]
+      }
+    ],
+    cierre: [
+      'He revisado el cuestionario antes de conectar',
+      'He identificado el patrón principal del cliente',
+      'He recogido la comida que quiere mejorar',
+      'He explicado el registro de 3 días con claridad',
+      'He presentado el protocolo de funcionamiento',
+      'He desbloqueado la semana 2 en la app'
+    ]
+  },
+  // S2
+  {
+    titulo: 'Cómo funciona la energía',
+    antes: [
+      'Registro de 3 días revisado',
+      'Presencia de vegetales, fibra y variedad de origen anotadas',
+      'Macronutriente más ausente identificado',
+      'Comida que quiere mejorar (S1) localizada en el registro',
+      '1-2 ajustes concretos preparados priorizando origen vegetal'
+    ],
+    bloques: [
+      {
+        label: 'Bloque 1 · 15 min · Revisión',
+        items: [
+          '¿Cómo fue el registro? ¿Algo que le sorprendiera al verse desde fuera?',
+          '¿Ha pensado en la comida que quiere mejorar de la semana pasada?',
+          'Señala 1 patrón positivo que ya tiene — reforzarlo antes de hablar de lo que falta'
+        ]
+      },
+      {
+        label: 'Bloque 2 · 30 min · Macros + fibra + ajuste real',
+        items: [
+          'Explicar los 3 macros usando sus propias comidas del registro como ejemplos',
+          '"En tu desayuno del martes veo X. Eso es principalmente Y. ¿Sabes qué le falta?"',
+          'Fibra: "La avena y el pan blanco son los dos carbohidratos pero uno tiene fibra y el otro no. Eso cambia todo."',
+          'Jerarquía sin dogmatismo: vegetal primero, después pescado, huevo, carne y lácteos como complemento',
+          'Identificar juntos el macronutriente más ausente en su día',
+          'Proponer ajuste concreto priorizando origen vegetal',
+          'Conectar el ajuste con el menú base Fase 1'
+        ]
+      },
+      {
+        label: 'Bloque 3 · 15 min · Cierre',
+        items: [
+          'Confirmar que el ajuste es realista — sin fricción ni coste extra',
+          '"No es perfección, es un paso. La semana que viene añadimos otro."',
+          '¿Qué te llevas de hoy?',
+          'Desbloquear semana 3 en la app'
+        ]
+      }
+    ],
+    cierre: [
+      'He usado su registro para explicar los macros — nada genérico',
+      'He introducido la fibra de forma práctica, no teórica',
+      'El ajuste propuesto prioriza origen vegetal y es asumible',
+      'El cliente sabe exactamente qué va a cambiar esta semana',
+      'Semana 3 desbloqueada en la app'
+    ]
+  },
+  // S3
+  {
+    titulo: 'Los mejores alimentos según la ciencia',
+    antes: [
+      'Revisar el ajuste de la semana pasada — ¿lo hizo? ¿cómo le fue?',
+      'Identificar qué alimentos de la lista base ya tiene incorporados y cuáles no aparecen',
+      'Preparar 1-2 ideas de comidas completas con la lista base adaptadas a sus gustos'
+    ],
+    bloques: [
+      {
+        label: 'Bloque 1 · 15 min · Revisión',
+        items: [
+          '¿Cómo fue el ajuste de la semana pasada? ¿Lo notó en algo?',
+          'Reforzar lo positivo — cualquier cambio merece reconocimiento',
+          'Si no lo hizo: "¿Qué se interpuso? Lo tenemos en cuenta para que esta semana sea más fácil." — sin juicio'
+        ]
+      },
+      {
+        label: 'Bloque 2 · 30 min · Ciencia práctica + comida completa',
+        items: [
+          'Por qué vegetal primero: menos grasas saturadas, menos colesterol, menos hierro hemo, más fibra y antioxidantes — con ejemplos cotidianos',
+          '"No se trata de eliminar el pollo o el huevo. Se trata de que la legumbre sea el protagonista y el huevo el apoyo, no al revés."',
+          'Repasar juntos la lista base y ver cuáles ya tiene en su cocina',
+          'Identificar los que generan más rechazo — trabajarlos sin presión',
+          'Construir juntos la comida del reto: que salga de sus gustos y de lo que ya tiene en casa',
+          '"Si te gusta X, podemos hacer una versión con Y que te va a sorprender."'
+        ]
+      },
+      {
+        label: 'Bloque 3 · 15 min · Cierre',
+        items: [
+          'Confirmar que la comida del reto es realista y apetecible',
+          '"No tiene que ser perfecta, tiene que ser tuya."',
+          '¿Qué te llevas de hoy?',
+          'Desbloquear semana 4 en la app'
+        ]
+      }
+    ],
+    cierre: [
+      'He explicado la ciencia sin abrumar — argumentos claros y cotidianos',
+      'La comida del reto es concreta, real y adaptada al cliente',
+      'El cliente entiende vegetal primero sin sentirlo como una prohibición',
+      'Semana 4 desbloqueada en la app'
+    ]
+  },
+  // S4
+  {
+    titulo: 'Hambre, saciedad y señales reales',
+    antes: [
+      'Revisar la comida completa del reto de la semana pasada',
+      'Repasar el registro inicial y los ajustes de las últimas 3 semanas — tener el mapa del mes',
+      'Identificar si hay patrón de hambre emocional en su registro o en lo comentado en sesiones anteriores'
+    ],
+    bloques: [
+      {
+        label: 'Bloque 1 · 15 min · Revisión',
+        items: [
+          '¿Cómo fue la comida completa del reto? ¿Le gustó? ¿La repetiría?',
+          'Nombrar 2-3 cambios concretos de estas 4 semanas — que los vea',
+          '"Llevas un mes y ya tienes X, Y y Z diferente. Eso es tuyo, nadie te lo quita."'
+        ]
+      },
+      {
+        label: 'Bloque 2 · 30 min · Señales fisiológicas + hábitos',
+        items: [
+          'Señales físicas del hambre real: dónde se siente, cómo aparece, cuándo aparece',
+          'Contrastar con hambre emocional: aparece de repente, pide alimentos concretos, no desaparece al comer',
+          '"¿Hay algún momento del día en que comas sin tener hambre real? ¿Cuándo suele pasar?"',
+          'Entorno sin culpabilizar: "No es fuerza de voluntad, es diseño. Si tienes ultraprocesados a mano, los vas a comer."',
+          'Identificar 1 hábito o situación concreta de su entorno que quiera modificar',
+          'Conectar con los alimentos base: tenerlos accesibles en casa es ya un cambio de entorno'
+        ]
+      },
+      {
+        label: 'Bloque 3 · 15 min · Cierre de fase',
+        items: [
+          'Explicar el reto: 30 segundos antes de cada comida, sin presión',
+          'Anticipar Fase 2: "El mes que viene empezamos a construir tu menú. Ya tienes la base, ahora le damos estructura."',
+          '¿Qué te llevas de este primer mes?',
+          'Desbloquear semana 5 en la app'
+        ]
+      }
+    ],
+    cierre: [
+      'El cliente diferencia hambre real de emocional con sus palabras',
+      'Hemos identificado al menos 1 situación concreta de hambre emocional',
+      'Hemos nombrado 1 cambio de entorno realista',
+      'El cliente sale del mes 1 con sensación de avance real',
+      'Semana 5 desbloqueada en la app'
+    ]
+  },
+  // S5
+  {
+    titulo: 'Proteína: la gran incomprendida',
+    antes: [
+      'Revisar el reto de S4 — ¿identificó momentos de hambre emocional?',
+      'Repasar su registro — ¿qué fuentes proteicas usa habitualmente?',
+      'Identificar si hay legumbres en su alimentación y con qué frecuencia',
+      'Preparar 1-2 ideas de comidas con legumbre como protagonista adaptadas a sus gustos'
+    ],
+    bloques: [
+      {
+        label: 'Bloque 1 · 15 min · Revisión',
+        items: [
+          '¿Cómo fue el ejercicio de los 30 segundos antes de comer?',
+          '¿Identificó algún hábito de su entorno que quiera cambiar?',
+          'Reforzar — llevan un mes y tienen base real'
+        ]
+      },
+      {
+        label: 'Bloque 2 · 30 min · Proteína + legumbres + reto',
+        items: [
+          'Preguntar qué fuentes de proteína consume habitualmente — sin juzgar',
+          'Desmitificar: "0.8g/kg es lo que dice la evidencia. Si pesas 70kg, son 56g al día. Con lentejas, avena, yogur y un huevo ya estás ahí."',
+          'Centrar la dieta en la proteína lleva a peores elecciones — se prioriza el aislado sobre la matriz nutricional',
+          'Legumbres como protagonistas: proteína + fibra + antioxidantes + sin hierro hemo ni grasas saturadas',
+          '"No es que el pollo sea malo. Es que los garbanzos son mejores. Y encima más baratos."',
+          'Huevo, pescado, yogur como buenos complementos — siempre integrales, nunca aislados',
+          'Construir juntos la comida nueva con legumbre como protagonista',
+          'Identificar la comida que va a optimizar esta semana'
+        ]
+      },
+      {
+        label: 'Bloque 3 · 15 min · Cierre',
+        items: [
+          'Confirmar que los dos retos son asumibles — si no, simplificar uno',
+          '"No tienes que pensar en proteína. Piensa en legumbres, cereales integrales, verduras. La proteína llega sola."',
+          '¿Qué te llevas de hoy?',
+          'Desbloquear semana 6 en la app'
+        ]
+      }
+    ],
+    cierre: [
+      'El cliente entiende que no necesita tanta proteína ni perseguirla como objetivo',
+      'Entiende las legumbres como mejor opción por su matriz nutricional',
+      'Los dos retos son concretos y adaptados a su vida real',
+      'Plant-based es una dirección, no una prohibición',
+      'Semana 6 desbloqueada en la app'
+    ]
+  },
+  // S6
+  {
+    titulo: 'Carbohidratos sin miedo',
+    antes: [
+      'Revisar los dos retos de S5 — ¿incorporó la legumbre? ¿mejoró la fuente proteica?',
+      'Identificar qué carbohidratos aparecen en su alimentación habitual y si son integrales o refinados',
+      'Revisar su desayuno habitual — protagonista del reto esta semana',
+      'Revisar su horario y actividad física — condiciona el timing de carbohidratos',
+      'Preparar 1-2 ejemplos de desayunos integrales sin azúcar añadido adaptados a sus gustos'
+    ],
+    bloques: [
+      {
+        label: 'Bloque 1 · 15 min · Revisión',
+        items: [
+          '¿Cómo fueron los dos retos de la semana pasada? ¿La comida con legumbre fue bien?',
+          '¿Ha notado algo diferente desde que prioriza origen vegetal?',
+          'Reforzar — llevan 5 semanas con cambios reales'
+        ]
+      },
+      {
+        label: 'Bloque 2 · 30 min · Carbohidratos + azúcar oculto + desayuno',
+        items: [
+          'Desmitificar: "Los carbohidratos no engordan. El exceso de calorías engorda."',
+          'Integral vs. refinado: fibra, velocidad de absorción, impacto glucémico, saciedad',
+          'Azúcar oculto: "El zumo de naranja natural tiene la misma cantidad de azúcar que un refresco. Mira siempre los ingredientes."',
+          'Analizar juntos su desayuno habitual — ¿qué hay? ¿qué falta? ¿qué sobra?',
+          'Diseñar juntos el nuevo desayuno: carbohidrato integral + proteína o grasa + sin azúcar añadido',
+          'Timing según su rutina: antes de entrenar, mediodía si entrena tarde, uniforme si no entrena',
+          '"Un bol de avena con fruta y frutos secos es muy diferente a un bol de avena sola."'
+        ]
+      },
+      {
+        label: 'Bloque 3 · 15 min · Cierre',
+        items: [
+          'Confirmar que los dos retos son claros y asumibles',
+          '"No se trata de comer menos carbohidratos. Se trata de elegir mejores y ponerlos donde tu cuerpo los aprovecha mejor."',
+          'Anticipar S10: "El azúcar oculto lo trabajaremos en profundidad con etiquetas."',
+          '¿Qué te llevas de hoy?',
+          'Desbloquear semana 7 en la app'
+        ]
+      }
+    ],
+    cierre: [
+      'El cliente sale sin miedo a los carbohidratos y con criterio para elegirlos',
+      'El nuevo desayuno es concreto, integral y sin azúcar añadido',
+      'El timing está adaptado a su horario y actividad',
+      'Entiende que la combinación de alimentos cambia el impacto nutricional',
+      'Semana 7 desbloqueada en la app'
+    ]
+  },
+  // S7
+  {
+    titulo: 'Grasas, inflamación y longevidad',
+    antes: [
+      'Revisar el reto del desayuno de S6 — ¿lo rediseñó? ¿cómo quedó?',
+      'Identificar qué grasas aparecen en su alimentación — ¿qué aceite usa? ¿frutos secos? ¿pescado azul?',
+      'Identificar si hay ultraprocesados o bollería con frecuencia — grasas trans potenciales',
+      'Preparar 1-2 formas sencillas de incorporar omega 3 adaptadas a sus gustos'
+    ],
+    bloques: [
+      {
+        label: 'Bloque 1 · 15 min · Revisión',
+        items: [
+          '¿Cómo quedó el nuevo desayuno? ¿Lo ha repetido durante la semana?',
+          '¿Ha notado algo con el timing de los carbohidratos?',
+          'Reforzar — llevan 6 semanas con cambios reales y acumulados'
+        ]
+      },
+      {
+        label: 'Bloque 2 · 30 min · Grasas + colesterol + inflamación',
+        items: [
+          '"¿Qué aceite usas habitualmente para cocinar?" — dejar que responda, no adelantarse',
+          '"¿Sabes la diferencia entre ese aceite y el AOVE en términos de salud cardiovascular?" — el insight sale de él',
+          '"¿Cuántas veces comes pescado azul a la semana?" — si dice poco: "¿Sabes qué estás dejando de aportar?"',
+          'Explicar colesterol LDL vs HDL a partir de lo que el cliente ya sabe',
+          '"¿Tienes en casa algún producto con aceite vegetal hidrogenado?" → momento supermercado: leer etiqueta juntos',
+          'Omega 3 como protagonista: sardinas, nueces, semillas de lino y chía — concreto y accesible',
+          '"Todo lo que hemos trabajado — legumbres, integrales, buenas grasas — reduce la inflamación crónica. Es una inversión a 20 años."',
+          'Identificar juntos la fuente de omega 3 que va a incorporar esta semana'
+        ]
+      },
+      {
+        label: 'Bloque 3 · 15 min · Cierre',
+        items: [
+          'Confirmar que el reto es concreto y encaja en su vida',
+          '"No tienes que obsesionarte con las grasas. Asegúrate de que las buenas están presentes y las trans brillan por su ausencia."',
+          'Anticipar S8: "La semana que viene construimos tu menú completo. Llega preparado con ideas."',
+          '¿Qué te llevas de hoy?',
+          'Desbloquear semana 8 en la app'
+        ]
+      }
+    ],
+    cierre: [
+      'El cliente entiende el impacto real de las grasas en el colesterol — sin mitos ni alarmismo',
+      'Ha identificado qué grasas predominan en su dieta y cuáles quiere cambiar',
+      'La fuente de omega 3 del reto es concreta y asumible',
+      'Entiende la conexión entre grasas, inflamación y longevidad',
+      'Sale motivado para S8 — construcción del menú completo',
+      'Semana 8 desbloqueada en la app'
+    ]
+  },
+  // S8
+  {
+    titulo: 'Construye tu menú semanal',
+    antes: [
+      'Revisar el reto de omega 3 de S7 — ¿lo incorporó? ¿cómo fue?',
+      'Repasar todos los cambios acumulados en 7 semanas — tener el mapa completo',
+      'Preparar estructura base de menú de 3 días adaptada a sus gustos y lo que ya tiene incorporado',
+      'Tener claros sus alimentos preferidos, restricciones y nivel de cocinado habitual'
+    ],
+    bloques: [
+      {
+        label: 'Bloque 1 · 15 min · Revisión',
+        items: [
+          '¿Incorporó el omega 3 esta semana? ¿Cómo lo hizo?',
+          '"Llevas 7 semanas. Tienes X, Y y Z incorporado. Hoy lo juntamos todo."',
+          'Si llega con borrador: revisarlo brevemente antes de entrar al bloque 2'
+        ]
+      },
+      {
+        label: 'Bloque 2 · 30 min · Construcción del menú',
+        items: [
+          'Arrancar por el desayuno — ya tiene trabajo hecho, consolidarlo como pieza fija',
+          '"¿Qué legumbre te apetece esta semana?" — que parta de él',
+          'Completar el plato: vegetal + carbohidrato integral + grasa de calidad',
+          'Construir la cena del día 1: más ligera, menos carbohidrato si no entrena por la tarde',
+          'Snack: fruta entera + frutos secos como base, ajustar según su hambre habitual',
+          'Repetir para días 2 y 3 variando fuentes — rotación de legumbres, verduras y cereales',
+          '"¿Por qué crees que esta opción es mejor que X?" — que el criterio salga de él',
+          'Ajustar según presupuesto y tiempo de cocinado real'
+        ]
+      },
+      {
+        label: 'Bloque 3 · 15 min · Cierre',
+        items: [
+          'Revisar el menú completo juntos — ¿falta algo? ¿hay algo que no va a poder cumplir?',
+          '"Este menú no es perfecto. Es tuyo. Y eso vale más."',
+          'Anticipar Fase 3: "El mes que viene salimos de casa. Todo lo aprendido lo pones a prueba en el mundo real."',
+          '¿Qué te llevas de hoy?',
+          'Desbloquear semana 9 en la app'
+        ]
+      }
+    ],
+    cierre: [
+      'El menú de 3 días está completo y es realista para su vida',
+      'Cada comida principal tiene proteína, carbohidrato integral y vegetal',
+      'El desayuno está consolidado como pieza fija',
+      'El cliente entiende cada elección — no ha copiado, ha construido',
+      'Sale motivado para la Fase 3',
+      'Semana 9 desbloqueada en la app'
+    ]
+  },
+  // S9-S12 pendientes
+  {titulo:'Nutrición en el mundo real',antes:['Contenido en desarrollo'],bloques:[{label:'Próximamente',items:['Guión de la Fase 3 en desarrollo']}],cierre:['Semana 10 desbloqueada en la app']},
+  {titulo:'Leer etiquetas y no morir en el intento',antes:['Contenido en desarrollo'],bloques:[{label:'Próximamente',items:['Guión de la Fase 3 en desarrollo']}],cierre:['Semana 11 desbloqueada en la app']},
+  {titulo:'Tu cuerpo a largo plazo',antes:['Contenido en desarrollo'],bloques:[{label:'Próximamente',items:['Guión de la Fase 3 en desarrollo']}],cierre:['Semana 12 desbloqueada en la app']},
+  {titulo:'Cierre y entrega de autonomía',antes:['Contenido en desarrollo'],bloques:[{label:'Próximamente',items:['Guión de la Fase 3 en desarrollo']}],cierre:['Programa completado']}
+];
+
+function renderGuion(clientId, semana, clientNombre) {
+  const idx = Math.min(semana, 11); // 0-based
+  const g = GUION[idx];
+  if (!g) return '';
+
+  const wNum = Math.min(semana + 1, 12);
+  const phaseNum = wNum <= 4 ? 1 : wNum <= 8 ? 2 : 3;
+  const phaseColor = phaseNum === 1 ? '#1D9E75' : phaseNum === 2 ? '#534AB7' : '#BA7517';
+
+  // Load saved checks from localStorage
+  const storageKey = `guion_${clientId}_s${semana}`;
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch(e) {}
+
+  let html = `<div class="guion-wrap">
+    <div class="guion-header">
+      <div class="guion-icon">
+        <svg width="16" height="16" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      </div>
+      <div>
+        <div class="guion-title">Guión · Semana ${wNum} · ${g.titulo}</div>
+        <div class="guion-week">Fase ${phaseNum} · ${clientNombre}</div>
+      </div>
+    </div>`;
+
+  // ANTES DE CONECTAR
+  html += `<div class="guion-section">
+    <div class="guion-sec-header">
+      <div class="guion-sec-dot" style="background:#888"></div>
+      <span class="guion-sec-label">Antes de conectar</span>
+    </div>
+    <div class="guion-items">`;
+  g.antes.forEach((item, i) => {
+    const key = `a${i}`;
+    const on = saved[key];
+    html += `<div class="guion-item" onclick="toggleGuionCheck('${storageKey}','${key}','gca-${clientId}-${i}','gcl-a-${clientId}-${i}')">
+      <div class="gchk${on?' on':''}" id="gca-${clientId}-${i}"></div>
+      <span class="gtxt${on?' dn':''}" id="gcl-a-${clientId}-${i}">${item}</span>
+    </div>`;
+  });
+  html += `</div></div>`;
+
+  // BLOQUES
+  g.bloques.forEach((bloque, bi) => {
+    html += `<div class="guion-section">
+      <div class="guion-sec-header">
+        <div class="guion-sec-dot" style="background:${phaseColor}"></div>
+        <span class="guion-sec-label">${bloque.label}</span>
+      </div>
+      <div class="guion-items">`;
+    bloque.items.forEach((item, ii) => {
+      const key = `b${bi}_${ii}`;
+      const on = saved[key];
+      html += `<div class="guion-item" onclick="toggleGuionCheck('${storageKey}','${key}','gcb-${clientId}-${bi}-${ii}','gcl-b-${clientId}-${bi}-${ii}')">
+        <div class="gchk${on?' on':''}" id="gcb-${clientId}-${bi}-${ii}"></div>
+        <span class="gtxt${on?' dn':''}" id="gcl-b-${clientId}-${bi}-${ii}">${item}</span>
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+
+  // CHECKS DE CIERRE
+  html += `<div class="guion-section">
+    <div class="guion-sec-header">
+      <div class="guion-sec-dot" style="background:var(--gold)"></div>
+      <span class="guion-sec-label">Checks de cierre</span>
+    </div>
+    <div class="guion-items">`;
+  g.cierre.forEach((item, i) => {
+    const key = `c${i}`;
+    const on = saved[key];
+    html += `<div class="guion-item" onclick="toggleGuionCheck('${storageKey}','${key}','gcc-${clientId}-${i}','gcl-c-${clientId}-${i}')">
+      <div class="gchk${on?' on':''}" id="gcc-${clientId}-${i}"></div>
+      <span class="gtxt${on?' dn':''}" id="gcl-c-${clientId}-${i}">${item}</span>
+    </div>`;
+  });
+  html += `</div></div>`;
+
+  // RESET
+  html += `<button class="reset-btn" onclick="resetGuion('${storageKey}','${clientId}',${semana},'${clientNombre}')">Limpiar checks de esta sesión</button>`;
+  html += `</div>`;
+  return html;
+}
+
+function toggleGuionCheck(storageKey, key, boxId, lblId) {
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch(e) {}
+  saved[key] = !saved[key];
+  localStorage.setItem(storageKey, JSON.stringify(saved));
+  const box = document.getElementById(boxId);
+  const lbl = document.getElementById(lblId);
+  if (box) box.className = 'gchk' + (saved[key] ? ' on' : '');
+  if (lbl) lbl.className = 'gtxt' + (saved[key] ? ' dn' : '');
+}
+
+function resetGuion(storageKey, clientId, semana, nombre) {
+  if (!confirm('¿Limpiar todos los checks de esta sesión?')) return;
+  localStorage.removeItem(storageKey);
+  // Re-render detail
+  openDet(clients.findIndex(x => x.id === parseInt(clientId)));
+}
+
 </script>
 </body>
 </html>
