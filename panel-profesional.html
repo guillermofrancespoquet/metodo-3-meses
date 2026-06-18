@@ -371,7 +371,8 @@ function openDet(id){
   let whtml='';
   for(let i=0;i<12;i++){
     const n=i+1,dn=n<=(c.semana||0),ac=n===(c.semana||0)+1;
-    whtml+=`<div class="witem${dn?' wdn':ac?' wac':''}"><div class="wnum ${dn?'dn':ac?'ac':'lk'}">${dn?'✓':n}</div><div><div class="wt">${WKT[i]}</div><div class="ws">${dn?'Completada':ac?'Activa':'Bloqueada'}</div></div></div>`;
+    const wonclick=`showWeekGuion(${i},${c.id},'${c.nombre.replace(/'/g,"\\'")}')`;
+    whtml+=`<div class="witem${dn?' wdn':ac?' wac':''}" onclick="${wonclick}"><div class="wnum ${dn?'dn':ac?'ac':'lk'}">${dn?'✓':n}</div><div><div class="wt">${WKT[i]}</div><div class="ws">${dn?'Completada':ac?'Activa':'Bloqueada'}</div></div></div>`;
   }
   document.getElementById('detPage').innerHTML=`
     <button class="det-back" onclick="show('vdash');load()">
