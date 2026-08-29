@@ -16,7 +16,7 @@
 <style>
 :root{
   --t900:#04342C;--t800:#085041;--t600:#0F6E56;--t400:#1D9E75;--t100:#9FE1CB;--t50:#E1F5EE;
-  --gold:#B8956A;--beige:#EDE8DE;
+  --gold:#B8956A;--gold-dk:#7A5A38;--gold-50:#F5EDE0;--beige:#EDE8DE;
   --g900:#1a1a18;--g700:#444441;--g500:#5F5E5A;--g400:#888780;--g200:#D3D1C7;--g100:#F1EFE8;
   --bg:#FAFAF8;--sf:#fff;--bd:rgba(0,0,0,.09);--bdm:rgba(0,0,0,.15);
   --red:#E24B4A;--red-bg:#FEF2F2;
@@ -187,7 +187,7 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .hub-card:hover{border-color:var(--t400);box-shadow:0 4px 20px rgba(29,158,117,.1)}
 .hub-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .hub-icon.green{background:var(--t50);border:1px solid rgba(29,158,117,.15)}
-.hub-icon.purple{background:var(--p50);border:1px solid rgba(83,74,183,.15)}
+.hub-icon.purple{background:var(--gold-50);border:1px solid rgba(184,149,106,.25)}
 .hub-info{flex:1}
 .hub-name{font-size:16px;font-weight:600;color:var(--g900);margin-bottom:2px}
 .hub-desc{font-size:12px;color:var(--g400)}
@@ -197,30 +197,27 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 /* DEPORTISTAS DASHBOARD */
 .dep-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px}
 .dep-card{background:var(--sf);border-radius:14px;border:.5px solid var(--bd);padding:1.25rem 1rem;cursor:pointer;transition:border-color .15s,box-shadow .15s;text-align:center}
-.dep-card:hover{border-color:var(--p400);box-shadow:0 2px 16px rgba(83,74,183,.12)}
-.dep-avatar{width:64px;height:64px;border-radius:50%;overflow:hidden;margin:0 auto 10px;background:var(--p50);display:flex;align-items:center;justify-content:center;border:2px solid var(--p50)}
+.dep-card:hover{border-color:var(--gold);box-shadow:0 2px 16px rgba(184,149,106,.18)}
+.dep-avatar{width:64px;height:64px;border-radius:50%;overflow:hidden;margin:0 auto 10px;background:var(--gold-50);display:flex;align-items:center;justify-content:center;border:2px solid var(--gold-50)}
 .dep-avatar img{width:100%;height:100%;object-fit:cover}
-.dep-avatar-fallback{font-size:22px;font-weight:700;color:var(--p400)}
+.dep-avatar-fallback{font-size:22px;font-weight:700;color:var(--gold-dk)}
 .dep-name{font-size:13px;font-weight:600;color:var(--g900);margin-bottom:2px}
 .dep-sport{font-size:11px;color:var(--g400)}
 
 /* DEPORTISTA DETAIL */
 .depd-hero{background:var(--sf);border-radius:14px;border:.5px solid var(--bd);padding:1.5rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
-.depd-avatar{width:76px;height:76px;border-radius:50%;overflow:hidden;background:var(--p50);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid var(--p50)}
+.depd-avatar{width:76px;height:76px;border-radius:50%;overflow:hidden;background:var(--gold-50);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid var(--gold-50)}
 .depd-avatar img{width:100%;height:100%;object-fit:cover}
-.depd-avatar-fallback{font-size:26px;font-weight:700;color:var(--p400)}
+.depd-avatar-fallback{font-size:26px;font-weight:700;color:var(--gold-dk)}
 .depd-info{flex:1;min-width:180px}
 .depd-name{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
-.depd-sport{font-size:13px;color:var(--p400);font-weight:500}
+.depd-sport{font-size:13px;color:var(--gold-dk);font-weight:500}
 .depd-section{margin-bottom:1.25rem}
 .depd-desc-box{background:var(--sf);border:.5px solid var(--bd);border-radius:12px;padding:1.1rem 1.25rem;font-size:14px;color:var(--g700);line-height:1.65}
-.plan-box{background:var(--p50);border-radius:12px;padding:1rem 1.25rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.plan-icon{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.plan-txt{flex:1;min-width:150px}
-.plan-label{font-size:11px;font-weight:500;color:var(--p400);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
-.plan-url{font-size:12px;color:var(--g500);word-break:break-all}
-.btn-plan{display:inline-flex;align-items:center;gap:6px;background:var(--p400);color:#fff;text-decoration:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;font-family:var(--f);white-space:nowrap}
-.btn-plan-copy{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.7);color:var(--p400);border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:500;cursor:pointer;font-family:var(--f);white-space:nowrap}
+.plan-box{background:var(--g100);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.plan-url{font-size:12px;color:var(--g500);flex:1;min-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:monospace}
+.btn-plan{display:inline-flex;align-items:center;gap:6px;background:var(--gold-50);color:var(--gold-dk);text-decoration:none;border-radius:7px;padding:5px 12px;font-size:12px;font-weight:500;font-family:var(--f);white-space:nowrap}
+.btn-plan-copy{display:inline-flex;align-items:center;gap:6px;background:var(--sf);border:.5px solid var(--bd);color:var(--gold-dk);border-radius:7px;padding:5px 12px;font-size:12px;font-weight:500;cursor:pointer;font-family:var(--f);white-space:nowrap}
 .dep-empty{grid-column:1/-1;text-align:center;padding:3rem 1rem}
 
 </style>
@@ -265,7 +262,7 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
         </div>
         <div class="hub-card" onclick="show('vdepdash');loadDeportistas()">
           <div class="hub-icon purple">
-            <svg width="26" height="26" fill="#534AB7" stroke="#534AB7" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <svg width="26" height="26" fill="var(--gold-dk)" stroke="var(--gold-dk)" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
           </div>
           <div class="hub-info">
             <div class="hub-name">Nutrición Deportiva</div>
@@ -770,14 +767,11 @@ function openDepDet(id) {
       <p class="sec-title">Planificación nutricional</p>
       ${d.plan_url ? `
       <div class="plan-box">
-        <div class="plan-icon">
-          <svg width="18" height="18" fill="none" stroke="#534AB7" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        </div>
-        <div class="plan-txt">
-          <div class="plan-label">Enlace al plan</div>
-          <div class="plan-url">${d.plan_url}</div>
-        </div>
-        <a href="${d.plan_url}" target="_blank" class="btn-plan">Abrir</a>
+        <span class="plan-url">${d.plan_url}</span>
+        <a href="${d.plan_url}" target="_blank" class="btn-plan">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Abrir
+        </a>
         <button class="btn-plan-copy" onclick="copyDepUrl('${d.plan_url}')">Copiar</button>
       </div>` : `<div class="depd-desc-box" style="color:var(--g400)">Sin plan nutricional enlazado todavía.</div>`}
     </div>
