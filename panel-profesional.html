@@ -362,6 +362,29 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
   </div>
 </div>
 
+<!-- MODAL: EDITAR DEPORTISTA -->
+<div class="mbg" id="mEditDep" style="display:none">
+  <div class="mc">
+    <p class="mt">Editar deportista</p>
+    <p class="ms">Actualiza los datos de este deportista.</p>
+    <label class="mfl">Nombre completo *</label>
+    <input type="text" class="inp" id="editDepNombre" placeholder="Ej. Carlos Ruiz">
+    <label class="mfl" style="margin-top:10px">Deporte / modalidad</label>
+    <input type="text" class="inp" id="editDepDeporte" placeholder="Ej. Ciclismo de carretera">
+    <label class="mfl" style="margin-top:10px">URL de la foto (GitHub)</label>
+    <input type="text" class="inp" id="editDepFoto" placeholder="https://raw.githubusercontent.com/...">
+    <label class="mfl" style="margin-top:10px">Descripción breve</label>
+    <textarea class="inp" id="editDepDesc" placeholder="Objetivo, contexto, cualquier dato relevante…" style="min-height:70px;resize:vertical"></textarea>
+    <label class="mfl" style="margin-top:10px">URL del plan nutricional (GitHub)</label>
+    <input type="text" class="inp" id="editDepPlan" placeholder="https://tu-usuario.github.io/...">
+    <p class="merr" id="mEditDepErr"></p>
+    <div class="mact">
+      <button class="btn-cancel" onclick="closeEditDep()">Cancelar</button>
+      <button class="btn-ok" onclick="saveEditDep()">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL: IMPORTAR VARIOS DEPORTISTAS -->
 <div class="mbg" id="mImportDep" style="display:none">
   <div class="mc" style="max-width:520px">
@@ -830,6 +853,45 @@ function renderDeportistas() {
 }
 
 
+
+let editingDepId = null;
+function openEditDep(id) {
+  const d = deportistas.find(x => x.id === id);
+  if (!d) return;
+  editingDepId = id;
+  document.getElementById('editDepNombre').value = d.nombre || '';
+  document.getElementById('editDepDeporte').value = d.deporte || '';
+  document.getElementById('editDepFoto').value = d.foto_url || '';
+  document.getElementById('editDepDesc').value = d.descripcion || '';
+  document.getElementById('editDepPlan').value = d.plan_url || '';
+  document.getElementById('mEditDepErr').textContent = '';
+  document.getElementById('mEditDep').style.display = 'flex';
+}
+function closeEditDep() {
+  document.getElementById('mEditDep').style.display = 'none';
+  editingDepId = null;
+}
+async function saveEditDep() {
+  const nombre = document.getElementById('editDepNombre').value.trim();
+  if (!nombre) { document.getElementById('mEditDepErr').textContent = 'El nombre es obligatorio'; return; }
+  try {
+    const updates = {
+      nombre,
+      deporte: document.getElementById('editDepDeporte').value.trim() || null,
+      foto_url: document.getElementById('editDepFoto').value.trim() || null,
+      descripcion: document.getElementById('editDepDesc').value.trim() || null,
+      plan_url: document.getElementById('editDepPlan').value.trim() || null
+    };
+    await patchDep(editingDepId, updates);
+    const d = deportistas.find(x => x.id === editingDepId);
+    if (d) Object.assign(d, updates);
+    closeEditDep();
+    openDepDet(editingDepId);
+  } catch(e) {
+    document.getElementById('mEditDepErr').textContent = 'Error al guardar. Inténtalo de nuevo.';
+  }
+}
+
 function openImportDep() {
   document.getElementById('mImportDep').style.display = 'flex';
   setTimeout(() => document.getElementById('importText').focus(), 100);
@@ -921,6 +983,10 @@ function openDepDet(id) {
         <div class="depd-name">${d.nombre}</div>
         <div class="depd-sport">${d.deporte || 'Modalidad sin especificar'}</div>
       </div>
+      <button class="btn-action" style="background:var(--gold-50);color:var(--gold-dk)" onclick="openEditDep(${d.id})">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Editar
+      </button>
       <button class="btn-action danger" onclick="openDelDep(${d.id})">
         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
         Eliminar
