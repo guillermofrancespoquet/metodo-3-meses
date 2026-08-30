@@ -244,10 +244,6 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .dep-search input{width:100%;padding:9px 14px 9px 34px;border:.5px solid var(--bdm);border-radius:10px;font-size:13px;font-family:var(--f);outline:none;transition:border-color .15s;background:var(--sf)}
 .dep-search input:focus{border-color:var(--gold)}
 .dep-search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--g400);pointer-events:none}
-.dep-chips{display:flex;gap:6px;flex-wrap:wrap}
-.dep-chip{background:var(--g100);border:.5px solid transparent;border-radius:20px;padding:6px 13px;font-size:12px;font-weight:500;color:var(--g500);cursor:pointer;font-family:var(--f);white-space:nowrap;transition:all .15s}
-.dep-chip.active{background:var(--gold-50);border-color:rgba(184,149,106,.3);color:var(--gold-dk)}
-.dep-chip:hover:not(.active){background:var(--g200)}
 .rev-badge{font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;margin-top:6px;display:inline-block}
 .rev-badge.urgent{background:#FEF2F2;color:var(--red)}
 .rev-badge.soon{background:var(--gold-50);color:var(--gold-dk)}
@@ -347,7 +343,6 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
         <input type="text" id="depSearchInp" placeholder="Buscar por nombre…" oninput="filterDeportistas()">
       </div>
     </div>
-    <div class="dep-chips" id="depChips" style="margin-bottom:1.25rem"></div>
     <div class="dep-grid" id="depgrid"></div>
   </div>
 </div>
@@ -859,12 +854,10 @@ const insertDep = (d) => sb('clientes_deportivos', {method:'POST', body: JSON.st
 const patchDep = (id, d) => sb(`clientes_deportivos?id=eq.${id}`, {method:'PATCH', headers:{'Prefer':'return=minimal'}, body: JSON.stringify(d)});
 const deleteDep = (id) => sb(`clientes_deportivos?id=eq.${id}`, {method:'DELETE', headers:{'Prefer':'return=minimal'}});
 
-let depFilterSport = null;
 let depSearchTerm = '';
 
 async function loadDeportistas() {
   deportistas = await getDeportistas() || [];
-  depFilterSport = null;
   depSearchTerm = '';
   const inp = document.getElementById('depSearchInp');
   if (inp) inp.value = '';
@@ -893,24 +886,9 @@ function filterDeportistas() {
   renderDeportistas();
 }
 
-function toggleSportFilter(sport) {
-  depFilterSport = (depFilterSport === sport) ? null : sport;
-  renderDeportistas();
-}
-
 function renderDeportistas() {
-  // Build sport chips from unique sports present
-  const sports = [...new Set(deportistas.map(d => d.deporte).filter(Boolean))].sort();
-  const chipsEl = document.getElementById('depChips');
-  if (chipsEl) {
-    chipsEl.innerHTML = sports.map(s =>
-      `<button class="dep-chip${depFilterSport===s?' active':''}" onclick="toggleSportFilter('${s.replace(/'/g,"\\'")}')">${s}</button>`
-    ).join('');
-  }
-
-  // Apply filters
+  // Apply search filter
   let filtered = deportistas;
-  if (depFilterSport) filtered = filtered.filter(d => d.deporte === depFilterSport);
   if (depSearchTerm) filtered = filtered.filter(d => d.nombre.toLowerCase().includes(depSearchTerm));
 
   // Sort by revision urgency: overdue/soonest first, then no-date, then furthest
@@ -1681,6 +1659,23 @@ const GUION = [
   {titulo:'Cierre y entrega de autonomía',antes:['Contenido en desarrollo'],bloques:[{label:'Próximamente',items:['Guión de la Fase 3 en desarrollo']}],cierre:['Programa completado']}
 ];
 
+function getGuionChecksFor(clientId, semana) {
+  const c = clients.find(x => x.id === parseInt(clientId));
+  const all = (c && c.guion_checks) || {};
+  const key = `s${semana}`;
+  return all[key] || {};
+}
+
+async function saveGuionChecksFor(clientId, semana, checksObj) {
+  const c = clients.find(x => x.id === parseInt(clientId));
+  if (!c) return;
+  const all = c.guion_checks || {};
+  const key = `s${semana}`;
+  all[key] = checksObj;
+  c.guion_checks = all;
+  await patch(clientId, { guion_checks: all });
+}
+
 function renderGuion(clientId, semana, clientNombre) {
   const idx = Math.min(semana, 11); // 0-based
   const g = GUION[idx];
@@ -1690,10 +1685,8 @@ function renderGuion(clientId, semana, clientNombre) {
   const phaseNum = wNum <= 4 ? 1 : wNum <= 8 ? 2 : 3;
   const phaseColor = phaseNum === 1 ? '#1D9E75' : phaseNum === 2 ? '#534AB7' : '#BA7517';
 
-  // Load saved checks from localStorage
-  const storageKey = `guion_${clientId}_s${semana}`;
-  let saved = {};
-  try { saved = JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch(e) {}
+  // Load saved checks from Supabase (already in clients array)
+  const saved = getGuionChecksFor(clientId, semana);
 
   let html = `<div class="guion-wrap">
     <div class="guion-header">
@@ -1716,7 +1709,7 @@ function renderGuion(clientId, semana, clientNombre) {
   g.antes.forEach((item, i) => {
     const key = `a${i}`;
     const on = saved[key];
-    html += `<div class="guion-item" onclick="toggleGuionCheck('${storageKey}','${key}','gca-${clientId}-${i}','gcl-a-${clientId}-${i}')">
+    html += `<div class="guion-item" onclick="toggleGuionCheck(${clientId},${semana},'${key}','gca-${clientId}-${i}','gcl-a-${clientId}-${i}')">
       <div class="gchk${on?' on':''}" id="gca-${clientId}-${i}"></div>
       <span class="gtxt${on?' dn':''}" id="gcl-a-${clientId}-${i}">${item}</span>
     </div>`;
@@ -1734,7 +1727,7 @@ function renderGuion(clientId, semana, clientNombre) {
     bloque.items.forEach((item, ii) => {
       const key = `b${bi}_${ii}`;
       const on = saved[key];
-      html += `<div class="guion-item" onclick="toggleGuionCheck('${storageKey}','${key}','gcb-${clientId}-${bi}-${ii}','gcl-b-${clientId}-${bi}-${ii}')">
+      html += `<div class="guion-item" onclick="toggleGuionCheck(${clientId},${semana},'${key}','gcb-${clientId}-${bi}-${ii}','gcl-b-${clientId}-${bi}-${ii}')">
         <div class="gchk${on?' on':''}" id="gcb-${clientId}-${bi}-${ii}"></div>
         <span class="gtxt${on?' dn':''}" id="gcl-b-${clientId}-${bi}-${ii}">${item}</span>
       </div>`;
@@ -1752,7 +1745,7 @@ function renderGuion(clientId, semana, clientNombre) {
   g.cierre.forEach((item, i) => {
     const key = `c${i}`;
     const on = saved[key];
-    html += `<div class="guion-item" onclick="toggleGuionCheck('${storageKey}','${key}','gcc-${clientId}-${i}','gcl-c-${clientId}-${i}')">
+    html += `<div class="guion-item" onclick="toggleGuionCheck(${clientId},${semana},'${key}','gcc-${clientId}-${i}','gcl-c-${clientId}-${i}')">
       <div class="gchk${on?' on':''}" id="gcc-${clientId}-${i}"></div>
       <span class="gtxt${on?' dn':''}" id="gcl-c-${clientId}-${i}">${item}</span>
     </div>`;
@@ -1760,20 +1753,19 @@ function renderGuion(clientId, semana, clientNombre) {
   html += `</div></div>`;
 
   // RESET
-  html += `<button class="reset-btn" onclick="resetGuion('${storageKey}','${clientId}',${semana},'${clientNombre}')">Limpiar checks de esta sesión</button>`;
+  html += `<button class="reset-btn" onclick="resetGuion(${clientId},${semana},'${clientNombre}')">Limpiar checks de esta sesión</button>`;
   html += `</div>`;
   return html;
 }
 
-function toggleGuionCheck(storageKey, key, boxId, lblId) {
-  let saved = {};
-  try { saved = JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch(e) {}
+async function toggleGuionCheck(clientId, semana, key, boxId, lblId) {
+  const saved = getGuionChecksFor(clientId, semana);
   saved[key] = !saved[key];
-  localStorage.setItem(storageKey, JSON.stringify(saved));
   const box = document.getElementById(boxId);
   const lbl = document.getElementById(lblId);
   if (box) box.className = 'gchk' + (saved[key] ? ' on' : '');
   if (lbl) lbl.className = 'gtxt' + (saved[key] ? ' dn' : '');
+  await saveGuionChecksFor(clientId, semana, saved);
 }
 
 function showWeekGuion(weekIdx, clientId, clientNombre) {
@@ -1785,10 +1777,9 @@ function showWeekGuion(weekIdx, clientId, clientNombre) {
   guionEl.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-function resetGuion(storageKey, clientId, semana, nombre) {
+async function resetGuion(clientId, semana, nombre) {
   if (!confirm('¿Limpiar todos los checks de esta sesión?')) return;
-  localStorage.removeItem(storageKey);
-  // Re-render detail
+  await saveGuionChecksFor(clientId, semana, {});
   openDet(clients.findIndex(x => x.id === parseInt(clientId)));
 }
 
