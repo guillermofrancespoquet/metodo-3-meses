@@ -193,6 +193,9 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .hub-desc{font-size:12px;color:var(--g400)}
 .hub-arrow{color:var(--g200);flex-shrink:0}
 .hub-logout{display:block;text-align:center;margin-top:1.5rem;font-size:13px;color:var(--g400);cursor:pointer;background:none;border:none;font-family:var(--f)}
+.hub-export{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:1.25rem;padding:10px;font-size:13px;color:var(--gold-dk);cursor:pointer;background:var(--gold-50);border:none;border-radius:10px;font-family:var(--f);font-weight:500;transition:opacity .15s}
+.hub-export:hover{opacity:.85}
+.hub-export-status{text-align:center;font-size:11px;color:var(--t600);margin-top:8px;min-height:14px}
 
 /* DEPORTISTAS DASHBOARD */
 .dep-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px}
@@ -306,6 +309,11 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
           <svg class="hub-arrow" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
       </div>
+      <button class="hub-export" onclick="exportAllData()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Exportar copia de seguridad
+      </button>
+      <p class="hub-export-status" id="exportStatus"></p>
       <button class="hub-logout" onclick="logout()">Cerrar sesión</button>
     </div>
   </div>
@@ -560,6 +568,43 @@ const patch=(id,d)=>sb(`clientes?id=eq.${id}`,{method:'PATCH',headers:{'Prefer':
 const del=(id)=>sb(`clientes?id=eq.${id}`,{method:'DELETE',headers:{'Prefer':'return=minimal'}});
 
 // ── AUTH ──
+
+// ═══════════════ EXPORTAR COPIA DE SEGURIDAD ═══════════════
+async function exportAllData() {
+  const statusEl = document.getElementById('exportStatus');
+  statusEl.textContent = 'Preparando exportación…';
+  try {
+    const [metodoClients, deportivos] = await Promise.all([
+      sb('clientes?select=*'),
+      sb('clientes_deportivos?select=*')
+    ]);
+
+    const backup = {
+      exportado_el: new Date().toISOString(),
+      metodo_3m: metodoClients || [],
+      nutricion_deportiva: deportivos || []
+    };
+
+    const json = JSON.stringify(backup, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const dateStr = new Date().toISOString().slice(0,10);
+    a.href = url;
+    a.download = `nutrilogos-backup-${dateStr}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    statusEl.textContent = `✓ Exportado — ${metodoClients.length} clientes Método 3M · ${deportivos.length} deportistas`;
+    setTimeout(() => { statusEl.textContent = ''; }, 4000);
+  } catch(e) {
+    statusEl.textContent = 'Error al exportar. Inténtalo de nuevo.';
+    setTimeout(() => { statusEl.textContent = ''; }, 3000);
+  }
+}
+
 function doLogin(){
   if(document.getElementById('linp').value===PASS){
     sessionStorage.setItem('auth','1');
