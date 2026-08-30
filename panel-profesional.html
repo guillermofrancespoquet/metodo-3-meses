@@ -309,10 +309,16 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
   <div class="page">
     <div class="page-header">
       <div><p class="page-title">Mis deportistas</p><p class="page-sub" id="depsub">Cargando…</p></div>
-      <button class="btn-add" onclick="openAddDep()">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Nuevo deportista
-      </button>
+      <div style="display:flex;gap:8px">
+        <button class="btn-add" style="background:var(--g100);color:var(--g700)" onclick="openImportDep()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Importar varios
+        </button>
+        <button class="btn-add" onclick="openAddDep()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nuevo deportista
+        </button>
+      </div>
     </div>
     <div class="dep-grid" id="depgrid"></div>
   </div>
@@ -352,6 +358,21 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
     <div class="mact">
       <button class="btn-cancel" onclick="closeAddDep()">Cancelar</button>
       <button class="btn-ok" onclick="createDeportista()">Crear deportista</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: IMPORTAR VARIOS DEPORTISTAS -->
+<div class="mbg" id="mImportDep" style="display:none">
+  <div class="mc" style="max-width:520px">
+    <p class="mt">Importar varios deportistas</p>
+    <p class="ms">Pega una línea por deportista con el formato: <strong>nombre | deporte | descripción | URL del plan</strong>. Separa cada campo con el símbolo <strong>|</strong>.</p>
+    <textarea class="inp" id="importText" placeholder="Juancho Sastre Medina | Fútbol de competición | Objetivo de pico de rendimiento... | https://...&#10;Rocío Flores | Fútbol · Valencia CF | Maximizar rendimiento... | https://..." style="min-height:180px;resize:vertical;font-family:monospace;font-size:12px;line-height:1.6"></textarea>
+    <p class="merr" id="mImportErr"></p>
+    <p style="font-size:12px;color:var(--gold-dk);margin-top:4px" id="mImportOk"></p>
+    <div class="mact">
+      <button class="btn-cancel" onclick="closeImportDep()">Cancelar</button>
+      <button class="btn-ok" onclick="importDeportistas()">Importar todos</button>
     </div>
   </div>
 </div>
@@ -806,6 +827,50 @@ function renderDeportistas() {
       <div class="dep-sport">${d.deporte || '—'}</div>
     </div>`;
   }).join('');
+}
+
+
+function openImportDep() {
+  document.getElementById('mImportDep').style.display = 'flex';
+  setTimeout(() => document.getElementById('importText').focus(), 100);
+}
+function closeImportDep() {
+  document.getElementById('mImportDep').style.display = 'none';
+  document.getElementById('importText').value = '';
+  document.getElementById('mImportErr').textContent = '';
+  document.getElementById('mImportOk').textContent = '';
+}
+async function importDeportistas() {
+  const raw = document.getElementById('importText').value.trim();
+  if (!raw) { document.getElementById('mImportErr').textContent = 'Pega al menos una línea.'; return; }
+
+  const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+  const errEl = document.getElementById('mImportErr');
+  const okEl = document.getElementById('mImportOk');
+  errEl.textContent = ''; okEl.textContent = '';
+
+  let created = 0, failed = 0;
+  for (const line of lines) {
+    const parts = line.split('|').map(p => p.trim());
+    if (!parts[0]) { failed++; continue; }
+    try {
+      await insertDep({
+        nombre: parts[0],
+        deporte: parts[1] || null,
+        descripcion: parts[2] || null,
+        plan_url: parts[3] || null,
+        foto_url: null,
+        notas: ''
+      });
+      created++;
+    } catch(e) {
+      failed++;
+    }
+  }
+
+  okEl.textContent = `✓ ${created} deportista${created!==1?'s':''} importado${created!==1?'s':''}${failed>0?` · ${failed} con error`:''}`;
+  await loadDeportistas();
+  setTimeout(() => { closeImportDep(); }, 1500);
 }
 
 function openAddDep() {
