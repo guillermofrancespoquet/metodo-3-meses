@@ -277,8 +277,12 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .agenda-meta{font-size:12px;color:var(--g400);margin-top:2px}
 .agenda-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .pay-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;font-weight:600;padding:5px 10px;border-radius:20px;border:none;font-family:var(--f)}
+.mfl-check{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:12.5px;color:var(--g700);cursor:pointer}
+.mfl-check input{width:15px;height:15px;accent-color:var(--t400);cursor:pointer}
+.mfl-hint{font-size:11px;color:var(--g400);margin:4px 0 0;line-height:1.4}
 .pay-toggle.paid{background:var(--t50);color:var(--t600)}
 .pay-toggle.pending{background:#FEF2F2;color:var(--red)}
+.pay-toggle.info{background:var(--g100);color:var(--g400);cursor:default}
 .agenda-del{background:var(--g100);border:none;border-radius:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--g500)}
 .agenda-empty-group{font-size:11px;font-weight:500;color:var(--g400);text-transform:uppercase;letter-spacing:.06em;margin:1.25rem 0 8px;padding-bottom:6px;border-bottom:.5px solid var(--bd)}
 
@@ -763,6 +767,11 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
     <input type="text" class="inp" id="citaCliente" placeholder="Ej. Ana García">
     <label class="mfl" style="margin-top:10px">Servicio</label>
     <input type="text" class="inp" id="citaServicio" placeholder="Ej. Método 3M — Sesión 11">
+    <label class="mfl-check">
+      <input type="checkbox" id="citaRequierePago" checked>
+      <span>Esta cita requiere seguimiento de pago individual</span>
+    </label>
+    <p class="mfl-hint">Desactívalo para sesiones de Método 3M — ese pago ya se gestiona una vez al inicio del programa, no por sesión.</p>
     <label class="mfl" style="margin-top:10px">Fecha *</label>
     <input type="date" class="inp" id="citaFecha">
     <label class="mfl" style="margin-top:10px">Hora</label>
@@ -1059,7 +1068,7 @@ async function loadDashboard(){
   }).join(''):'<p class="dash-empty">Sin sesiones para hoy o mañana.</p>';
 
   // ── Pagos pendientes/atrasados ──
-  const impagos=dashCitas.filter(c=>!c.pagado).sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  const impagos=dashCitas.filter(c=>!c.pagado&&c.requiere_pago!==false).sort((a,b)=>a.fecha.localeCompare(b.fecha));
   document.getElementById('dashPagosCount').textContent=impagos.length;
   document.getElementById('dashPagos').innerHTML=impagos.length?impagos.slice(0,5).map(c=>{
     const atrasado=c.fecha<todayISO;
@@ -1192,6 +1201,12 @@ function renderDash(){
 }
 
 // ── DETAIL ──
+async function toggleClientePago(id){
+  const c=clients.find(x=>x.id===id); if(!c)return;
+  c.pagado=!c.pagado;
+  await patch(id,{pagado:c.pagado});
+  openDet(id);
+}
 function openDet(id){
   currentId=id;
   const c=clients.find(x=>x.id===id); if(!c)return;
@@ -1217,6 +1232,7 @@ function openDet(id){
             📅 ${c.semana||0} de 12 semanas completadas
             ${(c.semana||0)<12?' · Semana '+((c.semana||0)+1)+' activa':''}
           </div>
+          <button class="pay-toggle ${c.pagado?'paid':'pending'}" style="margin-top:8px" onclick="toggleClientePago(${c.id})">${c.pagado?'✓ Pago del programa recibido':'Pago del programa pendiente'}</button>
         </div>
         <div class="act-bar">
           <button class="btn-action primary" onclick="openUnlock(${id})">
@@ -1562,7 +1578,7 @@ async function syncDepCita(nombre, fecha) {
     if (existing && existing.length) {
       await patchCita(existing[0].id, { fecha });
     } else {
-      await insertCita({ cliente: nombre, servicio: servicioTag, fecha, hora: null, nota: null, pagado: false });
+      await insertCita({ cliente: nombre, servicio: servicioTag, fecha, hora: null, nota: null, pagado: false, requiere_pago: true });
     }
   } catch(e) { /* silencioso: no bloquear el guardado del deportista si falla la sync */ }
 }
@@ -1632,7 +1648,7 @@ function renderWeekView(){
     const isToday = iso===todayISO;
     const dayCitas = citas.filter(c=>c.fecha===iso).sort((a,b)=>(a.hora||'').localeCompare(b.hora||''));
     const chips = dayCitas.length
-      ? dayCitas.map(c=>`<div class="week-chip${c.pagado?' paid':''}" onclick="show('vagenda');setAgendaView('lista')">
+      ? dayCitas.map(c=>`<div class="week-chip${(c.pagado||c.requiere_pago===false)?' paid':''}" onclick="show('vagenda');setAgendaView('lista')">
           <span class="week-chip-time">${c.hora?c.hora.slice(0,5):''}</span>
           <span class="week-chip-name">${c.cliente}</span>
         </div>`).join('')
@@ -1678,6 +1694,10 @@ function renderCitaItem(c, isPast) {
   const month = MESES_CORTO[d.getMonth()];
   const horaTxt = c.hora ? ` · ${c.hora.slice(0,5)}h` : '';
   const paid = !!c.pagado;
+  const needsPay = c.requiere_pago !== false;
+  const payHtml = needsPay
+    ? `<button class="pay-toggle ${paid?'paid':'pending'}" onclick="toggleCitaPago(${c.id})">${paid?'✓ Pagado':'Pendiente'}</button>`
+    : `<span class="pay-toggle info">Sin pago individual</span>`;
   return `<div class="agenda-item${isPast?' past':''}">
     <div class="agenda-date-box">
       <div class="agenda-date-day">${day}</div>
@@ -1688,7 +1708,7 @@ function renderCitaItem(c, isPast) {
       <div class="agenda-meta">${c.servicio || 'Revisión'}${horaTxt}${c.nota?' · '+c.nota:''}</div>
     </div>
     <div class="agenda-actions">
-      <button class="pay-toggle ${paid?'paid':'pending'}" onclick="toggleCitaPago(${c.id})">${paid?'✓ Pagado':'Pendiente'}</button>
+      ${payHtml}
       <button class="agenda-del" onclick="removeCita(${c.id})">
         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
       </button>
@@ -1719,6 +1739,7 @@ function openAddCita() {
 function closeAddCita() {
   document.getElementById('mAddCita').style.display = 'none';
   ['citaCliente','citaServicio','citaFecha','citaHora','citaNota'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('citaRequierePago').checked = true;
   document.getElementById('mAddCitaErr').textContent = '';
 }
 async function createCita() {
@@ -1732,7 +1753,8 @@ async function createCita() {
       fecha,
       hora: document.getElementById('citaHora').value || null,
       nota: document.getElementById('citaNota').value.trim() || null,
-      pagado: false
+      pagado: false,
+      requiere_pago: document.getElementById('citaRequierePago').checked
     });
     closeAddCita();
     await loadCitas();
