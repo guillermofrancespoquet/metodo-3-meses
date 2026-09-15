@@ -247,6 +247,9 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .dep-search input{width:100%;padding:9px 14px 9px 34px;border:.5px solid var(--bdm);border-radius:10px;font-size:13px;font-family:var(--f);outline:none;transition:border-color .15s;background:var(--sf)}
 .dep-search input:focus{border-color:var(--gold)}
 .dep-search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--g400);pointer-events:none}
+.dep-chip{background:var(--g100);border:.5px solid transparent;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:500;color:var(--g500);cursor:pointer;font-family:var(--f);white-space:nowrap;transition:all .15s}
+.dep-chip.active{background:var(--gold-50);border-color:rgba(184,149,106,.3);color:var(--gold-dk)}
+.dep-chip:hover:not(.active){background:var(--g200)}
 .depd-actividad-line{font-size:11px;color:var(--g400);margin-top:8px;padding-left:2px}
 .hist-add{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
 .btn-hist-add{background:var(--t400);border:none;border-radius:8px;color:#fff;font-size:12px;font-weight:600;padding:0 16px;cursor:pointer;font-family:var(--f);white-space:nowrap}
@@ -287,6 +290,8 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .pay-toggle.pending{background:#FEF2F2;color:var(--red)}
 .pay-toggle.info{background:var(--g100);color:var(--g400);cursor:default}
 .agenda-del{background:var(--g100);border:none;border-radius:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--g500)}
+.agenda-wa{background:#E7F7EE;border:none;border-radius:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#25D366}
+.agenda-wa:hover{background:#D4F0DF}
 .agenda-empty-group{font-size:11px;font-weight:500;color:var(--g400);text-transform:uppercase;letter-spacing:.06em;margin:1.25rem 0 8px;padding-bottom:6px;border-bottom:.5px solid var(--bd)}
 
 
@@ -366,6 +371,8 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .rem-txt.done{color:var(--g400);text-decoration:line-through}
 .rem-del{background:none;border:none;color:var(--g400);cursor:pointer;padding:2px;flex-shrink:0;opacity:0;transition:opacity .15s}
 .rem-item:hover .rem-del{opacity:1}
+.agenda-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
+.agenda-chips{display:flex;gap:6px;flex-wrap:wrap}
 .agenda-tabs{display:flex;gap:6px;margin-bottom:1.25rem;background:var(--g100);border-radius:10px;padding:3px;width:fit-content}
 .agenda-tab{background:transparent;border:none;border-radius:8px;padding:7px 18px;font-size:12.5px;font-weight:600;color:var(--g500);cursor:pointer;font-family:var(--f);transition:all .15s}
 .agenda-tab.on{background:#fff;color:var(--t800);box-shadow:0 1px 4px rgba(0,0,0,.08)}
@@ -387,6 +394,12 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .week-chip.paid .week-chip-time{color:var(--t600)}
 .week-chip-name{color:var(--g700);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .week-day-empty{font-size:10px;color:var(--g200);text-align:center;padding-top:10px}
+.fact-period-tabs{display:flex;gap:6px;background:var(--g100);border-radius:10px;padding:3px;width:fit-content}
+.fact-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:.5px solid var(--bd)}
+.fact-row:last-child{border-bottom:none}
+.fact-row-name{flex:1;font-size:12.5px;font-weight:600;color:var(--g900)}
+.fact-row-date{font-size:11px;color:var(--g400)}
+.fact-row-amount{font-size:13px;font-weight:700;color:var(--t600)}
 .dash-hero{margin-bottom:1.75rem}
 .dash-greet{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
 .dash-date{font-size:13px;color:var(--g400);text-transform:capitalize}
@@ -444,6 +457,31 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
   .gsearch-modal{max-width:100%;margin:0 .75rem}
 }
 
+
+
+/* ═══ EXPORTAR PDF (print) ═══ */
+#printArea{display:none}
+@media print{
+  body *{visibility:hidden}
+  #printArea, #printArea *{visibility:visible}
+  #printArea{display:block !important;position:absolute;top:0;left:0;width:100%;padding:0;margin:0}
+  .sidebar,.mobile-topbar,.sidebar-backdrop,.mbg{display:none !important}
+  @page{margin:14mm}
+}
+.pdf-hero{background:linear-gradient(135deg,#163a47 0%,#1f4d5e 100%);border-radius:18px;padding:22px 28px;color:#f7f4ee;margin-bottom:20px}
+.pdf-brand{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#d9b88c;margin:0 0 6px;font-weight:600}
+.pdf-hero h1{font-size:22px;margin:0 0 5px;font-weight:700}
+.pdf-hero p{margin:0;font-size:12px;color:#e7dfd2}
+.pdf-section{margin-bottom:18px}
+.pdf-section-title{font-size:11px;font-weight:700;color:#163a47;text-transform:uppercase;letter-spacing:1px;margin:0 0 8px;border-bottom:1px solid #e2d8c5;padding-bottom:5px}
+.pdf-row{display:flex;justify-content:space-between;padding:5px 0;font-size:12.5px;border-bottom:.5px solid #f0ebe0}
+.pdf-row .l{color:#6b6b6b}
+.pdf-row .v{color:#163a47;font-weight:600}
+.pdf-box{background:#faf8f3;border:1px solid #ece4d6;border-radius:10px;padding:12px 16px;font-size:12px;color:#3a3a3a;line-height:1.6}
+.pdf-badge{display:inline-block;font-size:10.5px;font-weight:700;padding:3px 10px;border-radius:20px;margin-left:6px}
+.pdf-badge.ok{background:#e4f0e6;color:#3f7a4c}
+.pdf-badge.pending{background:#FEF2F2;color:#c0392b}
+.pdf-foot{text-align:center;margin-top:24px;font-size:9px;color:#a89c89;letter-spacing:1px;text-transform:uppercase}
 
 </style>
 </head>
@@ -512,6 +550,10 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
     <button class="sb-item" id="sbDep" onclick="navTo('deportiva')">
       <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
       Nutrición Deportiva
+    </button>
+    <button class="sb-item" id="sbFact" onclick="navTo('facturacion')">
+      <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Facturación
     </button>
   </div>
   <div class="sb-foot">
@@ -586,6 +628,48 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 
 
 <!-- DEPORTISTAS DASHBOARD -->
+<!-- FACTURACIÓN -->
+<div id="vfact" class="view">
+  <div class="page">
+    <div class="page-header">
+      <div><p class="page-title">Facturación</p><p class="page-sub" id="factsub">Cargando…</p></div>
+    </div>
+
+    <div class="fact-period-tabs">
+      <button class="agenda-tab on" id="tabFactMes" onclick="setFactPeriod('mes')">Este mes</button>
+      <button class="agenda-tab" id="tabFactAno" onclick="setFactPeriod('ano')">Este año</button>
+      <button class="agenda-tab" id="tabFactTodo" onclick="setFactPeriod('todo')">Todo</button>
+    </div>
+
+    <div class="dash-stats" id="factStats" style="margin:1.25rem 0 1.5rem"></div>
+
+    <div class="dash-grid">
+      <div class="dash-card">
+        <div class="dash-card-head">
+          <span class="dash-card-title"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Método 3M</span>
+          <span class="dash-card-count" id="factM3MCount">0</span>
+        </div>
+        <div id="factM3MList"></div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-head">
+          <span class="dash-card-title"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Nutrición Deportiva</span>
+          <span class="dash-card-count" id="factDepCount">0</span>
+        </div>
+        <div id="factDepList"></div>
+      </div>
+    </div>
+
+    <div class="dash-card" style="margin-top:1.5rem">
+      <div class="dash-card-head">
+        <span class="dash-card-title"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Pendiente de cobro</span>
+        <span class="dash-card-count" id="factPendCount">0</span>
+      </div>
+      <div id="factPendList"></div>
+    </div>
+  </div>
+</div>
+
 <div id="vdepdash" class="view">
   <div class="page">
     <div class="page-header">
@@ -726,10 +810,28 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
   <div class="page">
     <div class="page-header">
       <div><p class="page-title">Agenda</p><p class="page-sub" id="agendasub">Cargando…</p></div>
-      <button class="btn-add" onclick="openAddCita()">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Nueva cita
-      </button>
+      <div style="display:flex;gap:8px">
+        <button class="btn-add" style="background:var(--g100);color:var(--g700)" onclick="exportICS()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4"/></svg>
+          Exportar calendario
+        </button>
+        <button class="btn-add" onclick="openAddCita()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nueva cita
+        </button>
+      </div>
+    </div>
+    <div class="agenda-toolbar">
+      <div class="dep-search" style="flex:1;min-width:160px">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="agendaSearchInp" placeholder="Buscar por cliente…" oninput="filterAgenda()">
+      </div>
+      <div class="agenda-chips" id="agendaChips">
+        <button class="dep-chip active" data-tipo="todas" onclick="setAgendaFilter('todas')">Todas</button>
+        <button class="dep-chip" data-tipo="metodo" onclick="setAgendaFilter('metodo')">Método 3M</button>
+        <button class="dep-chip" data-tipo="deportiva" onclick="setAgendaFilter('deportiva')">Nutrición Deportiva</button>
+        <button class="dep-chip" data-tipo="otras" onclick="setAgendaFilter('otras')">Otras</button>
+      </div>
     </div>
     <div class="agenda-tabs">
       <button class="agenda-tab on" id="tabLista" onclick="setAgendaView('lista')">Lista</button>
@@ -748,6 +850,7 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
       </div>
     </div>
   </div>
+
 </div>
 
 <!-- MODAL: BÚSQUEDA GLOBAL -->
@@ -845,6 +948,9 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
     </div>
   </div>
 </div>
+
+<!-- ÁREA DE IMPRESIÓN (solo visible al exportar PDF) -->
+<div id="printArea"></div>
 
 <script>
 const SURL='https://knmucvrbxpzmrjwxyksj.supabase.co';
@@ -1049,6 +1155,79 @@ document.addEventListener('keydown', function(e){
   }
 });
 
+
+// ═══════════════ FACTURACIÓN ═══════════════
+let factPeriod = 'mes';
+let factData = {clients:[], citas:[]};
+
+function setFactPeriod(p){
+  factPeriod = p;
+  document.getElementById('tabFactMes').classList.toggle('on', p==='mes');
+  document.getElementById('tabFactAno').classList.toggle('on', p==='ano');
+  document.getElementById('tabFactTodo').classList.toggle('on', p==='todo');
+  renderFacturacion();
+}
+
+function enPeriodo(fechaStr, hoy){
+  const f = new Date(fechaStr+'T00:00:00');
+  if(factPeriod==='mes') return f.getFullYear()===hoy.getFullYear() && f.getMonth()===hoy.getMonth();
+  if(factPeriod==='ano') return f.getFullYear()===hoy.getFullYear();
+  return true;
+}
+
+async function loadFacturacion(){
+  const [c, ci] = await Promise.all([getAll(), getCitas()]);
+  factData.clients = c || [];
+  factData.citas = ci || [];
+  renderFacturacion();
+}
+
+function renderFacturacion(){
+  const hoy = new Date();
+  const fmtMoney = n => n.toLocaleString('es-ES',{style:'currency',currency:'EUR',minimumFractionDigits:0});
+
+  // Método 3M: pagos únicos marcados como pagado, filtrados por fecha de creación (proxy: created_at)
+  const m3mPagados = factData.clients.filter(c => c.pagado && c.created_at && enPeriodo(c.created_at.slice(0,10), hoy));
+  const totalM3M = m3mPagados.reduce((a,c)=>a+(Number(c.monto)||350),0);
+  document.getElementById('factM3MCount').textContent = m3mPagados.length;
+  document.getElementById('factM3MList').innerHTML = m3mPagados.length ? m3mPagados.map(c=>`
+    <div class="fact-row">
+      <div class="fact-row-name">${c.nombre}</div>
+      <div class="fact-row-amount">${fmtMoney(Number(c.monto)||350)}</div>
+    </div>`).join('') : '<p class="dash-empty">Sin pagos en este periodo.</p>';
+
+  // Nutrición Deportiva: citas pagadas con requiere_pago, filtradas por fecha
+  const depPagadas = factData.citas.filter(c => c.pagado && c.requiere_pago!==false && enPeriodo(c.fecha, hoy));
+  const totalDep = depPagadas.reduce((a,c)=>a+(Number(c.monto)||40),0);
+  document.getElementById('factDepCount').textContent = depPagadas.length;
+  document.getElementById('factDepList').innerHTML = depPagadas.length ? depPagadas.map(c=>`
+    <div class="fact-row">
+      <div class="fact-row-name">${c.cliente}<div class="fact-row-date">${new Date(c.fecha+'T00:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'short'})}</div></div>
+      <div class="fact-row-amount">${fmtMoney(Number(c.monto)||40)}</div>
+    </div>`).join('') : '<p class="dash-empty">Sin pagos en este periodo.</p>';
+
+  // Pendientes de cobro (todas, sin filtrar por periodo — lo pendiente es pendiente ahora)
+  const pendM3M = factData.clients.filter(c => !c.pagado);
+  const pendDep = factData.citas.filter(c => !c.pagado && c.requiere_pago!==false);
+  const totalPend = pendM3M.reduce((a,c)=>a+(Number(c.monto)||350),0) + pendDep.reduce((a,c)=>a+(Number(c.monto)||40),0);
+  document.getElementById('factPendCount').textContent = pendM3M.length + pendDep.length;
+  let pendHtml = '';
+  pendM3M.forEach(c=>{ pendHtml += `<div class="fact-row"><div class="fact-row-name">${c.nombre}<div class="fact-row-date">Método 3M · pago único</div></div><div class="fact-row-amount" style="color:var(--red)">${fmtMoney(Number(c.monto)||350)}</div></div>`; });
+  pendDep.forEach(c=>{ pendHtml += `<div class="fact-row"><div class="fact-row-name">${c.cliente}<div class="fact-row-date">${c.servicio||'Revisión'} · ${new Date(c.fecha+'T00:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'short'})}</div></div><div class="fact-row-amount" style="color:var(--red)">${fmtMoney(Number(c.monto)||40)}</div></div>`; });
+  document.getElementById('factPendList').innerHTML = pendHtml || '<p class="dash-empty">Nada pendiente de cobro.</p>';
+
+  const totalCobrado = totalM3M + totalDep;
+  const periodoLabel = factPeriod==='mes' ? hoy.toLocaleDateString('es-ES',{month:'long',year:'numeric'}) : factPeriod==='ano' ? hoy.getFullYear() : 'histórico completo';
+  document.getElementById('factsub').textContent = `Periodo: ${periodoLabel}`;
+
+  document.getElementById('factStats').innerHTML = `
+    <div class="dash-stat"><div class="dash-stat-n">${fmtMoney(totalCobrado)}</div><div class="dash-stat-l">Total cobrado</div></div>
+    <div class="dash-stat"><div class="dash-stat-n">${fmtMoney(totalM3M)}</div><div class="dash-stat-l">Método 3M</div></div>
+    <div class="dash-stat"><div class="dash-stat-n">${fmtMoney(totalDep)}</div><div class="dash-stat-l">Nutrición Deportiva</div></div>
+    <div class="dash-stat"><div class="dash-stat-n" style="color:var(--red)">${fmtMoney(totalPend)}</div><div class="dash-stat-l">Pendiente de cobro</div></div>
+  `;
+}
+
 async function loadDashboard(){
   document.getElementById('dashDate').textContent=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   loadRecordatorios();
@@ -1154,6 +1333,7 @@ function navTo(section){
   else if(section==='agenda'){document.getElementById('sbAgenda').classList.add('on');show('vagenda');loadCitas();}
   else if(section==='metodo'){document.getElementById('sbMetodo').classList.add('on');show('vdash');load();}
   else if(section==='deportiva'){document.getElementById('sbDep').classList.add('on');show('vdepdash');loadDeportistas();}
+  else if(section==='facturacion'){document.getElementById('sbFact').classList.add('on');show('vfact');loadFacturacion();}
   closeMobileSidebar();
 }
 
@@ -1242,11 +1422,19 @@ function openDet(id){
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             Desbloquear
           </button>
+          <button class="btn-action" style="background:#E7F7EE;color:#1DA851" onclick="sendWhatsAppGenerico('${c.nombre.replace(/'/g,"\\'")}')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.05 2zm5.72 14.17c-.24.68-1.39 1.3-1.91 1.35-.49.05-1.09.08-1.75-.11-.4-.12-.92-.29-1.58-.57-2.79-1.2-4.61-4-4.75-4.19-.14-.19-1.14-1.51-1.14-2.88 0-1.37.72-2.04.97-2.32.25-.28.55-.35.73-.35.19 0 .37 0 .53.01.17.01.4-.06.62.48.24.58.81 1.99.88 2.13.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.29.29-.12.57.17.28.75 1.24 1.61 2.01 1.11.99 2.04 1.3 2.32 1.44.28.14.44.12.61-.07.17-.19.71-.82.9-1.11.19-.28.38-.23.63-.14.26.09 1.65.78 1.93.92.28.14.47.21.53.33.07.12.07.68-.17 1.36z"/></svg>
+            WhatsApp
+          </button>
           ${(c.semana||0)>0?`<button class="btn-action warning" onclick="openRelock(${id})">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><line x1="12" y1="15" x2="12" y2="17"/></svg>
             Rebloquear
           </button>`:''}
           <div class="act-bar-sep"></div>
+          <button class="btn-action" style="background:var(--gold-50);color:var(--gold-dk)" onclick="exportClientePDF(${id})">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Exportar PDF
+          </button>
           <button class="btn-action danger" onclick="openDel(${id})">
             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
             Eliminar
@@ -1570,18 +1758,21 @@ async function saveEditDep() {
 // ═══════════════ SINCRONIZACIÓN AUTOMÁTICA: revisión deportista → agenda ═══════════════
 async function syncDepCita(nombre, fecha) {
   const servicioTag = 'Revisión · Nutrición Deportiva';
+  const todayISO = new Date().toISOString().slice(0,10);
   try {
-    const existing = await sb(`citas?select=id&cliente=eq.${encodeURIComponent(nombre)}&servicio=eq.${encodeURIComponent(servicioTag)}`);
+    const existing = await sb(`citas?select=id,fecha&cliente=eq.${encodeURIComponent(nombre)}&servicio=eq.${encodeURIComponent(servicioTag)}`) || [];
+    const futuras = existing.filter(e => e.fecha >= todayISO).sort((a,b)=>a.fecha.localeCompare(b.fecha));
     if (!fecha) {
-      if (existing && existing.length) {
-        for (const e of existing) await deleteCita(e.id);
-      }
+      // Solo borramos revisiones futuras aún no ocurridas; el histórico pasado se conserva
+      for (const e of futuras) await deleteCita(e.id);
       return;
     }
-    if (existing && existing.length) {
-      await patchCita(existing[0].id, { fecha });
+    if (futuras.length) {
+      // Reprogramar la próxima revisión pendiente en vez de crear otra
+      await patchCita(futuras[0].id, { fecha });
     } else {
-      await insertCita({ cliente: nombre, servicio: servicioTag, fecha, hora: null, nota: null, pagado: false, requiere_pago: true });
+      // No hay ninguna futura (o la anterior ya pasó y quedó como histórico) → crear una nueva
+      await insertCita({ cliente: nombre, servicio: servicioTag, fecha, hora: null, nota: null, pagado: false, requiere_pago: true, monto: 40 });
     }
   } catch(e) { /* silencioso: no bloquear el guardado del deportista si falla la sync */ }
 }
@@ -1666,16 +1857,47 @@ function renderWeekView(){
   }).join('');
 }
 
-function renderCitas() {
-  const today = new Date(); today.setHours(0,0,0,0);
-  const proximas = citas.filter(c => new Date(c.fecha) >= today);
-  const pasadas = citas.filter(c => new Date(c.fecha) < today).reverse();
+let agendaFilterTipo = 'todas';
+let agendaSearchTerm = '';
 
-  document.getElementById('agendasub').textContent = citas.length ? `${proximas.length} próxima${proximas.length!==1?'s':''}${pasadas.length?` · ${pasadas.length} pasada${pasadas.length!==1?'s':''}`:''}` : 'Sin citas todavía';
+function citaTipo(c){
+  const s = (c.servicio||'').toLowerCase();
+  if (s.includes('método 3m') || s.includes('metodo 3m')) return 'metodo';
+  if (s.includes('nutrición deportiva') || s.includes('nutricion deportiva')) return 'deportiva';
+  return 'otras';
+}
+
+function setAgendaFilter(tipo){
+  agendaFilterTipo = tipo;
+  document.querySelectorAll('#agendaChips .dep-chip').forEach(b=>b.classList.toggle('active', b.dataset.tipo===tipo));
+  renderCitas();
+}
+function filterAgenda(){
+  agendaSearchTerm = document.getElementById('agendaSearchInp').value.trim().toLowerCase();
+  renderCitas();
+}
+
+function renderCitas() {
+  let filtered = citas;
+  if (agendaFilterTipo !== 'todas') filtered = filtered.filter(c => citaTipo(c) === agendaFilterTipo);
+  if (agendaSearchTerm) filtered = filtered.filter(c => c.cliente.toLowerCase().includes(agendaSearchTerm));
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const proximas = filtered.filter(c => new Date(c.fecha) >= today);
+  const pasadas = filtered.filter(c => new Date(c.fecha) < today).reverse();
+
+  const filtroActivo = agendaFilterTipo !== 'todas' || agendaSearchTerm;
+  document.getElementById('agendasub').textContent = citas.length
+    ? `${proximas.length} próxima${proximas.length!==1?'s':''}${pasadas.length?` · ${pasadas.length} pasada${pasadas.length!==1?'s':''}`:''}${filtroActivo?` · ${filtered.length} de ${citas.length} totales`:''}`
+    : 'Sin citas todavía';
 
   const listEl = document.getElementById('agendaList');
   if (!citas.length) {
     listEl.innerHTML = '<div class="dep-empty"><p class="empty-t">Sin citas todavía</p><p class="empty-s">Pulsa "Nueva cita" para empezar a llevar tu agenda.</p></div>';
+    return;
+  }
+  if (!filtered.length) {
+    listEl.innerHTML = '<div class="dep-empty"><p class="empty-t">Sin resultados</p><p class="empty-s">Prueba con otro filtro o busca otro nombre.</p></div>';
     return;
   }
 
@@ -1689,6 +1911,121 @@ function renderCitas() {
     html += pasadas.map(c => renderCitaItem(c, true)).join('');
   }
   listEl.innerHTML = html;
+}
+
+// ═══════════════ WHATSAPP RÁPIDO ═══════════════
+// ═══════════════ EXPORTAR CALENDARIO (.ics) ═══════════════
+// ═══════════════ EXPORTAR PDF (vía impresión del navegador) ═══════════════
+function printNow(){
+  setTimeout(()=>{ window.print(); }, 100);
+}
+
+function exportClientePDF(id){
+  const c = clients.find(x=>x.id===id); if(!c) return;
+  const wNum = Math.min((c.semana||0)+1,12);
+  const pct = Math.round((c.semana||0)/12*100);
+  const html = `
+    <div class="pdf-hero">
+      <p class="pdf-brand">Método 3 Meses · Ficha de cliente</p>
+      <h1>${c.nombre}</h1>
+      <p>Programa de nutrición · 12 semanas</p>
+    </div>
+    <div class="pdf-section">
+      <p class="pdf-section-title">Progreso del programa</p>
+      <div class="pdf-row"><span class="l">Semana actual</span><span class="v">${wNum} de 12</span></div>
+      <div class="pdf-row"><span class="l">Progreso completado</span><span class="v">${pct}%</span></div>
+      <div class="pdf-row"><span class="l">Email</span><span class="v">${c.email||'—'}</span></div>
+      <div class="pdf-row"><span class="l">Pago del programa</span><span class="v"><span class="pdf-badge ${c.pagado?'ok':'pending'}">${c.pagado?'✓ Pagado':'Pendiente'}</span></span></div>
+    </div>
+    <div class="pdf-section">
+      <p class="pdf-section-title">Notas privadas</p>
+      <div class="pdf-box">${(c.notas||'Sin notas registradas.').replace(/\\n/g,'<br>')}</div>
+    </div>
+    <p class="pdf-foot">NutriLogos · Ciencia con propósito · Exportado el ${new Date().toLocaleDateString('es-ES')}</p>
+  `;
+  document.getElementById('printArea').innerHTML = html;
+  printNow();
+}
+
+function exportDeportistaPDF(id){
+  const d = deportistas.find(x=>x.id===id); if(!d) return;
+  const revTxt = d.proxima_revision ? new Date(d.proxima_revision+'T00:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'}) : 'Sin fecha establecida';
+  const html = `
+    <div class="pdf-hero">
+      <p class="pdf-brand">Nutrición Deportiva · Ficha de deportista</p>
+      <h1>${d.nombre}</h1>
+      <p>${d.deporte||'Modalidad sin especificar'}</p>
+    </div>
+    <div class="pdf-section">
+      <p class="pdf-section-title">Datos generales</p>
+      <div class="pdf-row"><span class="l">Objetivo</span><span class="v">${d.objetivo||'—'}</span></div>
+      <div class="pdf-row"><span class="l">Próxima revisión</span><span class="v">${revTxt}</span></div>
+      <div class="pdf-row"><span class="l">Plan nutricional</span><span class="v">${d.plan_url||'—'}</span></div>
+    </div>
+    <div class="pdf-section">
+      <p class="pdf-section-title">Descripción</p>
+      <div class="pdf-box">${(d.descripcion||'Sin descripción registrada.').replace(/\\n/g,'<br>')}</div>
+    </div>
+    <div class="pdf-section">
+      <p class="pdf-section-title">Notas privadas</p>
+      <div class="pdf-box">${(d.notas||'Sin notas registradas.').replace(/\\n/g,'<br>')}</div>
+    </div>
+    <p class="pdf-foot">NutriLogos · Ciencia con propósito · Exportado el ${new Date().toLocaleDateString('es-ES')}</p>
+  `;
+  document.getElementById('printArea').innerHTML = html;
+  printNow();
+}
+
+function exportICS(){
+  if(!citas.length){ alert('No hay citas para exportar.'); return; }
+  const pad = n => String(n).padStart(2,'0');
+  const esc = s => (s||'').replace(/[\\,;]/g, m => '\\'+m).replace(/\n/g,'\\n');
+  let ics = 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//NutriLogos//Panel Profesional//ES\r\nCALSCALE:GREGORIAN\r\n';
+  citas.forEach(c=>{
+    const [y,m,d] = c.fecha.split('-');
+    let dtstart, dtend, allday=false;
+    if(c.hora){
+      const [hh,mm] = c.hora.split(':');
+      dtstart = `${y}${m}${d}T${pad(hh)}${pad(mm)}00`;
+      const endDate = new Date(`${c.fecha}T${c.hora}`);
+      endDate.setMinutes(endDate.getMinutes()+45);
+      dtend = `${endDate.getFullYear()}${pad(endDate.getMonth()+1)}${pad(endDate.getDate())}T${pad(endDate.getHours())}${pad(endDate.getMinutes())}00`;
+    } else {
+      allday = true;
+      dtstart = `${y}${m}${d}`;
+      const nd = new Date(c.fecha+'T00:00:00'); nd.setDate(nd.getDate()+1);
+      dtend = `${nd.getFullYear()}${pad(nd.getMonth()+1)}${pad(nd.getDate())}`;
+    }
+    ics += 'BEGIN:VEVENT\r\n';
+    ics += `UID:cita-${c.id}@nutrilogos\r\n`;
+    ics += `DTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').split('.')[0]}Z\r\n`;
+    ics += allday ? `DTSTART;VALUE=DATE:${dtstart}\r\nDTEND;VALUE=DATE:${dtend}\r\n` : `DTSTART:${dtstart}\r\nDTEND:${dtend}\r\n`;
+    ics += `SUMMARY:${esc(c.cliente+' — '+(c.servicio||'Revisión'))}\r\n`;
+    if(c.nota) ics += `DESCRIPTION:${esc(c.nota)}\r\n`;
+    ics += 'END:VEVENT\r\n';
+  });
+  ics += 'END:VCALENDAR\r\n';
+  const blob = new Blob([ics], {type:'text/calendar;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `agenda-nutrilogos-${new Date().toISOString().slice(0,10)}.ics`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function sendWhatsAppRecordatorio(cliente, fecha, hora, servicio){
+  const d = new Date(fecha+'T00:00:00');
+  const dateStr = d.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
+  const horaTxt = hora ? ` a las ${hora.slice(0,5)}h` : '';
+  const msg = `Hola ${cliente}! Te escribo para recordarte tu próxima cita de ${servicio} el ${dateStr}${horaTxt}. ¡Nos vemos! 💪`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+}
+function sendWhatsAppGenerico(nombre){
+  const msg = `Hola ${nombre}! `;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
 function renderCitaItem(c, isPast) {
@@ -1712,6 +2049,9 @@ function renderCitaItem(c, isPast) {
     </div>
     <div class="agenda-actions">
       ${payHtml}
+      <button class="agenda-wa" onclick="sendWhatsAppRecordatorio('${c.cliente.replace(/'/g,"\\'")}','${c.fecha}',${c.hora?`'${c.hora}'`:'null'},'${(c.servicio||'Revisión').replace(/'/g,"\\'")}')" title="Enviar recordatorio por WhatsApp">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.05 2zm5.72 14.17c-.24.68-1.39 1.3-1.91 1.35-.49.05-1.09.08-1.75-.11-.4-.12-.92-.29-1.58-.57-2.79-1.2-4.61-4-4.75-4.19-.14-.19-1.14-1.51-1.14-2.88 0-1.37.72-2.04.97-2.32.25-.28.55-.35.73-.35.19 0 .37 0 .53.01.17.01.4-.06.62.48.24.58.81 1.99.88 2.13.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.29.29-.12.57.17.28.75 1.24 1.61 2.01 1.11.99 2.04 1.3 2.32 1.44.28.14.44.12.61-.07.17-.19.71-.82.9-1.11.19-.28.38-.23.63-.14.26.09 1.65.78 1.93.92.28.14.47.21.53.33.07.12.07.68-.17 1.36z"/></svg>
+      </button>
       <button class="agenda-del" onclick="removeCita(${c.id})">
         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
       </button>
@@ -1867,9 +2207,17 @@ function openDepDet(id) {
         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         Registrar contacto
       </button>
+      <button class="btn-action" style="background:#E7F7EE;color:#1DA851" onclick="sendWhatsAppGenerico('${d.nombre.replace(/'/g,"\\'")}')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.05 2zm5.72 14.17c-.24.68-1.39 1.3-1.91 1.35-.49.05-1.09.08-1.75-.11-.4-.12-.92-.29-1.58-.57-2.79-1.2-4.61-4-4.75-4.19-.14-.19-1.14-1.51-1.14-2.88 0-1.37.72-2.04.97-2.32.25-.28.55-.35.73-.35.19 0 .37 0 .53.01.17.01.4-.06.62.48.24.58.81 1.99.88 2.13.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.29.29-.12.57.17.28.75 1.24 1.61 2.01 1.11.99 2.04 1.3 2.32 1.44.28.14.44.12.61-.07.17-.19.71-.82.9-1.11.19-.28.38-.23.63-.14.26.09 1.65.78 1.93.92.28.14.47.21.53.33.07.12.07.68-.17 1.36z"/></svg>
+        WhatsApp
+      </button>
       <button class="btn-action" style="background:var(--gold-50);color:var(--gold-dk)" onclick="openEditDep(${d.id})">
         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         Editar
+      </button>
+      <button class="btn-action" style="background:var(--t50);color:var(--t600)" onclick="exportDeportistaPDF(${d.id})">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Exportar PDF
       </button>
       <button class="btn-action danger" onclick="openDelDep(${d.id})">
         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
