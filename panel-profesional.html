@@ -250,7 +250,10 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .depd-actividad-line{font-size:11px;color:var(--g400);margin-top:8px;padding-left:2px}
 .hist-add{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
 .btn-hist-add{background:var(--t400);border:none;border-radius:8px;color:#fff;font-size:12px;font-weight:600;padding:0 16px;cursor:pointer;font-family:var(--f);white-space:nowrap}
-.hist-item{display:flex;gap:10px;padding:9px 0;border-bottom:.5px solid var(--bd)}
+.hist-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:.5px solid var(--bd)}
+.hist-del{background:none;border:none;color:var(--g400);cursor:pointer;padding:3px;flex-shrink:0;opacity:0;transition:opacity .15s}
+.hist-item:hover .hist-del{opacity:1}
+.hist-del:hover{color:var(--red)}
 .hist-item:last-child{border-bottom:none}
 .hist-date{font-size:11px;font-weight:600;color:var(--gold-dk);white-space:nowrap;padding-top:1px}
 .hist-nota{font-size:12.5px;color:var(--g700);flex:1}
@@ -1954,6 +1957,7 @@ function actividadTexto(ultima){
 
 const getHistorial = (depId) => sb(`historial_deportista?deportista_id=eq.${depId}&select=*&order=fecha.desc`);
 const insertHistorial = (d) => sb('historial_deportista', {method:'POST', body: JSON.stringify(d)});
+const deleteHistorialRow = (rowId) => sb(`historial_deportista?id=eq.${rowId}`, {method:'DELETE', headers:{'Prefer':'return=minimal'}});
 
 async function loadHistorial(depId){
   const rows = await getHistorial(depId) || [];
@@ -1962,8 +1966,23 @@ async function loadHistorial(depId){
   if(!rows.length){ el.innerHTML = '<p style="font-size:12px;color:var(--g400);padding:6px 0">Sin sesiones registradas todavía.</p>'; return; }
   el.innerHTML = rows.map(r => {
     const dateStr = new Date(r.fecha+'T00:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'});
-    return `<div class="hist-item"><span class="hist-date">${dateStr}</span><span class="hist-nota">${r.nota||'Contacto registrado'}</span></div>`;
+    return `<div class="hist-item"><span class="hist-date">${dateStr}</span><span class="hist-nota">${r.nota||'Contacto registrado'}</span><button class="hist-del" onclick="deleteHistorial(${r.id},${depId})" title="Eliminar">
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+    </button></div>`;
   }).join('');
+}
+
+async function deleteHistorial(rowId, depId){
+  if(!confirm('¿Eliminar este registro del historial?')) return;
+  await deleteHistorialRow(rowId);
+  const remaining = await getHistorial(depId) || [];
+  if(remaining.length){
+    const latest = remaining[0].fecha + 'T12:00:00';
+    await patchDep(depId, {ultima_actividad: latest});
+    const d = deportistas.find(x=>x.id===depId);
+    if(d) d.ultima_actividad = latest;
+  }
+  await loadHistorial(depId);
 }
 
 async function addHistorial(depId){
