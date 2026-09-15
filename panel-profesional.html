@@ -295,40 +295,8 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:190}
 .sidebar-backdrop.show{display:block}
 
-@media (max-width:860px){
-  body.has-sidebar{padding-left:0;padding-top:56px}
-  body.has-sidebar .mobile-topbar{display:flex}
-  .sidebar{width:270px;transform:translateX(-100%);transition:transform .25s ease;box-shadow:6px 0 28px rgba(0,0,0,.3)}
-  .sidebar.mobile-open{transform:translateX(0)}
-
-  html,body{overflow-x:hidden}
-  .page{padding:1rem;max-width:100%}
-  .page-header{margin-bottom:1.25rem}
-  .page-title{font-size:19px}
-  .dash-grid{grid-template-columns:1fr}
-  .dash-stats{grid-template-columns:repeat(2,1fr);gap:10px}
-  .dash-stat{padding:.85rem}
-  .dash-stat-n{font-size:19px}
-  .dash-card{padding:1rem 1.1rem}
-  .rem-add{flex-wrap:wrap}
-  .rem-add .inp{flex:1 1 100%}
-  .btn-rem-add{flex:1}
-  .dep-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
-  .agenda-tabs{width:100%}
-  .agenda-tab{flex:1;text-align:center}
-  .week-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -1rem;padding:0 1rem}
-  .week-grid{grid-template-columns:repeat(7,minmax(104px,1fr));width:max-content;min-width:100%}
-  .week-nav{flex-wrap:wrap}
-  .mc{padding:1.4rem 1.25rem;max-width:100%}
-  .hist-add{flex-direction:column}
-  .hist-add .inp{max-width:100% !important}
-  .depd-hero{flex-wrap:wrap}
-  .plan-box{flex-wrap:wrap}
-  .gsearch-modal{max-width:100%;margin:0 .75rem}
-}
-
 /* ═══ SIDEBAR APP SHELL ═══ */
-body.has-sidebar{padding-left:224px}
+@media (min-width:861px){ body.has-sidebar{padding-left:224px} }
 .sidebar{
   position:fixed;top:0;left:0;bottom:0;width:224px;
   background:var(--t900);display:none;flex-direction:column;
@@ -436,6 +404,39 @@ body.has-sidebar{padding-left:224px}
 .dash-stat{background:var(--sf);border-radius:14px;border:.5px solid var(--bd);padding:1rem;text-align:center}
 .dash-stat-n{font-size:22px;font-weight:700;color:var(--t800)}
 .dash-stat-l{font-size:10.5px;color:var(--g400);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+
+@media (max-width:860px){
+  body.has-sidebar{padding-left:0;padding-top:56px}
+  body.has-sidebar .mobile-topbar{display:flex}
+  .sidebar{width:270px;transform:translateX(-100%);transition:transform .25s ease;box-shadow:6px 0 28px rgba(0,0,0,.3)}
+  .sidebar.mobile-open{transform:translateX(0)}
+
+  html,body{overflow-x:hidden}
+  .page{padding:1rem;max-width:100%}
+  .page-header{margin-bottom:1.25rem}
+  .page-title{font-size:19px}
+  .dash-grid{grid-template-columns:1fr}
+  .dash-stats{grid-template-columns:repeat(2,1fr);gap:10px}
+  .dash-stat{padding:.85rem}
+  .dash-stat-n{font-size:19px}
+  .dash-card{padding:1rem 1.1rem}
+  .rem-add{flex-wrap:wrap}
+  .rem-add .inp{flex:1 1 100%}
+  .btn-rem-add{flex:1}
+  .dep-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+  .agenda-tabs{width:100%}
+  .agenda-tab{flex:1;text-align:center}
+  .week-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -1rem;padding:0 1rem}
+  .week-grid{grid-template-columns:repeat(7,minmax(104px,1fr));width:max-content;min-width:100%}
+  .week-nav{flex-wrap:wrap}
+  .mc{padding:1.4rem 1.25rem;max-width:100%}
+  .hist-add{flex-direction:column}
+  .hist-add .inp{max-width:100% !important}
+  .depd-hero{flex-wrap:wrap}
+  .plan-box{flex-wrap:wrap}
+  .gsearch-modal{max-width:100%;margin:0 .75rem}
+}
+
 
 </style>
 </head>
