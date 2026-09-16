@@ -462,9 +462,10 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 
 
 
-.accion-badge{margin-top:8px;font-size:10.5px;font-weight:600;color:var(--gold-dk);background:var(--gold-50);padding:4px 9px;border-radius:8px;cursor:pointer;display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.accion-badge.empty{color:var(--g400);background:var(--g100);font-weight:500}
-.accion-badge:hover{opacity:.85}
+.accion-badge{margin-top:9px;padding-top:8px;border-top:1px dashed var(--bd);display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--gold-dk);cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:color .15s}
+.accion-badge:hover{color:var(--gold)}
+.accion-badge::before{content:'';flex-shrink:0;width:12px;height:12px;background-color:currentColor;-webkit-mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.2"><path d="M4 22V4a1 1 0 0 1 1-1h13.5a1 1 0 0 1 .8 1.6l-3 4a1 1 0 0 0 0 1.2l3 4a1 1 0 0 1-.8 1.6H5"/></svg>') center/contain no-repeat;mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.2"><path d="M4 22V4a1 1 0 0 1 1-1h13.5a1 1 0 0 1 .8 1.6l-3 4a1 1 0 0 0 0 1.2l3 4a1 1 0 0 1-.8 1.6H5"/></svg>') center/contain no-repeat}
+.accion-badge.empty{color:var(--g400);font-weight:500;font-style:italic}
 
 .ref-modal{max-width:680px}
 .ref-jump{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
@@ -476,6 +477,7 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .ref-table td:first-child{color:var(--g700)}
 .ref-table td:last-child{color:var(--g900);font-weight:600;text-align:right}
 .ref-sub{background:var(--g100);font-weight:700;color:var(--gold-dk) !important;text-align:left !important;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px}
+.ref-formula{background:var(--t50);border-radius:8px;padding:10px 14px;font-size:11.5px;color:var(--t800);font-family:monospace;line-height:1.7}
 .ref-note{font-size:10.5px;color:var(--g400);margin-top:6px;line-height:1.5;font-style:italic}
 
 .calc-modal{max-width:640px;max-height:88vh;overflow-y:auto}
@@ -635,14 +637,6 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
         <button class="btn-rem-add" onclick="addRecordatorio()">Añadir</button>
       </div>
       <div id="remList"></div>
-    </div>
-
-    <div class="dash-card" style="margin-bottom:1.5rem">
-      <div class="dash-card-head">
-        <span class="dash-card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color:#25D366"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.05 2z"/></svg>Recordatorios por enviar</span>
-        <span class="dash-card-count" id="dashColaCount">0</span>
-      </div>
-      <div id="dashCola"></div>
     </div>
 
     <div class="dash-grid">
@@ -1040,12 +1034,17 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
           <tr><td>Deseable</td><td>&lt; 200</td></tr>
           <tr><td>Límite alto</td><td>200 – 239</td></tr>
           <tr><td>Alto</td><td>≥ 240</td></tr>
-          <tr><td colspan="2" class="ref-sub">LDL</td></tr>
+          <tr><td colspan="2" class="ref-sub">LDL — clasificación general</td></tr>
           <tr><td>Óptimo</td><td>&lt; 100</td></tr>
           <tr><td>Casi óptimo</td><td>100 – 129</td></tr>
           <tr><td>Límite alto</td><td>130 – 159</td></tr>
           <tr><td>Alto</td><td>160 – 189</td></tr>
           <tr><td>Muy alto</td><td>≥ 190</td></tr>
+          <tr><td colspan="2" class="ref-sub">LDL — objetivo por riesgo CV (ESC/EAS 2019)</td></tr>
+          <tr><td>Riesgo bajo</td><td>&lt; 116</td></tr>
+          <tr><td>Riesgo moderado</td><td>&lt; 100</td></tr>
+          <tr><td>Riesgo alto</td><td>&lt; 70</td></tr>
+          <tr><td>Riesgo muy alto</td><td>&lt; 55 (&lt; 40 si evento recurrente en 2 años)</td></tr>
           <tr><td colspan="2" class="ref-sub">HDL</td></tr>
           <tr><td>Bajo (riesgo)</td><td>&lt; 40 (H) / &lt; 50 (M)</td></tr>
           <tr><td>Deseable</td><td>≥ 60</td></tr>
@@ -1055,6 +1054,7 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
           <tr><td>Alto</td><td>200 – 499</td></tr>
           <tr><td>Muy alto</td><td>≥ 500</td></tr>
         </table>
+        <p class="ref-note">Mantener el LDL por debajo de 70 mg/dL durante periodos prolongados reduce el riesgo cardiovascular de forma sustancial y sostenida (ESC/EAS 2019; cada reducción de 1 mmol/L mantenida 5 años reduce eventos mayores &gt;20%). El objetivo exacto depende del riesgo individual, no es un umbral único para toda la población.</p>
       </div>
 
       <div class="ref-section" id="refGlu">
@@ -1138,6 +1138,33 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
           <tr><td>Mujeres adultas</td><td>~2.0 L/día (incluye agua de alimentos)</td></tr>
           <tr><td>Deportistas</td><td>Ajustar según tasa de sudoración individual y duración/intensidad</td></tr>
         </table>
+
+        <p class="ref-title" style="margin-top:16px">Tasa de sudoración — fórmula de cálculo (ACSM)</p>
+        <div class="ref-formula">Pérdida de sudor (L) = Peso antes (kg) − Peso después (kg) + Líquido ingerido (L) − Orina (L)<br>Tasa de sudoración (L/h) = Pérdida de sudor / Duración del ejercicio (h)</div>
+        <p class="ref-note">Úsala en la Calculadora → pestaña "Hidratación deportiva" para introducir los datos y obtener el resultado automáticamente.</p>
+
+        <p class="ref-title" style="margin-top:16px">Concentración de sodio en sudor — rangos habituales</p>
+        <table class="ref-table">
+          <tr><td>Sudorador bajo</td><td>~20 – 30 mmol/L</td></tr>
+          <tr><td>Sudorador medio</td><td>~40 – 60 mmol/L</td></tr>
+          <tr><td>Sudorador salado</td><td>~70 – 90+ mmol/L</td></tr>
+        </table>
+
+        <p class="ref-title" style="margin-top:16px">Reposición de líquidos</p>
+        <table class="ref-table">
+          <tr><td>Durante el ejercicio</td><td>≈ igual a la tasa de sudoración, sin superarla (riesgo de hiponatremia)</td></tr>
+          <tr><td>Post-ejercicio</td><td>1.25 – 1.5 L por cada kg de peso perdido</td></tr>
+        </table>
+
+        <p class="ref-title" style="margin-top:16px">Carbohidratos durante el ejercicio — según duración</p>
+        <table class="ref-table">
+          <tr><td>&lt; 45 min</td><td>No necesario</td></tr>
+          <tr><td>45 – 75 min</td><td>Cantidades pequeñas / enjuague bucal con CHO</td></tr>
+          <tr><td>1 – 2 h</td><td>~30 g/h</td></tr>
+          <tr><td>2 – 3 h</td><td>~60 g/h</td></tr>
+          <tr><td>&gt; 2.5 – 3 h (ultra-resistencia)</td><td>Hasta 90 g/h — múltiples fuentes transportables (glucosa:fructosa)</td></tr>
+        </table>
+        <p class="ref-note">Guías generales ACSM/ISSN. Los umbrales exactos varían según intensidad, clima, aclimatación y tolerancia digestiva individual.</p>
       </div>
 
     </div>
@@ -1168,8 +1195,14 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
       <p class="mt" style="margin:0">Calculadora nutricional</p>
       <button class="calc-close" onclick="closeCalc()">✕</button>
     </div>
-    <p class="ms">Fórmulas validadas: Mifflin-St Jeor, Harris-Benedict revisada y Katch-McArdle.</p>
+    <p class="ms">Fórmulas validadas: Mifflin-St Jeor, Harris-Benedict revisada, Katch-McArdle y estimación de sudoración ACSM.</p>
 
+    <div class="agenda-tabs" style="margin-bottom:14px">
+      <button class="agenda-tab on" id="calcTabEnergiaBtn" onclick="setCalcTab('energia')">Energía y macros</button>
+      <button class="agenda-tab" id="calcTabHidraBtn" onclick="setCalcTab('hidra')">Hidratación deportiva</button>
+    </div>
+
+    <div id="calcTabEnergia">
     <div class="calc-grid">
       <div>
         <label class="mfl">Sexo</label>
@@ -1245,9 +1278,58 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
     <p class="calc-warn" id="calcWarn" style="display:none"></p>
 
     <div class="calc-results" id="calcResults"></div>
+    </div>
+
+    <div id="calcTabHidra" style="display:none">
+      <div class="calc-grid">
+        <div>
+          <label class="mfl">Peso antes del ejercicio (kg)</label>
+          <input type="number" class="inp" id="hidraPesoAntes" step="0.1" placeholder="Ej. 72.4" oninput="calcHidra()">
+        </div>
+        <div>
+          <label class="mfl">Peso después del ejercicio (kg)</label>
+          <input type="number" class="inp" id="hidraPesoDespues" step="0.1" placeholder="Ej. 71.6" oninput="calcHidra()">
+        </div>
+        <div>
+          <label class="mfl">Líquido ingerido durante (mL)</label>
+          <input type="number" class="inp" id="hidraLiquido" placeholder="Ej. 500" oninput="calcHidra()">
+        </div>
+        <div>
+          <label class="mfl">Orina durante (mL, opcional)</label>
+          <input type="number" class="inp" id="hidraOrina" placeholder="0" oninput="calcHidra()">
+        </div>
+        <div>
+          <label class="mfl">Duración del ejercicio (h)</label>
+          <input type="number" class="inp" id="hidraDuracion" step="0.1" placeholder="Ej. 1.5" oninput="calcHidra()">
+        </div>
+        <div>
+          <label class="mfl">Tipo de sudorador</label>
+          <select class="inp" id="hidraTipoSudor" onchange="calcHidra()">
+            <option value="25">Bajo (~20-30 mmol/L Na)</option>
+            <option value="50" selected>Medio (~40-60 mmol/L Na)</option>
+            <option value="80">Salado (~70-90+ mmol/L Na)</option>
+          </select>
+        </div>
+      </div>
+      <div class="calc-grid" style="margin-top:10px">
+        <div style="grid-column:1/-1">
+          <label class="mfl">Duración total prevista del evento (para objetivo de CHO)</label>
+          <select class="inp" id="hidraChoRango" onchange="calcHidra()">
+            <option value="0">Menos de 45 min — no necesario</option>
+            <option value="0">45–75 min — cantidades pequeñas</option>
+            <option value="30">1–2 h — ~30 g/h</option>
+            <option value="60" selected>2–3 h — ~60 g/h</option>
+            <option value="90">Más de 3 h (ultra-resistencia) — hasta 90 g/h</option>
+          </select>
+        </div>
+      </div>
+      <p class="calc-warn" id="hidraWarn" style="display:none"></p>
+      <div class="calc-results" id="hidraResults"></div>
+    </div>
 
     <div class="mact">
       <button class="btn-cancel" onclick="closeCalc()">Cerrar</button>
+      <button class="btn-ok" onclick="exportCalcPDF()">Exportar PDF</button>
     </div>
   </div>
 </div>
@@ -1552,21 +1634,6 @@ async function loadDashboard(){
     return `<div class="dash-row"><div class="dash-row-dot ${c.fecha===todayISO?'gold':'teal'}"></div><div class="dash-row-txt"><div class="dash-row-name">${c.cliente}</div><div class="dash-row-sub">${c.servicio||'Revisión'}${hora?' · '+hora:''}</div></div><span class="dash-row-tag">${tag}</span></div>`;
   }).join(''):'<p class="dash-empty">Sin sesiones para hoy o mañana.</p>';
 
-  // ── Cola de recordatorios WhatsApp por enviar (hoy/mañana, no enviados aún) ──
-  const cola=sesiones.filter(c=>!c.recordatorio_enviado);
-  document.getElementById('dashColaCount').textContent=cola.length;
-  document.getElementById('dashCola').innerHTML=cola.length?cola.map(c=>{
-    const tag=c.fecha===todayISO?'Hoy':'Mañana';
-    const hora=c.hora?c.hora.slice(0,5)+'h':'';
-    return `<div class="dash-row">
-      <div class="dash-row-dot gold"></div>
-      <div class="dash-row-txt"><div class="dash-row-name">${c.cliente}</div><div class="dash-row-sub">${c.servicio||'Revisión'}${hora?' · '+hora:''} · ${tag}</div></div>
-      <button class="agenda-wa" style="width:26px;height:26px" onclick="sendWhatsAppRecordatorio(${c.id},'${c.cliente.replace(/'/g,"\\'")}','${c.fecha}',${c.hora?`'${c.hora}'`:'null'},'${(c.servicio||'Revisión').replace(/'/g,"\\'")}')" title="Enviar recordatorio">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.05 2zm5.72 14.17c-.24.68-1.39 1.3-1.91 1.35-.49.05-1.09.08-1.75-.11-.4-.12-.92-.29-1.58-.57-2.79-1.2-4.61-4-4.75-4.19-.14-.19-1.14-1.51-1.14-2.88 0-1.37.72-2.04.97-2.32.25-.28.55-.35.73-.35.19 0 .37 0 .53.01.17.01.4-.06.62.48.24.58.81 1.99.88 2.13.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.29.29-.12.57.17.28.75 1.24 1.61 2.01 1.11.99 2.04 1.3 2.32 1.44.28.14.44.12.61-.07.17-.19.71-.82.9-1.11.19-.28.38-.23.63-.14.26.09 1.65.78 1.93.92.28.14.47.21.53.33.07.12.07.68-.17 1.36z"/></svg>
-      </button>
-    </div>`;
-  }).join(''):'<p class="dash-empty">Nada pendiente de enviar. ✓</p>';
-
   // ── Pagos pendientes/atrasados ──
   const impagos=dashCitas.filter(c=>!c.pagado&&c.requiere_pago!==false).sort((a,b)=>a.fecha.localeCompare(b.fecha));
   document.getElementById('dashPagosCount').textContent=impagos.length;
@@ -1696,7 +1763,7 @@ function renderDash(){
         <span class="cpct">${c.semana||0} / 12 semanas</span>
         ${done?'':`<span class="cpct">${remaining} semana${remaining===1?'':'s'} restantes</span>`}
       </div>
-      <div class="accion-badge${c.proxima_accion?'':' empty'}" onclick="event.stopPropagation();openAccion('cliente',${c.id},'${(c.proxima_accion||'').replace(/'/g,"\\'")}')">${c.proxima_accion || '+ Próxima acción'}</div>
+      <div class="accion-badge${c.proxima_accion?'':' empty'}" onclick="event.stopPropagation();openAccion('cliente',${c.id},'${(c.proxima_accion||'').replace(/'/g,"\\'")}')">${c.proxima_accion || 'Añadir próxima acción'}</div>
       ${c.email?`<div style="font-size:11px;color:var(--g400);margin-top:6px;border-top:.5px solid var(--bd);padding-top:6px">📧 ${c.email}</div>`:''}
     </div>`;
   }).join('');
@@ -2023,7 +2090,7 @@ function renderDeportistas() {
       <div class="dep-sport">${d.deporte || '—'}</div>
       ${d.objetivo ? `<div class="dep-obj-badge">${d.objetivo}</div>` : ''}
       ${revisionBadge(d.proxima_revision)}
-      <div class="accion-badge${d.proxima_accion?'':' empty'}" onclick="event.stopPropagation();openAccion('deportista',${d.id},'${(d.proxima_accion||'').replace(/'/g,"\\'")}')">${d.proxima_accion || '+ Próxima acción'}</div>
+      <div class="accion-badge${d.proxima_accion?'':' empty'}" onclick="event.stopPropagation();openAccion('deportista',${d.id},'${(d.proxima_accion||'').replace(/'/g,"\\'")}')">${d.proxima_accion || 'Añadir próxima acción'}</div>
     </div>`;
   }).join('');
 }
@@ -2352,12 +2419,107 @@ function refJump(sectionId){
   document.getElementById(sectionId).scrollIntoView({behavior:'smooth', block:'start'});
 }
 
+let lastCalc = null, lastHidra = null;
+
 function openCalc(){
   document.getElementById('mCalc').style.display = 'flex';
   calcAll();
 }
 function closeCalc(){
   document.getElementById('mCalc').style.display = 'none';
+}
+function setCalcTab(tab){
+  document.getElementById('calcTabEnergiaBtn').classList.toggle('on', tab==='energia');
+  document.getElementById('calcTabHidraBtn').classList.toggle('on', tab==='hidra');
+  document.getElementById('calcTabEnergia').style.display = tab==='energia' ? 'block' : 'none';
+  document.getElementById('calcTabHidra').style.display = tab==='hidra' ? 'block' : 'none';
+}
+
+function calcHidra(){
+  const pesoAntes = parseFloat(document.getElementById('hidraPesoAntes').value);
+  const pesoDespues = parseFloat(document.getElementById('hidraPesoDespues').value);
+  const liquidoMl = parseFloat(document.getElementById('hidraLiquido').value) || 0;
+  const orinaMl = parseFloat(document.getElementById('hidraOrina').value) || 0;
+  const duracion = parseFloat(document.getElementById('hidraDuracion').value);
+  const naConc = parseFloat(document.getElementById('hidraTipoSudor').value);
+  const choObjetivo = parseFloat(document.getElementById('hidraChoRango').value);
+  const choLabel = document.getElementById('hidraChoRango').selectedOptions[0].text;
+
+  const warnEl = document.getElementById('hidraWarn');
+  warnEl.style.display = 'none';
+
+  if(!pesoAntes || !pesoDespues || !duracion){
+    document.getElementById('hidraResults').innerHTML = '<p style="font-size:12px;color:rgba(255,255,255,.6);text-align:center;padding:10px 0">Rellena peso antes, peso después y duración para calcular.</p>';
+    return;
+  }
+
+  const perdidaSudorL = (pesoAntes - pesoDespues) + (liquidoMl/1000) - (orinaMl/1000);
+  if(perdidaSudorL < 0){
+    warnEl.style.display = 'block';
+    warnEl.textContent = 'Los datos indican ganancia de peso neta — revisa las cifras introducidas.';
+  }
+  const tasaSudorLh = perdidaSudorL / duracion;
+  const sodioPerdidoMg = perdidaSudorL * naConc * 23;
+  const fluidoHoraMl = Math.round(tasaSudorLh * 1000);
+  const postEjercicioL_min = perdidaSudorL * 1.25;
+  const postEjercicioL_max = perdidaSudorL * 1.5;
+
+  lastHidra = {
+    perdidaSudorL: perdidaSudorL.toFixed(2), tasaSudorLh: tasaSudorLh.toFixed(2),
+    sodioPerdidoMg: Math.round(sodioPerdidoMg), fluidoHoraMl,
+    postEjercicioL_min: postEjercicioL_min.toFixed(2), postEjercicioL_max: postEjercicioL_max.toFixed(2),
+    choObjetivo, choLabel
+  };
+
+  document.getElementById('hidraResults').innerHTML = `
+    <div class="calc-row hl"><span class="l">Tasa de sudoración</span><span class="v">${tasaSudorLh.toFixed(2)} L/h</span></div>
+    <div class="calc-row"><span class="l">Pérdida total de sudor</span><span class="v">${perdidaSudorL.toFixed(2)} L</span></div>
+    <div class="calc-row"><span class="l">Sodio perdido estimado</span><span class="v">${Math.round(sodioPerdidoMg)} mg</span></div>
+    <div class="calc-row"><span class="l">Reposición durante (objetivo)</span><span class="v">~${fluidoHoraMl} mL/h</span></div>
+    <div class="calc-row"><span class="l">Reposición post-ejercicio</span><span class="v">${postEjercicioL_min.toFixed(2)} – ${postEjercicioL_max.toFixed(2)} L</span></div>
+    <div class="calc-row"><span class="l">Carbohidratos objetivo (${choLabel})</span><span class="v">${choObjetivo>0?choObjetivo+' g/h':'No necesario'}</span></div>
+  `;
+}
+
+function exportCalcPDF(){
+  if(!lastCalc && !lastHidra){ alert('Introduce datos y calcula algo antes de exportar.'); return; }
+  let html = `
+    <div class="pdf-hero">
+      <p class="pdf-brand">Calculadora nutricional</p>
+      <h1>Informe de cálculo</h1>
+      <p>NutriLogos · Generado el ${new Date().toLocaleDateString('es-ES')}</p>
+    </div>`;
+
+  if(lastCalc){
+    html += `
+    <div class="pdf-section">
+      <p class="pdf-section-title">Energía y macronutrientes</p>
+      <div class="pdf-row"><span class="l">BMR (metabolismo basal)</span><span class="v">${lastCalc.bmr} kcal</span></div>
+      <div class="pdf-row"><span class="l">TDEE (gasto total diario)</span><span class="v">${lastCalc.tdee} kcal</span></div>
+      <div class="pdf-row"><span class="l">Calorías objetivo</span><span class="v">${lastCalc.kcalObjetivo} kcal</span></div>
+      <div class="pdf-row"><span class="l">Proteína</span><span class="v">${lastCalc.proteinaG} g (${lastCalc.pctP}%)</span></div>
+      <div class="pdf-row"><span class="l">Grasa</span><span class="v">${lastCalc.grasaG} g (${lastCalc.pctF}%)</span></div>
+      <div class="pdf-row"><span class="l">Carbohidratos</span><span class="v">${lastCalc.carbosG} g (${lastCalc.pctC}%)</span></div>
+    </div>`;
+  }
+
+  if(lastHidra){
+    html += `
+    <div class="pdf-section">
+      <p class="pdf-section-title">Hidratación deportiva</p>
+      <div class="pdf-row"><span class="l">Tasa de sudoración</span><span class="v">${lastHidra.tasaSudorLh} L/h</span></div>
+      <div class="pdf-row"><span class="l">Pérdida total de sudor</span><span class="v">${lastHidra.perdidaSudorL} L</span></div>
+      <div class="pdf-row"><span class="l">Sodio perdido estimado</span><span class="v">${lastHidra.sodioPerdidoMg} mg</span></div>
+      <div class="pdf-row"><span class="l">Reposición durante el ejercicio</span><span class="v">~${lastHidra.fluidoHoraMl} mL/h</span></div>
+      <div class="pdf-row"><span class="l">Reposición post-ejercicio</span><span class="v">${lastHidra.postEjercicioL_min} – ${lastHidra.postEjercicioL_max} L</span></div>
+      <div class="pdf-row"><span class="l">Carbohidratos objetivo</span><span class="v">${lastHidra.choObjetivo>0?lastHidra.choObjetivo+' g/h':'No necesario'} (${lastHidra.choLabel})</span></div>
+    </div>`;
+  }
+
+  html += `<p class="pdf-foot">NutriLogos · Ciencia con propósito · Cálculo orientativo, no sustituye valoración profesional individualizada</p>`;
+
+  document.getElementById('printArea').innerHTML = html;
+  printNow();
 }
 
 function calcAll(){
@@ -2416,6 +2578,12 @@ function calcAll(){
   const pctF = Math.round(grasaKcal/kcalObjetivo*100);
   const pctC = 100 - pctP - pctF;
 
+  lastCalc = {
+    bmr: Math.round(bmr), tdee: Math.round(tdee), kcalObjetivo: Math.round(kcalObjetivo),
+    proteinaG: Math.round(proteinaG), grasaG: Math.round(grasaG), carbosG: Math.round(carbosG),
+    pctP, pctF, pctC: Math.max(pctC,0), formula, sexo, edad, peso, altura
+  };
+
   document.getElementById('calcResults').innerHTML = `
     <div class="calc-row"><span class="l">BMR (metabolismo basal)</span><span class="v">${Math.round(bmr)} kcal</span></div>
     <div class="calc-row"><span class="l">TDEE (gasto total diario)</span><span class="v">${Math.round(tdee)} kcal</span></div>
@@ -2453,7 +2621,7 @@ function googleCalLink(c){
     const endStr = `${nd.getFullYear()}${pad(nd.getMonth()+1)}${pad(nd.getDate())}`;
     datesParam = `${y}${m}${d}/${endStr}`;
   }
-  const text = encodeURIComponent(`${c.cliente} — ${c.servicio||'Revisión'}`);
+  const text = encodeURIComponent(`${c.cliente} — ${c.servicio||'Revisión'}`.toUpperCase());
   const details = encodeURIComponent(c.nota||'');
   return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${datesParam}&details=${details}${extra}`;
 }
