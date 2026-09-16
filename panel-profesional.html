@@ -291,6 +291,9 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .pay-toggle.info{background:var(--g100);color:var(--g400);cursor:default}
 .agenda-del{background:var(--g100);border:none;border-radius:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--g500)}
 .agenda-wa{background:#E7F7EE;border:none;border-radius:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#25D366}
+.agenda-wa.sent{background:var(--g100);color:var(--g400)}
+.agenda-cal{background:var(--t50);border:none;border-radius:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t600);text-decoration:none}
+.agenda-cal:hover{background:var(--t100)}
 .agenda-wa:hover{background:#D4F0DF}
 .agenda-empty-group{font-size:11px;font-weight:500;color:var(--g400);text-transform:uppercase;letter-spacing:.06em;margin:1.25rem 0 8px;padding-bottom:6px;border-bottom:.5px solid var(--bd)}
 
@@ -459,6 +462,42 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 
 
 
+.accion-badge{margin-top:8px;font-size:10.5px;font-weight:600;color:var(--gold-dk);background:var(--gold-50);padding:4px 9px;border-radius:8px;cursor:pointer;display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.accion-badge.empty{color:var(--g400);background:var(--g100);font-weight:500}
+.accion-badge:hover{opacity:.85}
+
+.ref-modal{max-width:680px}
+.ref-jump{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.ref-body{max-height:50vh;overflow-y:auto;padding-right:6px}
+.ref-section{margin-bottom:20px;scroll-margin-top:10px}
+.ref-title{font-size:12.5px;font-weight:700;color:var(--t800);margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--bd)}
+.ref-table{width:100%;border-collapse:collapse;font-size:12px}
+.ref-table td{padding:5px 8px;border-bottom:.5px solid var(--bd)}
+.ref-table td:first-child{color:var(--g700)}
+.ref-table td:last-child{color:var(--g900);font-weight:600;text-align:right}
+.ref-sub{background:var(--g100);font-weight:700;color:var(--gold-dk) !important;text-align:left !important;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px}
+.ref-note{font-size:10.5px;color:var(--g400);margin-top:6px;line-height:1.5;font-style:italic}
+
+.calc-modal{max-width:640px;max-height:88vh;overflow-y:auto}
+.calc-head{display:flex;align-items:center;justify-content:space-between}
+.calc-close{background:var(--g100);border:none;border-radius:8px;width:28px;height:28px;cursor:pointer;color:var(--g500);font-size:13px}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.calc-warn{background:#FEF2F2;color:var(--red);border-radius:8px;padding:8px 12px;font-size:12px;margin-top:10px}
+.calc-results{background:var(--t900);border-radius:14px;padding:16px 18px;margin-top:14px;color:#fff}
+.calc-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.calc-row:last-child{border-bottom:none}
+.calc-row .l{font-size:12px;color:rgba(255,255,255,.65)}
+.calc-row .v{font-size:14px;font-weight:700}
+.calc-row.hl{background:rgba(184,149,106,.15);margin:0 -18px;padding:10px 18px;border-radius:8px}
+.calc-macro-bar{display:flex;height:10px;border-radius:999px;overflow:hidden;margin:10px 0}
+.calc-macro-seg.p{background:#c19a6b}
+.calc-macro-seg.f{background:#6a9cc2}
+.calc-macro-seg.c{background:#5a9c68}
+.calc-macro-legend{display:flex;gap:14px;font-size:10.5px;color:rgba(255,255,255,.7)}
+.calc-macro-legend span{display:flex;align-items:center;gap:5px}
+.calc-macro-legend .dot{width:7px;height:7px;border-radius:50%}
+@media (max-width:600px){.calc-grid{grid-template-columns:1fr}}
+
 /* ═══ EXPORTAR PDF (print) ═══ */
 #printArea{display:none}
 @media print{
@@ -555,6 +594,14 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
       <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       Facturación
     </button>
+    <button class="sb-item" onclick="openCalc()">
+      <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8" y2="10.01"/><line x1="12" y1="10" x2="12" y2="10.01"/><line x1="16" y1="10" x2="16" y2="10.01"/><line x1="8" y1="14" x2="8" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="16" y1="14" x2="16" y2="14.01"/><line x1="8" y1="18" x2="16" y2="18"/></svg>
+      Calculadora
+    </button>
+    <button class="sb-item" onclick="openRef()">
+      <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Referencia clínica
+    </button>
   </div>
   <div class="sb-foot">
     <button class="sb-export" onclick="exportAllData();closeMobileSidebar()">
@@ -588,6 +635,14 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
         <button class="btn-rem-add" onclick="addRecordatorio()">Añadir</button>
       </div>
       <div id="remList"></div>
+    </div>
+
+    <div class="dash-card" style="margin-bottom:1.5rem">
+      <div class="dash-card-head">
+        <span class="dash-card-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color:#25D366"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.05 2z"/></svg>Recordatorios por enviar</span>
+        <span class="dash-card-count" id="dashColaCount">0</span>
+      </div>
+      <div id="dashCola"></div>
     </div>
 
     <div class="dash-grid">
@@ -810,16 +865,10 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
   <div class="page">
     <div class="page-header">
       <div><p class="page-title">Agenda</p><p class="page-sub" id="agendasub">Cargando…</p></div>
-      <div style="display:flex;gap:8px">
-        <button class="btn-add" style="background:var(--g100);color:var(--g700)" onclick="exportICS()">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4"/></svg>
-          Exportar calendario
-        </button>
-        <button class="btn-add" onclick="openAddCita()">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Nueva cita
-        </button>
-      </div>
+      <button class="btn-add" onclick="openAddCita()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nueva cita
+      </button>
     </div>
     <div class="agenda-toolbar">
       <div class="dep-search" style="flex:1;min-width:160px">
@@ -945,6 +994,260 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
     <div class="mact">
       <button class="btn-cancel" onclick="closeRelock()">Cancelar</button>
       <button class="btn-ok" style="background:#C2600A" onclick="confirmRelock()">Rebloquear</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: REFERENCIA CLÍNICA -->
+<div class="mbg" id="mRef" style="display:none">
+  <div class="mc calc-modal ref-modal">
+    <div class="calc-head">
+      <p class="mt" style="margin:0">Referencia clínica rápida</p>
+      <button class="calc-close" onclick="closeRef()">✕</button>
+    </div>
+    <p class="ms">Valores de referencia estándar para adultos. Úsalos como guía general — los rangos de laboratorio propios siempre tienen prioridad sobre estos.</p>
+
+    <div class="ref-jump">
+      <button class="dep-chip" onclick="refJump('refImc')">IMC</button>
+      <button class="dep-chip" onclick="refJump('refLip')">Lípidos</button>
+      <button class="dep-chip" onclick="refJump('refGlu')">Glucemia</button>
+      <button class="dep-chip" onclick="refJump('refTa')">Presión arterial</button>
+      <button class="dep-chip" onclick="refJump('refMicro')">Micronutrientes</button>
+      <button class="dep-chip" onclick="refJump('refGrasa')">% Grasa corporal</button>
+      <button class="dep-chip" onclick="refJump('refProt')">Proteína</button>
+      <button class="dep-chip" onclick="refJump('refAgua')">Hidratación</button>
+    </div>
+
+    <div class="ref-body">
+
+      <div class="ref-section" id="refImc">
+        <p class="ref-title">IMC — Clasificación OMS (kg/m²)</p>
+        <table class="ref-table">
+          <tr><td>Bajo peso</td><td>&lt; 18.5</td></tr>
+          <tr><td>Normopeso</td><td>18.5 – 24.9</td></tr>
+          <tr><td>Sobrepeso</td><td>25.0 – 29.9</td></tr>
+          <tr><td>Obesidad grado I</td><td>30.0 – 34.9</td></tr>
+          <tr><td>Obesidad grado II</td><td>35.0 – 39.9</td></tr>
+          <tr><td>Obesidad grado III</td><td>≥ 40.0</td></tr>
+        </table>
+        <p class="ref-note">El IMC no distingue masa grasa de masa magra — usar junto a composición corporal cuando sea posible.</p>
+      </div>
+
+      <div class="ref-section" id="refLip">
+        <p class="ref-title">Perfil lipídico — adultos en ayunas (mg/dL)</p>
+        <table class="ref-table">
+          <tr><td colspan="2" class="ref-sub">Colesterol total</td></tr>
+          <tr><td>Deseable</td><td>&lt; 200</td></tr>
+          <tr><td>Límite alto</td><td>200 – 239</td></tr>
+          <tr><td>Alto</td><td>≥ 240</td></tr>
+          <tr><td colspan="2" class="ref-sub">LDL</td></tr>
+          <tr><td>Óptimo</td><td>&lt; 100</td></tr>
+          <tr><td>Casi óptimo</td><td>100 – 129</td></tr>
+          <tr><td>Límite alto</td><td>130 – 159</td></tr>
+          <tr><td>Alto</td><td>160 – 189</td></tr>
+          <tr><td>Muy alto</td><td>≥ 190</td></tr>
+          <tr><td colspan="2" class="ref-sub">HDL</td></tr>
+          <tr><td>Bajo (riesgo)</td><td>&lt; 40 (H) / &lt; 50 (M)</td></tr>
+          <tr><td>Deseable</td><td>≥ 60</td></tr>
+          <tr><td colspan="2" class="ref-sub">Triglicéridos</td></tr>
+          <tr><td>Normal</td><td>&lt; 150</td></tr>
+          <tr><td>Límite alto</td><td>150 – 199</td></tr>
+          <tr><td>Alto</td><td>200 – 499</td></tr>
+          <tr><td>Muy alto</td><td>≥ 500</td></tr>
+        </table>
+      </div>
+
+      <div class="ref-section" id="refGlu">
+        <p class="ref-title">Glucemia y HbA1c — criterios ADA</p>
+        <table class="ref-table">
+          <tr><td colspan="2" class="ref-sub">Glucosa en ayunas (mg/dL)</td></tr>
+          <tr><td>Normal</td><td>&lt; 100</td></tr>
+          <tr><td>Prediabetes</td><td>100 – 125</td></tr>
+          <tr><td>Diabetes</td><td>≥ 126 (confirmar en 2 ocasiones)</td></tr>
+          <tr><td colspan="2" class="ref-sub">HbA1c (%)</td></tr>
+          <tr><td>Normal</td><td>&lt; 5.7</td></tr>
+          <tr><td>Prediabetes</td><td>5.7 – 6.4</td></tr>
+          <tr><td>Diabetes</td><td>≥ 6.5</td></tr>
+        </table>
+      </div>
+
+      <div class="ref-section" id="refTa">
+        <p class="ref-title">Presión arterial — ACC/AHA (mmHg)</p>
+        <table class="ref-table">
+          <tr><td>Normal</td><td>&lt; 120 / &lt; 80</td></tr>
+          <tr><td>Elevada</td><td>120–129 / &lt; 80</td></tr>
+          <tr><td>HTA grado 1</td><td>130–139 / 80–89</td></tr>
+          <tr><td>HTA grado 2</td><td>≥ 140 / ≥ 90</td></tr>
+          <tr><td>Crisis hipertensiva</td><td>&gt; 180 / &gt; 120 — derivar urgente</td></tr>
+        </table>
+      </div>
+
+      <div class="ref-section" id="refMicro">
+        <p class="ref-title">Micronutrientes — rangos habituales en adultos</p>
+        <table class="ref-table">
+          <tr><td>Vitamina D (25-OH)</td><td>Suficiencia &gt; 30 ng/mL · Insuficiencia 20–29 · Deficiencia &lt; 20</td></tr>
+          <tr><td>Vitamina B12</td><td>200 – 900 pg/mL (varía por laboratorio)</td></tr>
+          <tr><td>Ferritina</td><td>Hombres 30–400 ng/mL · Mujeres 15–150 ng/mL</td></tr>
+          <tr><td>Ácido fólico</td><td>2.7 – 17.0 ng/mL</td></tr>
+        </table>
+        <p class="ref-note">Los puntos de corte de suficiencia de vitamina D varían según la sociedad científica de referencia — usar siempre el rango del laboratorio emisor.</p>
+      </div>
+
+      <div class="ref-section" id="refGrasa">
+        <p class="ref-title">% Grasa corporal — categorías ACE</p>
+        <table class="ref-table">
+          <tr><td colspan="2" class="ref-sub">Hombres</td></tr>
+          <tr><td>Grasa esencial</td><td>2 – 5%</td></tr>
+          <tr><td>Atlético</td><td>6 – 13%</td></tr>
+          <tr><td>Fitness</td><td>14 – 17%</td></tr>
+          <tr><td>Aceptable</td><td>18 – 24%</td></tr>
+          <tr><td>Obesidad</td><td>≥ 25%</td></tr>
+          <tr><td colspan="2" class="ref-sub">Mujeres</td></tr>
+          <tr><td>Grasa esencial</td><td>10 – 13%</td></tr>
+          <tr><td>Atlético</td><td>14 – 20%</td></tr>
+          <tr><td>Fitness</td><td>21 – 24%</td></tr>
+          <tr><td>Aceptable</td><td>25 – 31%</td></tr>
+          <tr><td>Obesidad</td><td>≥ 32%</td></tr>
+        </table>
+      </div>
+
+      <div class="ref-section" id="refProt">
+        <p class="ref-title">Requerimiento proteico — recomendaciones institucionales (g/kg/día)</p>
+        <table class="ref-table">
+          <tr><td>OMS / FAO / UNU (2007)</td><td>0.83 — ingesta segura, población adulta</td></tr>
+          <tr><td>EFSA (2012)</td><td>0.83 — PRI, población adulta ≥18 años</td></tr>
+          <tr><td>IOM / NAM (EE.UU., 2005)</td><td>0.8 — RDA · rango AMDR 10–35% de las kcal totales</td></tr>
+        </table>
+        <p class="ref-note">Son valores mínimos de seguridad para población general sana, calculados por balance nitrogenado. No están pensados para poblaciones entrenadas ni objetivos de composición corporal — para eso, ver la tabla por contexto de actividad justo debajo.</p>
+
+        <p class="ref-title" style="margin-top:16px">Ajuste por contexto de actividad (g/kg/día)</p>
+        <table class="ref-table">
+          <tr><td>Sedentario (RDA mínimo)</td><td>0.8</td></tr>
+          <tr><td>Actividad general</td><td>1.0 – 1.2</td></tr>
+          <tr><td>Resistencia / fondo</td><td>1.2 – 1.4</td></tr>
+          <tr><td>Fuerza / hipertrofia</td><td>1.6 – 2.2</td></tr>
+          <tr><td>Déficit preservando músculo</td><td>2.3 – 3.1</td></tr>
+        </table>
+        <p class="ref-note">Rangos superiores basados en revisiones ISSN/Helms para población entrenada en déficit calórico.</p>
+      </div>
+
+      <div class="ref-section" id="refAgua">
+        <p class="ref-title">Hidratación — ingesta total de referencia (EFSA)</p>
+        <table class="ref-table">
+          <tr><td>Hombres adultos</td><td>~2.5 L/día (incluye agua de alimentos)</td></tr>
+          <tr><td>Mujeres adultas</td><td>~2.0 L/día (incluye agua de alimentos)</td></tr>
+          <tr><td>Deportistas</td><td>Ajustar según tasa de sudoración individual y duración/intensidad</td></tr>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="mact">
+      <button class="btn-cancel" onclick="closeRef()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: PRÓXIMA ACCIÓN -->
+<div class="mbg" id="mAccion" style="display:none">
+  <div class="mc">
+    <p class="mt">Próxima acción</p>
+    <p class="ms">¿Qué toca hacer a continuación con este cliente?</p>
+    <input type="text" class="inp" id="accionInput" placeholder="Ej. Enviar menú, Cobrar, Esperando respuesta…">
+    <div class="mact">
+      <button class="btn-cancel" onclick="closeAccion()">Cancelar</button>
+      <button class="btn-ok" onclick="saveAccion()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CALCULADORA NUTRICIONAL -->
+<div class="mbg" id="mCalc" style="display:none">
+  <div class="mc calc-modal">
+    <div class="calc-head">
+      <p class="mt" style="margin:0">Calculadora nutricional</p>
+      <button class="calc-close" onclick="closeCalc()">✕</button>
+    </div>
+    <p class="ms">Fórmulas validadas: Mifflin-St Jeor, Harris-Benedict revisada y Katch-McArdle.</p>
+
+    <div class="calc-grid">
+      <div>
+        <label class="mfl">Sexo</label>
+        <select class="inp" id="calcSexo" onchange="calcAll()">
+          <option value="h">Hombre</option>
+          <option value="m">Mujer</option>
+        </select>
+      </div>
+      <div>
+        <label class="mfl">Edad (años)</label>
+        <input type="number" class="inp" id="calcEdad" value="30" oninput="calcAll()">
+      </div>
+      <div>
+        <label class="mfl">Peso (kg)</label>
+        <input type="number" class="inp" id="calcPeso" value="70" step="0.1" oninput="calcAll()">
+      </div>
+      <div>
+        <label class="mfl">Altura (cm)</label>
+        <input type="number" class="inp" id="calcAltura" value="175" oninput="calcAll()">
+      </div>
+      <div>
+        <label class="mfl">% Grasa corporal (opcional)</label>
+        <input type="number" class="inp" id="calcGrasa" placeholder="Solo para Katch-McArdle" step="0.1" oninput="calcAll()">
+      </div>
+      <div>
+        <label class="mfl">Fórmula de BMR</label>
+        <select class="inp" id="calcFormula" onchange="calcAll()">
+          <option value="mifflin">Mifflin-St Jeor (recomendada)</option>
+          <option value="harris">Harris-Benedict revisada</option>
+          <option value="katch">Katch-McArdle (requiere % grasa)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="calc-grid" style="margin-top:10px">
+      <div>
+        <label class="mfl">Nivel de actividad</label>
+        <select class="inp" id="calcActividad" onchange="calcAll()">
+          <option value="1.2">Sedentario — poco o ningún ejercicio</option>
+          <option value="1.375">Ligero — ejercicio 1-3 días/semana</option>
+          <option value="1.55" selected>Moderado — ejercicio 3-5 días/semana</option>
+          <option value="1.725">Activo — ejercicio intenso 6-7 días/semana</option>
+          <option value="1.9">Muy activo — ejercicio muy intenso + trabajo físico</option>
+        </select>
+      </div>
+      <div>
+        <label class="mfl">Objetivo calórico</label>
+        <select class="inp" id="calcObjetivo" onchange="calcAll()">
+          <option value="-20">Déficit agresivo (-20%)</option>
+          <option value="-15">Déficit moderado (-15%)</option>
+          <option value="-10" selected>Déficit ligero (-10%)</option>
+          <option value="0">Mantenimiento</option>
+          <option value="10">Superávit ligero (+10%)</option>
+          <option value="15">Superávit moderado (+15%)</option>
+        </select>
+      </div>
+      <div>
+        <label class="mfl">Proteína objetivo</label>
+        <select class="inp" id="calcProteina" onchange="calcAll()">
+          <option value="0.8">0.8 g/kg — Sedentario / RDA mínimo</option>
+          <option value="1.2">1.2 g/kg — Salud general</option>
+          <option value="1.6" selected>1.6 g/kg — Actividad moderada</option>
+          <option value="2.0">2.0 g/kg — Hipertrofia / rendimiento</option>
+          <option value="2.4">2.4 g/kg — Déficit agresivo (preservar músculo)</option>
+        </select>
+      </div>
+      <div>
+        <label class="mfl">% Calorías de grasa</label>
+        <input type="number" class="inp" id="calcPctGrasa" value="25" oninput="calcAll()">
+      </div>
+    </div>
+
+    <p class="calc-warn" id="calcWarn" style="display:none"></p>
+
+    <div class="calc-results" id="calcResults"></div>
+
+    <div class="mact">
+      <button class="btn-cancel" onclick="closeCalc()">Cerrar</button>
     </div>
   </div>
 </div>
@@ -1249,6 +1552,21 @@ async function loadDashboard(){
     return `<div class="dash-row"><div class="dash-row-dot ${c.fecha===todayISO?'gold':'teal'}"></div><div class="dash-row-txt"><div class="dash-row-name">${c.cliente}</div><div class="dash-row-sub">${c.servicio||'Revisión'}${hora?' · '+hora:''}</div></div><span class="dash-row-tag">${tag}</span></div>`;
   }).join(''):'<p class="dash-empty">Sin sesiones para hoy o mañana.</p>';
 
+  // ── Cola de recordatorios WhatsApp por enviar (hoy/mañana, no enviados aún) ──
+  const cola=sesiones.filter(c=>!c.recordatorio_enviado);
+  document.getElementById('dashColaCount').textContent=cola.length;
+  document.getElementById('dashCola').innerHTML=cola.length?cola.map(c=>{
+    const tag=c.fecha===todayISO?'Hoy':'Mañana';
+    const hora=c.hora?c.hora.slice(0,5)+'h':'';
+    return `<div class="dash-row">
+      <div class="dash-row-dot gold"></div>
+      <div class="dash-row-txt"><div class="dash-row-name">${c.cliente}</div><div class="dash-row-sub">${c.servicio||'Revisión'}${hora?' · '+hora:''} · ${tag}</div></div>
+      <button class="agenda-wa" style="width:26px;height:26px" onclick="sendWhatsAppRecordatorio(${c.id},'${c.cliente.replace(/'/g,"\\'")}','${c.fecha}',${c.hora?`'${c.hora}'`:'null'},'${(c.servicio||'Revisión').replace(/'/g,"\\'")}')" title="Enviar recordatorio">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.05 2zm5.72 14.17c-.24.68-1.39 1.3-1.91 1.35-.49.05-1.09.08-1.75-.11-.4-.12-.92-.29-1.58-.57-2.79-1.2-4.61-4-4.75-4.19-.14-.19-1.14-1.51-1.14-2.88 0-1.37.72-2.04.97-2.32.25-.28.55-.35.73-.35.19 0 .37 0 .53.01.17.01.4-.06.62.48.24.58.81 1.99.88 2.13.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.29.29-.12.57.17.28.75 1.24 1.61 2.01 1.11.99 2.04 1.3 2.32 1.44.28.14.44.12.61-.07.17-.19.71-.82.9-1.11.19-.28.38-.23.63-.14.26.09 1.65.78 1.93.92.28.14.47.21.53.33.07.12.07.68-.17 1.36z"/></svg>
+      </button>
+    </div>`;
+  }).join(''):'<p class="dash-empty">Nada pendiente de enviar. ✓</p>';
+
   // ── Pagos pendientes/atrasados ──
   const impagos=dashCitas.filter(c=>!c.pagado&&c.requiere_pago!==false).sort((a,b)=>a.fecha.localeCompare(b.fecha));
   document.getElementById('dashPagosCount').textContent=impagos.length;
@@ -1378,6 +1696,7 @@ function renderDash(){
         <span class="cpct">${c.semana||0} / 12 semanas</span>
         ${done?'':`<span class="cpct">${remaining} semana${remaining===1?'':'s'} restantes</span>`}
       </div>
+      <div class="accion-badge${c.proxima_accion?'':' empty'}" onclick="event.stopPropagation();openAccion('cliente',${c.id},'${(c.proxima_accion||'').replace(/'/g,"\\'")}')">${c.proxima_accion || '+ Próxima acción'}</div>
       ${c.email?`<div style="font-size:11px;color:var(--g400);margin-top:6px;border-top:.5px solid var(--bd);padding-top:6px">📧 ${c.email}</div>`:''}
     </div>`;
   }).join('');
@@ -1704,6 +2023,7 @@ function renderDeportistas() {
       <div class="dep-sport">${d.deporte || '—'}</div>
       ${d.objetivo ? `<div class="dep-obj-badge">${d.objetivo}</div>` : ''}
       ${revisionBadge(d.proxima_revision)}
+      <div class="accion-badge${d.proxima_accion?'':' empty'}" onclick="event.stopPropagation();openAccion('deportista',${d.id},'${(d.proxima_accion||'').replace(/'/g,"\\'")}')">${d.proxima_accion || '+ Próxima acción'}</div>
     </div>`;
   }).join('');
 }
@@ -1914,7 +2234,25 @@ function renderCitas() {
 }
 
 // ═══════════════ WHATSAPP RÁPIDO ═══════════════
-// ═══════════════ EXPORTAR CALENDARIO (.ics) ═══════════════
+async function sendWhatsAppRecordatorio(citaId, cliente, fecha, hora, servicio){
+  const d = new Date(fecha+'T00:00:00');
+  const dateStr = d.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
+  const horaTxt = hora ? ` a las ${hora.slice(0,5)}h` : '';
+  const msg = `Hola ${cliente}! Te escribo para recordarte tu próxima cita de ${servicio} el ${dateStr}${horaTxt}. ¡Nos vemos! 💪`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+  if(citaId){
+    await patchCita(citaId, {recordatorio_enviado: true});
+    const c = citas.find(x=>x.id===citaId);
+    if(c) c.recordatorio_enviado = true;
+    renderCitas();
+    if(document.getElementById('vhome').classList.contains('active')) loadDashboard();
+  }
+}
+function sendWhatsAppGenerico(nombre){
+  const msg = `Hola ${nombre}! `;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
 // ═══════════════ EXPORTAR PDF (vía impresión del navegador) ═══════════════
 function printNow(){
   setTimeout(()=>{ window.print(); }, 100);
@@ -1976,56 +2314,148 @@ function exportDeportistaPDF(id){
   printNow();
 }
 
-function exportICS(){
-  if(!citas.length){ alert('No hay citas para exportar.'); return; }
-  const pad = n => String(n).padStart(2,'0');
-  const esc = s => (s||'').replace(/[\\,;]/g, m => '\\'+m).replace(/\n/g,'\\n');
-  let ics = 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//NutriLogos//Panel Profesional//ES\r\nCALSCALE:GREGORIAN\r\n';
-  citas.forEach(c=>{
-    const [y,m,d] = c.fecha.split('-');
-    let dtstart, dtend, allday=false;
-    if(c.hora){
-      const [hh,mm] = c.hora.split(':');
-      dtstart = `${y}${m}${d}T${pad(hh)}${pad(mm)}00`;
-      const endDate = new Date(`${c.fecha}T${c.hora}`);
-      endDate.setMinutes(endDate.getMinutes()+45);
-      dtend = `${endDate.getFullYear()}${pad(endDate.getMonth()+1)}${pad(endDate.getDate())}T${pad(endDate.getHours())}${pad(endDate.getMinutes())}00`;
-    } else {
-      allday = true;
-      dtstart = `${y}${m}${d}`;
-      const nd = new Date(c.fecha+'T00:00:00'); nd.setDate(nd.getDate()+1);
-      dtend = `${nd.getFullYear()}${pad(nd.getMonth()+1)}${pad(nd.getDate())}`;
-    }
-    ics += 'BEGIN:VEVENT\r\n';
-    ics += `UID:cita-${c.id}@nutrilogos\r\n`;
-    ics += `DTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').split('.')[0]}Z\r\n`;
-    ics += allday ? `DTSTART;VALUE=DATE:${dtstart}\r\nDTEND;VALUE=DATE:${dtend}\r\n` : `DTSTART:${dtstart}\r\nDTEND:${dtend}\r\n`;
-    ics += `SUMMARY:${esc(c.cliente+' — '+(c.servicio||'Revisión'))}\r\n`;
-    if(c.nota) ics += `DESCRIPTION:${esc(c.nota)}\r\n`;
-    ics += 'END:VEVENT\r\n';
-  });
-  ics += 'END:VCALENDAR\r\n';
-  const blob = new Blob([ics], {type:'text/calendar;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `agenda-nutrilogos-${new Date().toISOString().slice(0,10)}.ics`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+// ═══════════════ CALCULADORA NUTRICIONAL ═══════════════
+// ═══════════════ PRÓXIMA ACCIÓN (cliente / deportista) ═══════════════
+let accionCtx = { tipo: null, id: null };
+function openAccion(tipo, id, actual){
+  accionCtx = { tipo, id };
+  document.getElementById('accionInput').value = actual || '';
+  document.getElementById('mAccion').style.display = 'flex';
+  setTimeout(()=>document.getElementById('accionInput').focus(), 80);
+}
+function closeAccion(){
+  document.getElementById('mAccion').style.display = 'none';
+}
+async function saveAccion(){
+  const val = document.getElementById('accionInput').value.trim();
+  const { tipo, id } = accionCtx;
+  if(tipo === 'cliente'){
+    await patch(id, { proxima_accion: val || null });
+    const c = clients.find(x=>x.id===id); if(c) c.proxima_accion = val || null;
+    renderDash();
+  } else if(tipo === 'deportista'){
+    await patchDep(id, { proxima_accion: val || null });
+    const d = deportistas.find(x=>x.id===id); if(d) d.proxima_accion = val || null;
+    renderDeportistas();
+  }
+  closeAccion();
 }
 
-function sendWhatsAppRecordatorio(cliente, fecha, hora, servicio){
-  const d = new Date(fecha+'T00:00:00');
-  const dateStr = d.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
-  const horaTxt = hora ? ` a las ${hora.slice(0,5)}h` : '';
-  const msg = `Hola ${cliente}! Te escribo para recordarte tu próxima cita de ${servicio} el ${dateStr}${horaTxt}. ¡Nos vemos! 💪`;
-  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+// ═══════════════ REFERENCIA CLÍNICA ═══════════════
+function openRef(){
+  document.getElementById('mRef').style.display = 'flex';
 }
-function sendWhatsAppGenerico(nombre){
-  const msg = `Hola ${nombre}! `;
-  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+function closeRef(){
+  document.getElementById('mRef').style.display = 'none';
+}
+function refJump(sectionId){
+  document.getElementById(sectionId).scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function openCalc(){
+  document.getElementById('mCalc').style.display = 'flex';
+  calcAll();
+}
+function closeCalc(){
+  document.getElementById('mCalc').style.display = 'none';
+}
+
+function calcAll(){
+  const sexo = document.getElementById('calcSexo').value;
+  const edad = parseFloat(document.getElementById('calcEdad').value) || 0;
+  const peso = parseFloat(document.getElementById('calcPeso').value) || 0;
+  const altura = parseFloat(document.getElementById('calcAltura').value) || 0;
+  const grasaPct = parseFloat(document.getElementById('calcGrasa').value);
+  const formula = document.getElementById('calcFormula').value;
+  const pal = parseFloat(document.getElementById('calcActividad').value);
+  const ajuste = parseFloat(document.getElementById('calcObjetivo').value);
+  const proteinaGkg = parseFloat(document.getElementById('calcProteina').value);
+  const pctGrasaCal = parseFloat(document.getElementById('calcPctGrasa').value) || 25;
+
+  const warnEl = document.getElementById('calcWarn');
+  warnEl.style.display = 'none';
+
+  if(!peso || !altura || !edad){
+    document.getElementById('calcResults').innerHTML = '<p style="font-size:12px;color:rgba(255,255,255,.6);text-align:center;padding:10px 0">Rellena peso, altura y edad para calcular.</p>';
+    return;
+  }
+
+  let bmr;
+  if(formula === 'mifflin'){
+    bmr = sexo==='h' ? (10*peso + 6.25*altura - 5*edad + 5) : (10*peso + 6.25*altura - 5*edad - 161);
+  } else if(formula === 'harris'){
+    bmr = sexo==='h' ? (88.362 + 13.397*peso + 4.799*altura - 5.677*edad) : (447.593 + 9.247*peso + 3.098*altura - 4.330*edad);
+  } else if(formula === 'katch'){
+    if(!grasaPct){
+      warnEl.style.display = 'block';
+      warnEl.textContent = 'Katch-McArdle requiere el % de grasa corporal. Usando Mifflin-St Jeor mientras tanto.';
+      bmr = sexo==='h' ? (10*peso + 6.25*altura - 5*edad + 5) : (10*peso + 6.25*altura - 5*edad - 161);
+    } else {
+      const lbm = peso * (1 - grasaPct/100);
+      bmr = 370 + 21.6*lbm;
+    }
+  }
+
+  const tdee = bmr * pal;
+  const kcalObjetivo = tdee * (1 + ajuste/100);
+
+  const proteinaG = proteinaGkg * peso;
+  const proteinaKcal = proteinaG * 4;
+  const grasaKcal = kcalObjetivo * (pctGrasaCal/100);
+  const grasaG = grasaKcal / 9;
+  let carbosKcal = kcalObjetivo - proteinaKcal - grasaKcal;
+  let carbosG = carbosKcal / 4;
+
+  if(carbosKcal < 0){
+    warnEl.style.display = 'block';
+    warnEl.textContent = 'La proteína y grasa elegidas superan las calorías objetivo. Reduce el % de grasa o las kcal de proteína.';
+    carbosKcal = 0; carbosG = 0;
+  }
+
+  const pctP = Math.round(proteinaKcal/kcalObjetivo*100);
+  const pctF = Math.round(grasaKcal/kcalObjetivo*100);
+  const pctC = 100 - pctP - pctF;
+
+  document.getElementById('calcResults').innerHTML = `
+    <div class="calc-row"><span class="l">BMR (metabolismo basal)</span><span class="v">${Math.round(bmr)} kcal</span></div>
+    <div class="calc-row"><span class="l">TDEE (gasto total diario)</span><span class="v">${Math.round(tdee)} kcal</span></div>
+    <div class="calc-row hl"><span class="l">Calorías objetivo</span><span class="v">${Math.round(kcalObjetivo)} kcal</span></div>
+    <div class="calc-macro-bar">
+      <div class="calc-macro-seg p" style="width:${pctP}%"></div>
+      <div class="calc-macro-seg f" style="width:${pctF}%"></div>
+      <div class="calc-macro-seg c" style="width:${Math.max(pctC,0)}%"></div>
+    </div>
+    <div class="calc-macro-legend">
+      <span><span class="dot" style="background:#c19a6b"></span>Proteína ${pctP}%</span>
+      <span><span class="dot" style="background:#6a9cc2"></span>Grasa ${pctF}%</span>
+      <span><span class="dot" style="background:#5a9c68"></span>Carbohidratos ${Math.max(pctC,0)}%</span>
+    </div>
+    <div class="calc-row" style="margin-top:10px"><span class="l">Proteína (${proteinaGkg} g/kg)</span><span class="v">${Math.round(proteinaG)} g</span></div>
+    <div class="calc-row"><span class="l">Grasa (${pctGrasaCal}%)</span><span class="v">${Math.round(grasaG)} g</span></div>
+    <div class="calc-row"><span class="l">Carbohidratos (resto)</span><span class="v">${Math.round(carbosG)} g</span></div>
+  `;
+}
+
+function googleCalLink(c){
+  const pad = n => String(n).padStart(2,'0');
+  const [y,m,d] = c.fecha.split('-');
+  let datesParam, extra='';
+  if(c.hora){
+    const [hh,mm] = c.hora.split(':');
+    const start = `${y}${m}${d}T${pad(hh)}${pad(mm)}00`;
+    const endDate = new Date(`${c.fecha}T${c.hora}`);
+    endDate.setMinutes(endDate.getMinutes()+45);
+    const end = `${endDate.getFullYear()}${pad(endDate.getMonth()+1)}${pad(endDate.getDate())}T${pad(endDate.getHours())}${pad(endDate.getMinutes())}00`;
+    datesParam = `${start}/${end}`;
+    extra = '&ctz=Europe%2FMadrid';
+  } else {
+    const nd = new Date(c.fecha+'T00:00:00'); nd.setDate(nd.getDate()+1);
+    const endStr = `${nd.getFullYear()}${pad(nd.getMonth()+1)}${pad(nd.getDate())}`;
+    datesParam = `${y}${m}${d}/${endStr}`;
+  }
+  const text = encodeURIComponent(`${c.cliente} — ${c.servicio||'Revisión'}`);
+  const details = encodeURIComponent(c.nota||'');
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${datesParam}&details=${details}${extra}`;
 }
 
 function renderCitaItem(c, isPast) {
@@ -2038,6 +2468,7 @@ function renderCitaItem(c, isPast) {
   const payHtml = needsPay
     ? `<button class="pay-toggle ${paid?'paid':'pending'}" onclick="toggleCitaPago(${c.id})">${paid?'✓ Pagado':'Pendiente'}</button>`
     : `<span class="pay-toggle info">Sin pago individual</span>`;
+  const waSent = !!c.recordatorio_enviado;
   return `<div class="agenda-item${isPast?' past':''}">
     <div class="agenda-date-box">
       <div class="agenda-date-day">${day}</div>
@@ -2049,7 +2480,10 @@ function renderCitaItem(c, isPast) {
     </div>
     <div class="agenda-actions">
       ${payHtml}
-      <button class="agenda-wa" onclick="sendWhatsAppRecordatorio('${c.cliente.replace(/'/g,"\\'")}','${c.fecha}',${c.hora?`'${c.hora}'`:'null'},'${(c.servicio||'Revisión').replace(/'/g,"\\'")}')" title="Enviar recordatorio por WhatsApp">
+      <a class="agenda-cal" href="${googleCalLink(c)}" target="_blank" title="Añadir a Google Calendar">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/></svg>
+      </a>
+      <button class="agenda-wa${waSent?' sent':''}" onclick="sendWhatsAppRecordatorio(${c.id},'${c.cliente.replace(/'/g,"\\'")}','${c.fecha}',${c.hora?`'${c.hora}'`:'null'},'${(c.servicio||'Revisión').replace(/'/g,"\\'")}')" title="${waSent?'Recordatorio ya enviado — reenviar':'Enviar recordatorio por WhatsApp'}">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.05 2zm5.72 14.17c-.24.68-1.39 1.3-1.91 1.35-.49.05-1.09.08-1.75-.11-.4-.12-.92-.29-1.58-.57-2.79-1.2-4.61-4-4.75-4.19-.14-.19-1.14-1.51-1.14-2.88 0-1.37.72-2.04.97-2.32.25-.28.55-.35.73-.35.19 0 .37 0 .53.01.17.01.4-.06.62.48.24.58.81 1.99.88 2.13.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.29.29-.12.57.17.28.75 1.24 1.61 2.01 1.11.99 2.04 1.3 2.32 1.44.28.14.44.12.61-.07.17-.19.71-.82.9-1.11.19-.28.38-.23.63-.14.26.09 1.65.78 1.93.92.28.14.47.21.53.33.07.12.07.68-.17 1.36z"/></svg>
       </button>
       <button class="agenda-del" onclick="removeCita(${c.id})">
