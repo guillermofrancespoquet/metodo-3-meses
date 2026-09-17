@@ -299,6 +299,21 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 
 
 
+
+/* ═══ MODO OSCURO ═══ */
+body.dark-mode{
+  --bg:#14181a;--sf:#1f2426;--g900:#f0f0ec;--g700:#cfcec8;--g500:#9c9b95;--g400:#75746e;
+  --g200:#3a3d3a;--g100:#262a28;--bd:rgba(255,255,255,.08);--bdm:rgba(255,255,255,.16);
+  --t50:#193530;--gold-50:#2e2718;--red-bg:#3a1f1f;
+}
+body.dark-mode .gsearch-modal,
+body.dark-mode .comp-result-item img,
+body.dark-mode .comp-card,
+body.dark-mode .agenda-tab.on{background:var(--sf)}
+body.dark-mode .week-chip{background:var(--gold-50)}
+body.dark-mode .week-chip.paid{background:var(--t50)}
+body.dark-mode img{opacity:.92}
+
 /* ═══ MOBILE RESPONSIVE SIDEBAR ═══ */
 .mobile-topbar{display:none;position:fixed;top:0;left:0;right:0;height:56px;background:var(--t900);z-index:150;align-items:center;padding:0 1rem;gap:12px}
 .mobile-topbar-brand{display:flex;align-items:center;gap:9px;flex:1;min-width:0}
@@ -324,6 +339,7 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .sb-brand-txt{font-size:13px;font-weight:600;color:#fff;line-height:1.3}
 .sb-brand-sub{font-size:10px;color:rgba(255,255,255,.4)}
 .sb-nav{display:flex;flex-direction:column;gap:2px;padding:0 .75rem;flex:1}
+.sb-divider{padding:14px 1.25rem 6px;font-size:10px;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.6px;margin:0}
 .sb-item{
   display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;
   color:rgba(255,255,255,.62);font-size:13.5px;font-weight:500;cursor:pointer;
@@ -363,6 +379,33 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .sb-logout svg{flex-shrink:0;opacity:.9}
 
 /* ═══ DASHBOARD ═══ */
+.comp-search-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.comp-search-col{background:var(--sf);border-radius:16px;border:.5px solid var(--bd);padding:14px}
+.comp-results{max-height:180px;overflow-y:auto;margin-top:8px}
+.comp-result-item{padding:8px 10px;border-radius:8px;cursor:pointer;font-size:12px;display:flex;align-items:center;gap:8px}
+.comp-result-item:hover{background:var(--g100)}
+.comp-result-item img{width:28px;height:28px;object-fit:contain;border-radius:4px;flex-shrink:0;background:#fff}
+.comp-card{margin-top:12px;background:#fff;border:.5px solid var(--bd);border-radius:12px;padding:14px}
+.comp-card-name{font-size:13px;font-weight:700;color:var(--g900);margin-bottom:2px}
+.comp-card-brand{font-size:11px;color:var(--g400);margin-bottom:10px}
+.comp-nutri-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:.5px solid var(--bd);font-size:12px}
+.comp-nutri-row:last-child{border-bottom:none}
+.comp-nutri-row.hl{font-weight:700;color:var(--t600)}
+.menu-day{background:var(--sf);border-radius:16px;border:.5px solid var(--bd);padding:16px 18px;margin-bottom:12px}
+.menu-day-title{font-size:12.5px;font-weight:700;color:var(--t800);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--bd)}
+.menu-meal{display:flex;justify-content:space-between;padding:6px 0;font-size:12px}
+.menu-meal .name{color:var(--g500);min-width:90px;font-weight:600}
+.menu-meal .food{color:var(--g900);flex:1}
+.menu-meal .kcal{color:var(--g400);white-space:nowrap;margin-left:8px}
+.menu-day-total{text-align:right;font-size:11px;font-weight:700;color:var(--gold-dk);margin-top:6px;padding-top:6px;border-top:.5px dashed var(--bd)}
+.prog-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:.5px solid var(--bd)}
+.prog-item:last-child{border-bottom:none}
+.prog-date{font-size:11px;font-weight:600;color:var(--gold-dk);white-space:nowrap;min-width:70px}
+.prog-ej{font-size:12px;font-weight:600;color:var(--g900)}
+.prog-val{font-size:12px;color:var(--t600);font-weight:700}
+.prog-nota{font-size:11px;color:var(--g400)}
+@media (max-width:860px){.comp-search-grid{grid-template-columns:1fr}}
+
 .rem-add{display:flex;gap:8px;margin-bottom:10px}
 .btn-rem-add{background:var(--t400);border:none;border-radius:8px;color:#fff;font-size:12px;font-weight:600;padding:0 16px;cursor:pointer;font-family:var(--f);white-space:nowrap}
 .rem-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:.5px solid var(--bd)}
@@ -403,6 +446,10 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .fact-row-name{flex:1;font-size:12.5px;font-weight:600;color:var(--g900)}
 .fact-row-date{font-size:11px;color:var(--g400)}
 .fact-row-amount{font-size:13px;font-weight:700;color:var(--t600)}
+.fact-card{background:linear-gradient(135deg,var(--t900) 0%,#1f4d5e 100%);border-radius:16px;padding:16px 20px;margin-bottom:1.5rem;color:#fff;display:flex;align-items:flex-start;gap:12px}
+.fact-card svg{flex-shrink:0;color:var(--gold);margin-top:2px}
+.fact-card-label{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gold);margin-bottom:4px}
+.fact-card-txt{font-size:12.5px;line-height:1.55;color:rgba(255,255,255,.92)}
 .dash-hero{margin-bottom:1.75rem}
 .dash-greet{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
 .dash-date{font-size:13px;color:var(--g400);text-transform:capitalize}
@@ -467,9 +514,9 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .accion-badge::before{content:'';flex-shrink:0;width:12px;height:12px;background-color:currentColor;-webkit-mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.2"><path d="M4 22V4a1 1 0 0 1 1-1h13.5a1 1 0 0 1 .8 1.6l-3 4a1 1 0 0 0 0 1.2l3 4a1 1 0 0 1-.8 1.6H5"/></svg>') center/contain no-repeat;mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.2"><path d="M4 22V4a1 1 0 0 1 1-1h13.5a1 1 0 0 1 .8 1.6l-3 4a1 1 0 0 0 0 1.2l3 4a1 1 0 0 1-.8 1.6H5"/></svg>') center/contain no-repeat}
 .accion-badge.empty{color:var(--g400);font-weight:500;font-style:italic}
 
-.ref-modal{max-width:680px}
+
 .ref-jump{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
-.ref-body{max-height:50vh;overflow-y:auto;padding-right:6px}
+.ref-body{}
 .ref-section{margin-bottom:20px;scroll-margin-top:10px}
 .ref-title{font-size:12.5px;font-weight:700;color:var(--t800);margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--bd)}
 .ref-table{width:100%;border-collapse:collapse;font-size:12px}
@@ -480,7 +527,7 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .ref-formula{background:var(--t50);border-radius:8px;padding:10px 14px;font-size:11.5px;color:var(--t800);font-family:monospace;line-height:1.7}
 .ref-note{font-size:10.5px;color:var(--g400);margin-top:6px;line-height:1.5;font-style:italic}
 
-.calc-modal{max-width:640px;max-height:88vh;overflow-y:auto}
+
 .calc-head{display:flex;align-items:center;justify-content:space-between}
 .calc-close{background:var(--g100);border:none;border-radius:8px;width:28px;height:28px;cursor:pointer;color:var(--g500);font-size:13px}
 .calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -596,16 +643,33 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
       <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       Facturación
     </button>
-    <button class="sb-item" onclick="openCalc()">
+    <p class="sb-divider">Herramientas</p>
+    <button class="sb-item" id="sbCalc" onclick="navTo('calculadora')">
       <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8" y2="10.01"/><line x1="12" y1="10" x2="12" y2="10.01"/><line x1="16" y1="10" x2="16" y2="10.01"/><line x1="8" y1="14" x2="8" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="16" y1="14" x2="16" y2="14.01"/><line x1="8" y1="18" x2="16" y2="18"/></svg>
       Calculadora
     </button>
-    <button class="sb-item" onclick="openRef()">
+    <button class="sb-item" id="sbRef" onclick="navTo('referencia')">
       <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
       Referencia clínica
     </button>
+    <button class="sb-item" id="sbComp" onclick="navTo('comparador')">
+      <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0H5a2 2 0 0 1-2-2v-4m6 6h10a2 2 0 0 0 2-2v-4"/></svg>
+      Comparador de alimentos
+    </button>
+    <button class="sb-item" id="sbMenu" onclick="navTo('menugen')">
+      <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+      Menú semanal
+    </button>
+    <button class="sb-item" id="sbEntreno" onclick="navTo('entreno')">
+      <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11"/><path d="M5 8l-2-2 2-2 2 2z"/><path d="M19 16l2 2-2 2-2-2z"/><path d="M8 5l1.5-1.5a2 2 0 0 1 2.8 0l.2.2a2 2 0 0 1 0 2.8L11 8"/><path d="M16 13l-1.5 1.5a2 2 0 0 0 0 2.8l.2.2a2 2 0 0 0 2.8 0L19 16"/></svg>
+      Entrenamiento
+    </button>
   </div>
   <div class="sb-foot">
+    <button class="sb-export" id="darkModeBtn" onclick="toggleDarkMode()">
+      <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <span id="darkModeLabel">Modo oscuro</span>
+    </button>
     <button class="sb-export" onclick="exportAllData();closeMobileSidebar()">
       <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       Copia de seguridad
@@ -627,6 +691,8 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
     </div>
 
     <div class="dash-stats" id="dashStats" style="margin-bottom:1.5rem"></div>
+
+    <div class="fact-card" id="factCard"></div>
 
     <div class="dash-card" style="margin-bottom:1.5rem">
       <div class="dash-card-head">
@@ -716,6 +782,133 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
       </div>
       <div id="factPendList"></div>
     </div>
+  </div>
+</div>
+
+<!-- PÁGINA: ENTRENAMIENTO -->
+<div id="ventreno" class="view">
+  <div class="page">
+    <div class="page-header">
+      <div><p class="page-title">Entrenamiento</p><p class="page-sub">1RM, zonas de intensidad y progresión de cargas — cualquier deporte</p></div>
+    </div>
+
+    <div class="dash-card" style="margin-bottom:1.5rem">
+      <div class="dash-card-head">
+        <span class="dash-card-title"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11"/><path d="M5 8l-2-2 2-2 2 2z"/><path d="M19 16l2 2-2 2-2-2z"/></svg>1RM estimado y zonas de intensidad</span>
+      </div>
+      <div class="calc-grid">
+        <div>
+          <label class="mfl">Peso levantado (kg)</label>
+          <input type="number" class="inp" id="rmPeso" step="0.5" placeholder="Ej. 80" oninput="calcRM()">
+        </div>
+        <div>
+          <label class="mfl">Repeticiones realizadas</label>
+          <input type="number" class="inp" id="rmReps" placeholder="Ej. 6" oninput="calcRM()">
+        </div>
+        <div>
+          <label class="mfl">Fórmula</label>
+          <select class="inp" id="rmFormula" onchange="calcRM()">
+            <option value="epley">Epley</option>
+            <option value="brzycki">Brzycki</option>
+          </select>
+        </div>
+      </div>
+      <p class="calc-warn" id="rmWarn" style="display:none"></p>
+      <div id="rmResults"></div>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-card-head">
+        <span class="dash-card-title"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Progresión de cargas</span>
+      </div>
+      <div class="calc-grid" style="margin-bottom:12px">
+        <div>
+          <label class="mfl">Deportista</label>
+          <select class="inp" id="progDeportista" onchange="loadProgresion()"></select>
+        </div>
+        <div>
+          <label class="mfl">Ejercicio / actividad</label>
+          <input type="text" class="inp" id="progEjercicio" placeholder="Ej. Sentadilla, 10K, FTP ciclismo…">
+        </div>
+        <div>
+          <label class="mfl">Valor registrado</label>
+          <input type="text" class="inp" id="progValor" placeholder="Ej. 80kg x 5, 10km en 42min, 250W">
+        </div>
+        <div>
+          <label class="mfl">Fecha</label>
+          <input type="date" class="inp" id="progFecha">
+        </div>
+      </div>
+      <div class="hist-add">
+        <input type="text" class="inp" id="progNota" placeholder="Nota opcional (RPE, sensaciones, contexto…)" style="margin:0;flex:1">
+        <button class="btn-hist-add" onclick="addProgresion()">Añadir registro</button>
+      </div>
+      <div id="progList" style="margin-top:12px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PÁGINA: COMPARADOR DE ALIMENTOS -->
+<div id="vcomp" class="view">
+  <div class="page">
+    <div class="page-header">
+      <div><p class="page-title">Comparador de alimentos</p><p class="page-sub">Datos de Open Food Facts — la mayor base de datos abierta, con miles de productos reales de Mercadona, Consum, Lidl y Aldi</p></div>
+    </div>
+
+    <div class="comp-search-grid">
+      <div class="comp-search-col">
+        <div class="dep-search" style="width:100%">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="compSearchA" placeholder="Buscar alimento A…" oninput="compSearch('A')">
+        </div>
+        <div id="compResultsA" class="comp-results"></div>
+        <div id="compCardA"></div>
+      </div>
+      <div class="comp-search-col">
+        <div class="dep-search" style="width:100%">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="compSearchB" placeholder="Buscar alimento B…" oninput="compSearch('B')">
+        </div>
+        <div id="compResultsB" class="comp-results"></div>
+        <div id="compCardB"></div>
+      </div>
+    </div>
+    <p class="ref-note" style="margin-top:14px">Valores por 100g/100mL, tal como los reporta el fabricante o el usuario que subió el producto a Open Food Facts. Verifica siempre en el envase real cuando sea posible.</p>
+  </div>
+</div>
+
+<!-- PÁGINA: GENERADOR DE MENÚ SEMANAL -->
+<div id="vmenu" class="view">
+  <div class="page">
+    <div class="page-header">
+      <div><p class="page-title">Generador de menú semanal</p><p class="page-sub">Plantillas plant-based first — legumbres, integrales y vegetales como protagonistas</p></div>
+    </div>
+
+    <div class="calc-grid" style="margin-bottom:14px">
+      <div>
+        <label class="mfl">Calorías objetivo</label>
+        <select class="inp" id="menuKcal">
+          <option value="1500">1500 kcal</option>
+          <option value="2000" selected>2000 kcal</option>
+          <option value="2500">2500 kcal</option>
+        </select>
+      </div>
+      <div>
+        <label class="mfl">Enfoque</label>
+        <select class="inp" id="menuEnfoque">
+          <option value="flex">Plant-based flexible (con complementos)</option>
+          <option value="strict">100% vegetal</option>
+        </select>
+      </div>
+      <div style="display:flex;align-items:flex-end">
+        <button class="btn-add" style="width:100%;justify-content:center" onclick="generarMenu()">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.85.99 6.57 2.57L21 8"/><path d="M21 3v5h-5"/></svg>
+          Generar menú
+        </button>
+      </div>
+    </div>
+
+    <div id="menuResult"></div>
   </div>
 </div>
 
@@ -992,14 +1185,12 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
   </div>
 </div>
 
-<!-- MODAL: REFERENCIA CLÍNICA -->
-<div class="mbg" id="mRef" style="display:none">
-  <div class="mc calc-modal ref-modal">
-    <div class="calc-head">
-      <p class="mt" style="margin:0">Referencia clínica rápida</p>
-      <button class="calc-close" onclick="closeRef()">✕</button>
+<!-- PÁGINA: REFERENCIA CLÍNICA -->
+<div id="vref" class="view">
+  <div class="page">
+    <div class="page-header">
+      <div><p class="page-title">Referencia clínica</p><p class="page-sub">Valores estándar para adultos — los rangos de tu laboratorio siempre tienen prioridad</p></div>
     </div>
-    <p class="ms">Valores de referencia estándar para adultos. Úsalos como guía general — los rangos de laboratorio propios siempre tienen prioridad sobre estos.</p>
 
     <div class="ref-jump">
       <button class="dep-chip" onclick="refJump('refImc')">IMC</button>
@@ -1168,10 +1359,6 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
       </div>
 
     </div>
-
-    <div class="mact">
-      <button class="btn-cancel" onclick="closeRef()">Cerrar</button>
-    </div>
   </div>
 </div>
 
@@ -1188,14 +1375,16 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
   </div>
 </div>
 
-<!-- MODAL: CALCULADORA NUTRICIONAL -->
-<div class="mbg" id="mCalc" style="display:none">
-  <div class="mc calc-modal">
-    <div class="calc-head">
-      <p class="mt" style="margin:0">Calculadora nutricional</p>
-      <button class="calc-close" onclick="closeCalc()">✕</button>
+<!-- PÁGINA: CALCULADORA NUTRICIONAL -->
+<div id="vcalc" class="view">
+  <div class="page">
+    <div class="page-header">
+      <div><p class="page-title">Calculadora nutricional</p><p class="page-sub">Mifflin-St Jeor, Harris-Benedict revisada, Katch-McArdle y estimación de sudoración ACSM</p></div>
+      <button class="btn-add" onclick="exportCalcPDF()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Exportar PDF
+      </button>
     </div>
-    <p class="ms">Fórmulas validadas: Mifflin-St Jeor, Harris-Benedict revisada, Katch-McArdle y estimación de sudoración ACSM.</p>
 
     <div class="agenda-tabs" style="margin-bottom:14px">
       <button class="agenda-tab on" id="calcTabEnergiaBtn" onclick="setCalcTab('energia')">Energía y macros</button>
@@ -1326,11 +1515,6 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
       <p class="calc-warn" id="hidraWarn" style="display:none"></p>
       <div class="calc-results" id="hidraResults"></div>
     </div>
-
-    <div class="mact">
-      <button class="btn-cancel" onclick="closeCalc()">Cerrar</button>
-      <button class="btn-ok" onclick="exportCalcPDF()">Exportar PDF</button>
-    </div>
   </div>
 </div>
 
@@ -1341,6 +1525,8 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 const SURL='https://knmucvrbxpzmrjwxyksj.supabase.co';
 const SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtubXVjdnJieHB6bXJqd3h5a3NqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExOTE4NTgsImV4cCI6MjA5Njc2Nzg1OH0.DRKDDzKlxCXFedofGvXF0dLhWtSQ4LLI9oLWItEYJGQ';
 const PASS='1099';
+// Fecha local en formato YYYY-MM-DD, sin pasar por UTC (toISOString() desplaza un día en husos horarios positivos como España)
+function localISO(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 const WKT=['¿Dónde estás ahora?','Cómo funciona la energía','Los mejores alimentos según la ciencia','Hambre, saciedad y señales reales','Proteína: la gran incomprendida','Carbohidratos sin miedo','Grasas, inflamación y longevidad','Construye tu menú semanal','Nutrición en el mundo real','Leer etiquetas y no morir en el intento','Tu cuerpo a largo plazo','Cierre y entrega de autonomía'];
 
 let clients=[], currentId=null;
@@ -1378,7 +1564,7 @@ async function exportAllData() {
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    const dateStr = new Date().toISOString().slice(0,10);
+    const dateStr = localISO(new Date());
     a.href = url;
     a.download = `nutrilogos-backup-${dateStr}.json`;
     document.body.appendChild(a);
@@ -1560,6 +1746,234 @@ function enPeriodo(fechaStr, hoy){
   return true;
 }
 
+// ═══════════════ ENTRENAMIENTO ═══════════════
+function calcRM(){
+  const peso = parseFloat(document.getElementById('rmPeso').value);
+  const reps = parseFloat(document.getElementById('rmReps').value);
+  const formula = document.getElementById('rmFormula').value;
+  const warnEl = document.getElementById('rmWarn');
+  warnEl.style.display = 'none';
+
+  if(!peso || !reps){
+    document.getElementById('rmResults').innerHTML = '';
+    return;
+  }
+  if(reps > 12){
+    warnEl.style.display = 'block';
+    warnEl.textContent = 'Con más de 12 repeticiones la estimación de 1RM pierde fiabilidad — úsala como orientación, no como dato exacto.';
+  }
+
+  let rm;
+  if(formula === 'epley'){
+    rm = peso * (1 + reps/30);
+  } else {
+    rm = peso / (1.0278 - 0.0278*reps);
+  }
+
+  const zonas = [
+    {label:'Fuerza máxima', pct:[90,100], color:'#c0392b'},
+    {label:'Fuerza', pct:[80,90], color:'#c19a6b'},
+    {label:'Hipertrofia', pct:[65,80], color:'#5a9c68'},
+    {label:'Resistencia muscular', pct:[50,65], color:'#6a9cc2'}
+  ];
+
+  document.getElementById('rmResults').innerHTML = `
+    <div class="calc-results" style="margin-top:12px">
+      <div class="calc-row hl"><span class="l">1RM estimado (${formula==='epley'?'Epley':'Brzycki'})</span><span class="v">${rm.toFixed(1)} kg</span></div>
+      ${zonas.map(z=>`<div class="calc-row"><span class="l">${z.label} (${z.pct[0]}–${z.pct[1]}%)</span><span class="v">${(rm*z.pct[0]/100).toFixed(1)} – ${(rm*z.pct[1]/100).toFixed(1)} kg</span></div>`).join('')}
+    </div>
+  `;
+}
+
+let entrenoDeportistas = [];
+async function loadEntreno(){
+  entrenoDeportistas = deportistas.length ? deportistas : (await getDeportistas() || []);
+  const sel = document.getElementById('progDeportista');
+  sel.innerHTML = entrenoDeportistas.map(d=>`<option value="${d.id}">${d.nombre}</option>`).join('');
+  if(!document.getElementById('progFecha').value){
+    document.getElementById('progFecha').value = localISO(new Date());
+  }
+  if(entrenoDeportistas.length) loadProgresion();
+}
+
+const getProgresion = (depId) => sb(`progresion_cargas?deportista_id=eq.${depId}&select=*&order=fecha.desc`);
+const insertProgresion = (d) => sb('progresion_cargas', {method:'POST', body: JSON.stringify(d)});
+
+async function loadProgresion(){
+  const depId = document.getElementById('progDeportista').value;
+  const listEl = document.getElementById('progList');
+  if(!depId){ listEl.innerHTML = ''; return; }
+  listEl.innerHTML = '<p class="dash-empty">Cargando…</p>';
+  const rows = await getProgresion(depId) || [];
+  if(!rows.length){ listEl.innerHTML = '<p class="dash-empty">Sin registros todavía para este deportista.</p>'; return; }
+  listEl.innerHTML = rows.map(r=>{
+    const dateStr = new Date(r.fecha+'T00:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'short'});
+    return `<div class="prog-item">
+      <span class="prog-date">${dateStr}</span>
+      <div style="flex:1">
+        <div class="prog-ej">${r.ejercicio} <span class="prog-val">${r.valor}</span></div>
+        ${r.nota?`<div class="prog-nota">${r.nota}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function addProgresion(){
+  const depId = document.getElementById('progDeportista').value;
+  const ejercicio = document.getElementById('progEjercicio').value.trim();
+  const valor = document.getElementById('progValor').value.trim();
+  const fecha = document.getElementById('progFecha').value || localISO(new Date());
+  const nota = document.getElementById('progNota').value.trim();
+  if(!depId || !ejercicio || !valor){ alert('Elige deportista, ejercicio y valor.'); return; }
+  await insertProgresion({deportista_id: parseInt(depId), ejercicio, valor, fecha, nota: nota||null});
+  document.getElementById('progEjercicio').value = '';
+  document.getElementById('progValor').value = '';
+  document.getElementById('progNota').value = '';
+  await loadProgresion();
+}
+
+// ═══════════════ COMPARADOR DE ALIMENTOS (Open Food Facts) ═══════════════
+let compTimers = {A:null, B:null};
+let compData = {A:null, B:null};
+
+function compSearch(side){
+  clearTimeout(compTimers[side]);
+  const q = document.getElementById('compSearch'+side).value.trim();
+  const resEl = document.getElementById('compResults'+side);
+  if(q.length < 3){ resEl.innerHTML = ''; return; }
+  compTimers[side] = setTimeout(async ()=>{
+    resEl.innerHTML = '<p class="dash-empty">Buscando…</p>';
+    try{
+      const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process&json=1&page_size=6&lc=es`;
+      const r = await fetch(url);
+      const data = await r.json();
+      const products = (data.products||[]).filter(p=>p.product_name);
+      if(!products.length){ resEl.innerHTML = '<p class="dash-empty">Sin resultados.</p>'; return; }
+      resEl.innerHTML = products.map(p=>`
+        <div class="comp-result-item" onclick='compSelect("${side}", ${JSON.stringify(p).replace(/'/g,"&apos;")})'>
+          ${p.image_small_url?`<img src="${p.image_small_url}">`:''}
+          <span>${p.product_name}${p.brands?' · '+p.brands.split(',')[0]:''}</span>
+        </div>
+      `).join('');
+    }catch(e){
+      resEl.innerHTML = '<p class="dash-empty">Error al buscar. Inténtalo de nuevo.</p>';
+    }
+  }, 450);
+}
+
+function compSelect(side, product){
+  compData[side] = product;
+  document.getElementById('compResults'+side).innerHTML = '';
+  document.getElementById('compSearch'+side).value = product.product_name;
+  renderCompCards();
+}
+
+function compVal(n){ return (n===undefined||n===null||isNaN(n)) ? '—' : (Math.round(n*10)/10); }
+
+function renderCompCards(){
+  ['A','B'].forEach(side=>{
+    const p = compData[side];
+    const el = document.getElementById('compCard'+side);
+    if(!p){ el.innerHTML = ''; return; }
+    const n = p.nutriments || {};
+    const other = compData[side==='A'?'B':'A'];
+    const fields = [
+      {k:'energy-kcal_100g', label:'Energía', unit:'kcal', better:'low'},
+      {k:'proteins_100g', label:'Proteína', unit:'g', better:'high'},
+      {k:'carbohydrates_100g', label:'Carbohidratos', unit:'g', better:null},
+      {k:'sugars_100g', label:'Azúcares', unit:'g', better:'low'},
+      {k:'fat_100g', label:'Grasas', unit:'g', better:null},
+      {k:'saturated-fat_100g', label:'Grasas saturadas', unit:'g', better:'low'},
+      {k:'fiber_100g', label:'Fibra', unit:'g', better:'high'},
+      {k:'salt_100g', label:'Sal', unit:'g', better:'low'}
+    ];
+    el.innerHTML = `<div class="comp-card">
+      <div class="comp-card-name">${p.product_name}</div>
+      <div class="comp-card-brand">${p.brands||'Marca no especificada'} ${p.nutriscore_grade?'· Nutri-Score '+p.nutriscore_grade.toUpperCase():''}</div>
+      ${fields.map(f=>{
+        const v = n[f.k];
+        let hl = '';
+        if(other && f.better && other.nutriments && other.nutriments[f.k]!==undefined && v!==undefined){
+          const ov = other.nutriments[f.k];
+          if(f.better==='high' && v>ov) hl='hl'; if(f.better==='low' && v<ov) hl='hl';
+        }
+        return `<div class="comp-nutri-row ${hl}"><span>${f.label}</span><span>${compVal(v)} ${f.unit}</span></div>`;
+      }).join('')}
+    </div>`;
+  });
+}
+
+// ═══════════════ GENERADOR DE MENÚ SEMANAL (plant-based first) ═══════════════
+const MENU_BANK = {
+  desayuno: [
+    {n:'Porridge de avena con plátano y canela', k:350},
+    {n:'Tostadas de pan integral con aguacate y tomate', k:320},
+    {n:'Yogur de soja con frutos rojos y semillas de chía', k:280},
+    {n:'Batido verde (espinaca, plátano, leche de avena, mantequilla de cacahuete)', k:380},
+    {n:'Tostada integral con hummus y pepino', k:300},
+    {n:'Gachas de avena con manzana y nueces', k:360}
+  ],
+  comida: [
+    {n:'Lentejas estofadas con verduras y arroz integral', k:550},
+    {n:'Garbanzos salteados con espinacas y quinoa', k:520},
+    {n:'Bowl de tofu a la plancha, boniato y brócoli', k:540},
+    {n:'Ensalada templada de alubias, pimiento y arroz integral', k:500},
+    {n:'Curry de garbanzos y verduras con arroz integral', k:560},
+    {n:'Salteado de tempeh con verduras y fideos integrales', k:530},
+    {n:'Guiso de judías blancas con calabaza y espinacas', k:510}
+  ],
+  cena: [
+    {n:'Crema de calabacín con picatostes integrales y huevo', k:400, strict:false},
+    {n:'Tortilla de garbanzo (sin huevo) con ensalada verde', k:420, strict:true},
+    {n:'Tofu al horno con verduras asadas', k:410, strict:true},
+    {n:'Salmón al horno con verduras (complemento ocasional)', k:450, strict:false},
+    {n:'Wok de verduras con edamame y arroz integral', k:430, strict:true},
+    {n:'Sopa de miso con tofu y algas', k:350, strict:true}
+  ],
+  snack: [
+    {n:'Fruta + puñado de almendras', k:180},
+    {n:'Hummus con crudités', k:150},
+    {n:'Yogur de soja con nueces', k:170},
+    {n:'Edamame al vapor con sal', k:140},
+    {n:'Fruta entera de temporada', k:90}
+  ]
+};
+const DIAS_MENU = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+
+function pickCombo(target, enfoque){
+  const cenaOpts = enfoque==='strict' ? MENU_BANK.cena.filter(c=>c.strict) : MENU_BANK.cena;
+  let best=null, bestDiff=Infinity;
+  for(let attempt=0; attempt<40; attempt++){
+    const d = MENU_BANK.desayuno[Math.floor(Math.random()*MENU_BANK.desayuno.length)];
+    const c = MENU_BANK.comida[Math.floor(Math.random()*MENU_BANK.comida.length)];
+    const ce = cenaOpts[Math.floor(Math.random()*cenaOpts.length)];
+    const s = MENU_BANK.snack[Math.floor(Math.random()*MENU_BANK.snack.length)];
+    const total = d.k+c.k+ce.k+s.k;
+    const diff = Math.abs(total-target);
+    if(diff<bestDiff){ bestDiff=diff; best={d,c,ce,s,total}; }
+    if(diff<60) break;
+  }
+  return best;
+}
+
+function generarMenu(){
+  const target = parseInt(document.getElementById('menuKcal').value);
+  const enfoque = document.getElementById('menuEnfoque').value;
+  let html = '';
+  for(let i=0;i<7;i++){
+    const combo = pickCombo(target, enfoque);
+    html += `<div class="menu-day">
+      <div class="menu-day-title">${DIAS_MENU[i]}</div>
+      <div class="menu-meal"><span class="name">Desayuno</span><span class="food">${combo.d.n}</span><span class="kcal">${combo.d.k} kcal</span></div>
+      <div class="menu-meal"><span class="name">Comida</span><span class="food">${combo.c.n}</span><span class="kcal">${combo.c.k} kcal</span></div>
+      <div class="menu-meal"><span class="name">Cena</span><span class="food">${combo.ce.n}</span><span class="kcal">${combo.ce.k} kcal</span></div>
+      <div class="menu-meal"><span class="name">Snack</span><span class="food">${combo.s.n}</span><span class="kcal">${combo.s.k} kcal</span></div>
+      <div class="menu-day-total">Total: ${combo.total} kcal (objetivo ${target})</div>
+    </div>`;
+  }
+  document.getElementById('menuResult').innerHTML = html;
+}
+
 async function loadFacturacion(){
   const [c, ci] = await Promise.all([getAll(), getCitas()]);
   factData.clients = c || [];
@@ -1613,15 +2027,60 @@ function renderFacturacion(){
   `;
 }
 
+const DATOS_DIA = [
+  'La fibra soluble de la avena (beta-glucano) reduce el colesterol LDL de forma dosis-dependiente, demostrado en múltiples ensayos clínicos.',
+  'El músculo esquelético recicla entre el 1-2% de sus proteínas cada día — es el llamado turnover proteico.',
+  'La vitamina D es, en términos estrictos, una hormona esteroidea sintetizada por la piel, no una vitamina clásica.',
+  'El intestino delgado tiene una superficie de absorción aproximada de 250 m², similar a una pista de tenis.',
+  'La absorción de hierro no hemo (vegetal) puede multiplicarse hasta x3 si se combina con vitamina C en la misma comida.',
+  'El músculo esquelético supone entre el 40-50% del peso corporal total en un adulto sano.',
+  'El omega-3 (EPA/DHA) a dosis terapéuticas reduce los triglicéridos plasmáticos entre un 25-30%.',
+  'Un adulto entrenado puede almacenar hasta 400-500g de carbohidratos como glucógeno muscular.',
+  'La microbiota intestinal contiene ~150 veces más genes bacterianos que el genoma humano completo.',
+  'El cortisol sigue un ritmo circadiano natural, con su pico entre 30-45 minutos después de despertar.',
+  'La creatina monohidrato es uno de los suplementos más estudiados en ciencia del deporte, con cientos de ensayos publicados.',
+  'El agua corporal representa ~60% del peso en hombres adultos y ~50-55% en mujeres.',
+  'La síntesis de proteína muscular permanece elevada entre 24-48h tras un entrenamiento de fuerza.',
+  'El hígado almacena hasta ~100g de glucógeno, suficiente para sostener la glucemia varias horas en ayuno.',
+  'Leptina y grelina son las dos hormonas principales en la regulación del apetito a corto y largo plazo.',
+  'Una sola noche de sueño insuficiente puede aumentar el apetito y la preferencia por alimentos calóricos al día siguiente.',
+  'El calcio se absorbe de forma más eficiente cuando la ingesta por toma no supera los ~500mg.',
+  'La vitamina B12 solo existe de forma natural en alimentos de origen animal — clave a vigilar en dietas veganas.',
+  'El NEAT (gasto en actividad no deportiva) puede variar hasta 2000 kcal/día entre personas de tamaño similar.',
+  'El pico de masa ósea se alcanza generalmente entre los 25 y los 30 años de edad.',
+  'Las grasas trans industriales suben el LDL y bajan el HDL a la vez — un efecto doble que no tienen las grasas saturadas.',
+  'La oxidación de grasas durante el ejercicio es máxima a intensidad moderada (~60-65% VO2max), el llamado "Fatmax".',
+  'El músculo esquelético capta hasta el 80% de la glucosa postprandial — es el principal regulador de la sensibilidad a la insulina.',
+  'La cafeína alcanza su pico en sangre entre 30 y 60 minutos después de la ingesta oral.',
+  'A partir de los 30 años, un adulto sano pierde de forma natural un 0.5-1% de masa muscular al año si no interviene.',
+  'Las legumbres son de los pocos vegetales que aportan lisina en cantidad relevante — el aminoácido limitante de los cereales.',
+  'El corazón apenas se fatiga como el músculo esquelético porque funciona casi exclusivamente con metabolismo aeróbico.',
+  'La fibra dietética total recomendada para adultos ronda los 25-30 g/día, y la mayoría de la población no la alcanza.',
+  'El sodio y el potasio trabajan en equilibrio: un exceso de sodio se compensa parcialmente aumentando la ingesta de potasio.',
+  'La proteína tiene el mayor efecto térmico de los macronutrientes — su digestión consume ~20-30% de su propia energía.'
+];
+
+function renderFactOfDay(){
+  const start = new Date(new Date().getFullYear(),0,0);
+  const diff = new Date() - start;
+  const dayOfYear = Math.floor(diff / 86400000);
+  const fact = DATOS_DIA[dayOfYear % DATOS_DIA.length];
+  document.getElementById('factCard').innerHTML = `
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+    <div><div class="fact-card-label">Dato del día</div><div class="fact-card-txt">${fact}</div></div>
+  `;
+}
+
 async function loadDashboard(){
   document.getElementById('dashDate').textContent=new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  renderFactOfDay();
   loadRecordatorios();
   let [dashClients,dashCitas,dashDeps]=await Promise.all([getAll(),getCitas(),getDeportistas()]);
   dashClients=dashClients||[];dashCitas=dashCitas||[];dashDeps=dashDeps||[];
 
   const today=new Date();today.setHours(0,0,0,0);
   const tomorrow=new Date(today);tomorrow.setDate(tomorrow.getDate()+1);
-  const fmtISO=d=>d.toISOString().slice(0,10);
+  const fmtISO=d=>localISO(d);
   const todayISO=fmtISO(today),tomorrowISO=fmtISO(tomorrow);
 
   // ── Sesiones hoy/mañana ──
@@ -1699,6 +2158,19 @@ function logout(){
   show('vlogin');
 }
 function show(v){document.querySelectorAll('.view').forEach(e=>e.classList.remove('active'));document.getElementById(v).classList.add('active');}
+// ═══════════════ MODO OSCURO ═══════════════
+function toggleDarkMode(){
+  const isDark = document.body.classList.toggle('dark-mode');
+  localStorage.setItem('nutrilogos_dark', isDark ? '1' : '0');
+  document.getElementById('darkModeLabel').textContent = isDark ? 'Modo claro' : 'Modo oscuro';
+}
+function initDarkMode(){
+  if(localStorage.getItem('nutrilogos_dark') === '1'){
+    document.body.classList.add('dark-mode');
+    document.getElementById('darkModeLabel').textContent = 'Modo claro';
+  }
+}
+
 function enterApp(){
   document.body.classList.add('has-sidebar');
   document.getElementById('sidebar').classList.add('show');
@@ -1719,6 +2191,11 @@ function navTo(section){
   else if(section==='metodo'){document.getElementById('sbMetodo').classList.add('on');show('vdash');load();}
   else if(section==='deportiva'){document.getElementById('sbDep').classList.add('on');show('vdepdash');loadDeportistas();}
   else if(section==='facturacion'){document.getElementById('sbFact').classList.add('on');show('vfact');loadFacturacion();}
+  else if(section==='calculadora'){document.getElementById('sbCalc').classList.add('on');show('vcalc');calcAll();}
+  else if(section==='referencia'){document.getElementById('sbRef').classList.add('on');show('vref');}
+  else if(section==='comparador'){document.getElementById('sbComp').classList.add('on');show('vcomp');}
+  else if(section==='menugen'){document.getElementById('sbMenu').classList.add('on');show('vmenu');}
+  else if(section==='entreno'){document.getElementById('sbEntreno').classList.add('on');show('ventreno');loadEntreno();}
   closeMobileSidebar();
 }
 
@@ -2145,7 +2622,7 @@ async function saveEditDep() {
 // ═══════════════ SINCRONIZACIÓN AUTOMÁTICA: revisión deportista → agenda ═══════════════
 async function syncDepCita(nombre, fecha) {
   const servicioTag = 'Revisión · Nutrición Deportiva';
-  const todayISO = new Date().toISOString().slice(0,10);
+  const todayISO = localISO(new Date());
   try {
     const existing = await sb(`citas?select=id,fecha&cliente=eq.${encodeURIComponent(nombre)}&servicio=eq.${encodeURIComponent(servicioTag)}`) || [];
     const futuras = existing.filter(e => e.fecha >= todayISO).sort((a,b)=>a.fecha.localeCompare(b.fecha));
@@ -2212,7 +2689,7 @@ function resetWeek(){
 
 function renderWeekView(){
   const monday = getWeekStart(currentWeekOffset);
-  const todayISO = new Date().toISOString().slice(0,10);
+  const todayISO = localISO(new Date());
   const days = [];
   for(let i=0;i<7;i++){
     const d = new Date(monday);
@@ -2225,7 +2702,7 @@ function renderWeekView(){
 
   const grid = document.getElementById('weekGrid');
   grid.innerHTML = days.map((d,i)=>{
-    const iso = d.toISOString().slice(0,10);
+    const iso = localISO(d);
     const isToday = iso===todayISO;
     const dayCitas = citas.filter(c=>c.fecha===iso).sort((a,b)=>(a.hora||'').localeCompare(b.hora||''));
     const chips = dayCitas.length
@@ -2409,25 +2886,12 @@ async function saveAccion(){
 }
 
 // ═══════════════ REFERENCIA CLÍNICA ═══════════════
-function openRef(){
-  document.getElementById('mRef').style.display = 'flex';
-}
-function closeRef(){
-  document.getElementById('mRef').style.display = 'none';
-}
 function refJump(sectionId){
   document.getElementById(sectionId).scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 let lastCalc = null, lastHidra = null;
 
-function openCalc(){
-  document.getElementById('mCalc').style.display = 'flex';
-  calcAll();
-}
-function closeCalc(){
-  document.getElementById('mCalc').style.display = 'none';
-}
 function setCalcTab(tab){
   document.getElementById('calcTabEnergiaBtn').classList.toggle('on', tab==='energia');
   document.getElementById('calcTabHidraBtn').classList.toggle('on', tab==='hidra');
@@ -2936,7 +3400,7 @@ async function deleteHistorial(rowId, depId){
 }
 
 async function addHistorial(depId){
-  const fecha = document.getElementById('histFecha').value || new Date().toISOString().slice(0,10);
+  const fecha = document.getElementById('histFecha').value || localISO(new Date());
   const nota = document.getElementById('histNota').value.trim();
   await insertHistorial({deportista_id: depId, fecha, nota: nota || null});
   await touchActividad(depId);
@@ -2953,7 +3417,7 @@ async function touchActividad(depId){
 }
 
 async function registrarContacto(depId){
-  const today = new Date().toISOString().slice(0,10);
+  const today = localISO(new Date());
   await insertHistorial({deportista_id: depId, fecha: today, nota: 'Contacto registrado'});
   await touchActividad(depId);
   const d = deportistas.find(x => x.id === depId);
@@ -3000,6 +3464,7 @@ document.addEventListener('keydown',e=>{
 
 // ── INIT ──
 document.getElementById('vload').style.display='none';
+initDarkMode();
 if(sessionStorage.getItem('auth')==='1'){enterApp();}
 else show('vlogin');
 const GUION = [
