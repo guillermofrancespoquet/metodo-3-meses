@@ -347,6 +347,12 @@ body.dark-mode img{opacity:.92}
   transition:background .15s,color .15s;position:relative;
 }
 .sb-item:hover{background:rgba(255,255,255,.06);color:#fff}
+.sb-chevron{transition:transform .2s ease;flex-shrink:0}
+.sb-chevron.open{transform:rotate(0deg)}
+.sb-chevron:not(.open){transform:rotate(-90deg)}
+.sb-subnav{overflow:hidden;max-height:0;transition:max-height .22s ease;display:flex;flex-direction:column;gap:2px}
+.sb-subnav.open{max-height:120px;margin-top:2px}
+.sb-subitem{padding-left:2.4rem;font-size:12.5px}
 .sb-item.on{background:rgba(255,255,255,.1);color:#fff}
 .sb-item.on::before{content:'';position:absolute;left:-.75rem;top:8px;bottom:8px;width:3px;background:var(--gold);border-radius:0 3px 3px 0}
 .sb-item svg{flex-shrink:0;opacity:.9}
@@ -379,6 +385,7 @@ body.dark-mode img{opacity:.92}
 .sb-logout svg{flex-shrink:0;opacity:.9}
 
 /* ═══ DASHBOARD ═══ */
+.comp-controls{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
 .comp-search-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .comp-search-col{background:var(--sf);border-radius:16px;border:.5px solid var(--bd);padding:14px}
 .comp-results{max-height:180px;overflow-y:auto;margin-top:8px}
@@ -556,20 +563,37 @@ body.dark-mode img{opacity:.92}
   .sidebar,.mobile-topbar,.sidebar-backdrop,.mbg{display:none !important}
   @page{margin:14mm}
 }
-.pdf-hero{background:linear-gradient(135deg,#163a47 0%,#1f4d5e 100%);border-radius:18px;padding:22px 28px;color:#f7f4ee;margin-bottom:20px}
+.pdf-hero{background:linear-gradient(135deg,#163a47 0%,#1f4d5e 100%);border-radius:18px;padding:22px 28px;color:#f7f4ee;margin-bottom:22px;display:flex;align-items:center;gap:18px}
+.pdf-hero-logo{width:44px;height:44px;border-radius:50%;border:1.5px solid rgba(217,184,140,.5);flex-shrink:0;overflow:hidden}
+.pdf-hero-logo img{width:100%;height:100%;object-fit:cover;display:block}
+.pdf-hero-txt{flex:1}
 .pdf-brand{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#d9b88c;margin:0 0 6px;font-weight:600}
 .pdf-hero h1{font-size:22px;margin:0 0 5px;font-weight:700}
 .pdf-hero p{margin:0;font-size:12px;color:#e7dfd2}
-.pdf-section{margin-bottom:18px}
-.pdf-section-title{font-size:11px;font-weight:700;color:#163a47;text-transform:uppercase;letter-spacing:1px;margin:0 0 8px;border-bottom:1px solid #e2d8c5;padding-bottom:5px}
-.pdf-row{display:flex;justify-content:space-between;padding:5px 0;font-size:12.5px;border-bottom:.5px solid #f0ebe0}
+.pdf-section{margin-bottom:20px}
+.pdf-section-title{font-size:11px;font-weight:700;color:#163a47;text-transform:uppercase;letter-spacing:1px;margin:0 0 10px;border-bottom:1.5px solid #e2d8c5;padding-bottom:6px;display:flex;align-items:center;gap:6px}
+.pdf-section-title::before{content:'';width:5px;height:5px;border-radius:50%;background:#c19a6b;display:inline-block}
+.pdf-row{display:flex;justify-content:space-between;padding:7px 2px;font-size:12.5px;border-bottom:.5px solid #f0ebe0}
+.pdf-row:nth-child(even){background:#faf8f3}
 .pdf-row .l{color:#6b6b6b}
 .pdf-row .v{color:#163a47;font-weight:600}
 .pdf-box{background:#faf8f3;border:1px solid #ece4d6;border-radius:10px;padding:12px 16px;font-size:12px;color:#3a3a3a;line-height:1.6}
 .pdf-badge{display:inline-block;font-size:10.5px;font-weight:700;padding:3px 10px;border-radius:20px;margin-left:6px}
 .pdf-badge.ok{background:#e4f0e6;color:#3f7a4c}
 .pdf-badge.pending{background:#FEF2F2;color:#c0392b}
-.pdf-foot{text-align:center;margin-top:24px;font-size:9px;color:#a89c89;letter-spacing:1px;text-transform:uppercase}
+.pdf-progress-wrap{margin-bottom:6px}
+.pdf-progress-bar{height:10px;background:#f0ebe0;border-radius:999px;overflow:hidden;margin-top:6px}
+.pdf-progress-fill{height:100%;background:linear-gradient(90deg,#7db88a,#1D9E75);border-radius:999px}
+.pdf-macro-bar{display:flex;height:14px;border-radius:999px;overflow:hidden;margin:10px 0 8px}
+.pdf-macro-p{background:#c19a6b}.pdf-macro-f{background:#6a9cc2}.pdf-macro-c{background:#5a9c68}
+.pdf-macro-legend{display:flex;gap:16px;font-size:10.5px;color:#6b6b6b;margin-bottom:4px}
+.pdf-macro-legend span{display:flex;align-items:center;gap:5px}
+.pdf-macro-legend .dot{width:7px;height:7px;border-radius:50%}
+.pdf-two-col{display:flex;gap:16px}
+.pdf-two-col > div{flex:1}
+.pdf-hist-item{display:flex;gap:10px;padding:5px 0;font-size:11.5px;border-bottom:.5px solid #f0ebe0}
+.pdf-hist-date{color:#c19a6b;font-weight:700;white-space:nowrap;min-width:55px}
+.pdf-foot{text-align:center;margin-top:26px;padding-top:14px;border-top:1px solid #ece4d6;font-size:9px;color:#a89c89;letter-spacing:1px;text-transform:uppercase}
 
 </style>
 </head>
@@ -631,14 +655,21 @@ body.dark-mode img{opacity:.92}
       Agenda
       <span class="sb-badge" id="sbAgendaBadge" style="display:none">0</span>
     </button>
-    <button class="sb-item" id="sbMetodo" onclick="navTo('metodo')">
-      <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-      Método 3M
+    <button class="sb-item sb-group-toggle" id="sbServiciosToggle" onclick="toggleServiciosGroup()">
+      <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 7h-3V5a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H4a1 1 0 0 0-1 1v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8a1 1 0 0 0-1-1zM9 5h6v2H9z"/></svg>
+      Servicios
+      <svg class="sb-chevron open" id="sbServiciosChevron" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-left:auto"><polyline points="6 9 12 15 18 9"/></svg>
     </button>
-    <button class="sb-item" id="sbDep" onclick="navTo('deportiva')">
-      <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-      Nutrición Deportiva
-    </button>
+    <div class="sb-subnav open" id="sbServiciosSub">
+      <button class="sb-item sb-subitem" id="sbMetodo" onclick="navTo('metodo')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        Método 3M
+      </button>
+      <button class="sb-item sb-subitem" id="sbDep" onclick="navTo('deportiva')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Nutrición Deportiva
+      </button>
+    </div>
     <button class="sb-item" id="sbFact" onclick="navTo('facturacion')">
       <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       Facturación
@@ -852,7 +883,22 @@ body.dark-mode img{opacity:.92}
 <div id="vcomp" class="view">
   <div class="page">
     <div class="page-header">
-      <div><p class="page-title">Comparador de alimentos</p><p class="page-sub">Datos de Open Food Facts — la mayor base de datos abierta, con miles de productos reales de Mercadona, Consum, Lidl y Aldi</p></div>
+      <div><p class="page-title">Comparador de alimentos</p><p class="page-sub">Open Food Facts (productos de supermercado) + USDA FoodData Central (alimentos genéricos EE.UU.)</p></div>
+    </div>
+
+    <div class="comp-controls">
+      <div class="agenda-tabs">
+        <button class="agenda-tab on" id="compSrcOff" onclick="setCompSource('off')">Supermercado (OFF)</button>
+        <button class="agenda-tab" id="compSrcUsda" onclick="setCompSource('usda')">USDA (genéricos EE.UU.)</button>
+      </div>
+      <div class="agenda-tabs">
+        <button class="agenda-tab on" id="compMode100" onclick="setCompMode('100g')">Por 100g</button>
+        <button class="agenda-tab" id="compModeIso" onclick="setCompMode('iso')">Isocalórico</button>
+      </div>
+      <div id="compIsoInput" style="display:none;align-items:center;gap:8px">
+        <label class="mfl" style="margin:0">kcal a comparar</label>
+        <input type="number" class="inp" id="compIsoKcal" value="200" style="width:90px" oninput="renderCompCards()">
+      </div>
     </div>
 
     <div class="comp-search-grid">
@@ -873,7 +919,7 @@ body.dark-mode img{opacity:.92}
         <div id="compCardB"></div>
       </div>
     </div>
-    <p class="ref-note" style="margin-top:14px">Valores por 100g/100mL, tal como los reporta el fabricante o el usuario que subió el producto a Open Food Facts. Verifica siempre en el envase real cuando sea posible.</p>
+    <p class="ref-note" style="margin-top:14px" id="compFootnote">Valores por 100g/100mL reportados por el fabricante o la fuente original. Verifica siempre en el envase real cuando sea posible.</p>
   </div>
 </div>
 
@@ -1832,9 +1878,30 @@ async function addProgresion(){
   await loadProgresion();
 }
 
-// ═══════════════ COMPARADOR DE ALIMENTOS (Open Food Facts) ═══════════════
+// ═══════════════ COMPARADOR DE ALIMENTOS (Open Food Facts + USDA FDC) ═══════════════
 let compTimers = {A:null, B:null};
 let compData = {A:null, B:null};
+let compRawResults = {A:[], B:[]};
+let compSource = 'off';
+let compMode = '100g';
+const USDA_KEY = 'DEMO_KEY'; // funciona sin registro (límite bajo). Guille puede pegar su propia clave gratuita de fdc.nal.usda.gov aquí para más límite.
+
+function setCompSource(src){
+  compSource = src;
+  document.getElementById('compSrcOff').classList.toggle('on', src==='off');
+  document.getElementById('compSrcUsda').classList.toggle('on', src==='usda');
+  document.getElementById('compFootnote').textContent = src==='off'
+    ? 'Valores por 100g/100mL reportados por el fabricante o el usuario que subió el producto a Open Food Facts.'
+    : 'Valores por 100g según USDA FoodData Central (base de datos oficial del gobierno de EE.UU.).';
+  ['A','B'].forEach(s=>{ document.getElementById('compResults'+s).innerHTML=''; });
+}
+function setCompMode(mode){
+  compMode = mode;
+  document.getElementById('compMode100').classList.toggle('on', mode==='100g');
+  document.getElementById('compModeIso').classList.toggle('on', mode==='iso');
+  document.getElementById('compIsoInput').style.display = mode==='iso' ? 'flex' : 'none';
+  renderCompCards();
+}
 
 function compSearch(side){
   clearTimeout(compTimers[side]);
@@ -1844,57 +1911,105 @@ function compSearch(side){
   compTimers[side] = setTimeout(async ()=>{
     resEl.innerHTML = '<p class="dash-empty">Buscando…</p>';
     try{
-      const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process&json=1&page_size=6&lc=es`;
-      const r = await fetch(url);
-      const data = await r.json();
-      const products = (data.products||[]).filter(p=>p.product_name);
-      if(!products.length){ resEl.innerHTML = '<p class="dash-empty">Sin resultados.</p>'; return; }
-      resEl.innerHTML = products.map(p=>`
-        <div class="comp-result-item" onclick='compSelect("${side}", ${JSON.stringify(p).replace(/'/g,"&apos;")})'>
-          ${p.image_small_url?`<img src="${p.image_small_url}">`:''}
-          <span>${p.product_name}${p.brands?' · '+p.brands.split(',')[0]:''}</span>
-        </div>
-      `).join('');
+      let items = [];
+      if(compSource === 'off'){
+        const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process&json=1&page_size=8&lc=es`;
+        const r = await fetch(url);
+        const data = await r.json();
+        items = (data.products||[]).filter(p=>p.product_name || p.generic_name);
+      } else {
+        const url = `https://api.nal.usda.gov/fdc/v1/foods/search?api_key=${USDA_KEY}&query=${encodeURIComponent(q)}&pageSize=8`;
+        const r = await fetch(url);
+        const data = await r.json();
+        items = data.foods || [];
+      }
+      compRawResults[side] = items;
+      if(!items.length){ resEl.innerHTML = '<p class="dash-empty">Sin resultados.</p>'; return; }
+      resEl.innerHTML = items.map((p,i)=>{
+        const name = compSource==='off' ? (p.product_name||p.generic_name) : p.description;
+        const brand = compSource==='off' ? (p.brands?p.brands.split(',')[0]:'') : (p.brandOwner||p.dataType||'');
+        const img = compSource==='off' ? p.image_small_url : null;
+        return `<div class="comp-result-item" onclick="compSelect('${side}',${i})">
+          ${img?`<img src="${img}">`:''}
+          <span>${name}${brand?' · '+brand:''}</span>
+        </div>`;
+      }).join('');
     }catch(e){
       resEl.innerHTML = '<p class="dash-empty">Error al buscar. Inténtalo de nuevo.</p>';
     }
   }, 450);
 }
 
-function compSelect(side, product){
-  compData[side] = product;
+// Normaliza un resultado (OFF o USDA) a una forma común, sea cual sea la fuente
+function compNormalize(raw, source){
+  if(source === 'off'){
+    const n = raw.nutriments || {};
+    return {
+      name: raw.product_name || raw.generic_name || 'Sin nombre',
+      brand: raw.brands ? raw.brands.split(',')[0] : '',
+      extra: raw.nutriscore_grade ? 'Nutri-Score ' + raw.nutriscore_grade.toUpperCase() : '',
+      kcal: n['energy-kcal_100g'], protein: n['proteins_100g'], carbs: n['carbohydrates_100g'],
+      sugars: n['sugars_100g'], fat: n['fat_100g'], satfat: n['saturated-fat_100g'],
+      fiber: n['fiber_100g'], sodium_mg: n['sodium_100g']!==undefined ? n['sodium_100g']*1000 : undefined
+    };
+  } else {
+    const get = (id) => {
+      const found = (raw.foodNutrients||[]).find(x => x.nutrientId===id || x.nutrient?.id===id);
+      return found ? (found.value!==undefined?found.value:found.amount) : undefined;
+    };
+    return {
+      name: raw.description || 'Sin nombre',
+      brand: raw.brandOwner || raw.dataType || '',
+      extra: raw.dataType || '',
+      kcal: get(1008), protein: get(1003), carbs: get(1005),
+      sugars: get(2000), fat: get(1004), satfat: get(1258),
+      fiber: get(1079), sodium_mg: get(1093)
+    };
+  }
+}
+
+function compSelect(side, idx){
+  const raw = compRawResults[side][idx];
+  const norm = compNormalize(raw, compSource);
+  compData[side] = norm;
   document.getElementById('compResults'+side).innerHTML = '';
-  document.getElementById('compSearch'+side).value = product.product_name;
+  document.getElementById('compSearch'+side).value = norm.name;
   renderCompCards();
 }
 
 function compVal(n){ return (n===undefined||n===null||isNaN(n)) ? '—' : (Math.round(n*10)/10); }
 
 function renderCompCards(){
+  const isoKcal = parseFloat(document.getElementById('compIsoKcal').value) || 200;
   ['A','B'].forEach(side=>{
     const p = compData[side];
     const el = document.getElementById('compCard'+side);
     if(!p){ el.innerHTML = ''; return; }
-    const n = p.nutriments || {};
     const other = compData[side==='A'?'B':'A'];
+    // Factor de escala: 1.0 si es por 100g, o el que corresponda para igualar las kcal objetivo
+    const scale = (compMode==='iso' && p.kcal) ? (isoKcal / p.kcal) : 1;
+    const scaleOther = (other && compMode==='iso' && other.kcal) ? (isoKcal / other.kcal) : 1;
     const fields = [
-      {k:'energy-kcal_100g', label:'Energía', unit:'kcal', better:'low'},
-      {k:'proteins_100g', label:'Proteína', unit:'g', better:'high'},
-      {k:'carbohydrates_100g', label:'Carbohidratos', unit:'g', better:null},
-      {k:'sugars_100g', label:'Azúcares', unit:'g', better:'low'},
-      {k:'fat_100g', label:'Grasas', unit:'g', better:null},
-      {k:'saturated-fat_100g', label:'Grasas saturadas', unit:'g', better:'low'},
-      {k:'fiber_100g', label:'Fibra', unit:'g', better:'high'},
-      {k:'salt_100g', label:'Sal', unit:'g', better:'low'}
+      {k:'kcal', label:'Energía', unit:'kcal', better:null},
+      {k:'protein', label:'Proteína', unit:'g', better:'high'},
+      {k:'carbs', label:'Carbohidratos', unit:'g', better:null},
+      {k:'sugars', label:'Azúcares', unit:'g', better:'low'},
+      {k:'fat', label:'Grasas', unit:'g', better:null},
+      {k:'satfat', label:'Grasas saturadas', unit:'g', better:'low'},
+      {k:'fiber', label:'Fibra', unit:'g', better:'high'},
+      {k:'sodium_mg', label:'Sodio', unit:'mg', better:'low'}
     ];
+    const basisLabel = compMode==='iso' ? `por ${isoKcal} kcal` : 'por 100g';
     el.innerHTML = `<div class="comp-card">
-      <div class="comp-card-name">${p.product_name}</div>
-      <div class="comp-card-brand">${p.brands||'Marca no especificada'} ${p.nutriscore_grade?'· Nutri-Score '+p.nutriscore_grade.toUpperCase():''}</div>
+      <div class="comp-card-name">${p.name}</div>
+      <div class="comp-card-brand">${p.brand||'Sin marca especificada'} ${p.extra?'· '+p.extra:''} · <strong>${basisLabel}</strong></div>
       ${fields.map(f=>{
-        const v = n[f.k];
+        let v = p[f.k];
+        if(v!==undefined && compMode==='iso') v = v*scale;
         let hl = '';
-        if(other && f.better && other.nutriments && other.nutriments[f.k]!==undefined && v!==undefined){
-          const ov = other.nutriments[f.k];
+        if(other && f.better && other[f.k]!==undefined && v!==undefined){
+          let ov = other[f.k];
+          if(compMode==='iso') ov = ov*scaleOther;
           if(f.better==='high' && v>ov) hl='hl'; if(f.better==='low' && v<ov) hl='hl';
         }
         return `<div class="comp-nutri-row ${hl}"><span>${f.label}</span><span>${compVal(v)} ${f.unit}</span></div>`;
@@ -2184,6 +2299,11 @@ function closeMobileSidebar(){
   document.getElementById('sidebar').classList.remove('mobile-open');
   document.getElementById('sidebarBackdrop').classList.remove('show');
 }
+function toggleServiciosGroup(){
+  document.getElementById('sbServiciosSub').classList.toggle('open');
+  document.getElementById('sbServiciosChevron').classList.toggle('open');
+}
+
 function navTo(section){
   document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('on'));
   if(section==='home'){document.getElementById('sbHome').classList.add('on');show('vhome');loadDashboard();}
@@ -2802,57 +2922,99 @@ function printNow(){
   setTimeout(()=>{ window.print(); }, 100);
 }
 
+function pdfLogoHtml(){
+  const img = document.querySelector('.sb-logo img');
+  const src = img ? img.getAttribute('src') : '';
+  return src ? `<div class="pdf-hero-logo"><img src="${src}"></div>` : '';
+}
+
 function exportClientePDF(id){
   const c = clients.find(x=>x.id===id); if(!c) return;
   const wNum = Math.min((c.semana||0)+1,12);
   const pct = Math.round((c.semana||0)/12*100);
   const html = `
     <div class="pdf-hero">
-      <p class="pdf-brand">Método 3 Meses · Ficha de cliente</p>
-      <h1>${c.nombre}</h1>
-      <p>Programa de nutrición · 12 semanas</p>
+      ${pdfLogoHtml()}
+      <div class="pdf-hero-txt">
+        <p class="pdf-brand">Método 3 Meses · Ficha de cliente</p>
+        <h1>${c.nombre}</h1>
+        <p>Programa de nutrición · 12 semanas · Generado el ${new Date().toLocaleDateString('es-ES')}</p>
+      </div>
     </div>
+
     <div class="pdf-section">
       <p class="pdf-section-title">Progreso del programa</p>
-      <div class="pdf-row"><span class="l">Semana actual</span><span class="v">${wNum} de 12</span></div>
-      <div class="pdf-row"><span class="l">Progreso completado</span><span class="v">${pct}%</span></div>
+      <div class="pdf-progress-wrap">
+        <div class="pdf-row"><span class="l">Semana actual</span><span class="v">${wNum} de 12 (${pct}%)</span></div>
+        <div class="pdf-progress-bar"><div class="pdf-progress-fill" style="width:${pct}%"></div></div>
+      </div>
       <div class="pdf-row"><span class="l">Email</span><span class="v">${c.email||'—'}</span></div>
       <div class="pdf-row"><span class="l">Pago del programa</span><span class="v"><span class="pdf-badge ${c.pagado?'ok':'pending'}">${c.pagado?'✓ Pagado':'Pendiente'}</span></span></div>
+      <div class="pdf-row"><span class="l">Próxima acción</span><span class="v">${c.proxima_accion||'—'}</span></div>
     </div>
+
     <div class="pdf-section">
       <p class="pdf-section-title">Notas privadas</p>
-      <div class="pdf-box">${(c.notas||'Sin notas registradas.').replace(/\\n/g,'<br>')}</div>
+      <div class="pdf-box">${(c.notas||'Sin notas registradas.').replace(/\n/g,'<br>')}</div>
     </div>
-    <p class="pdf-foot">NutriLogos · Ciencia con propósito · Exportado el ${new Date().toLocaleDateString('es-ES')}</p>
+
+    <p class="pdf-foot">NutriLogos · Ciencia con propósito · Documento de uso interno — Método 3M</p>
   `;
   document.getElementById('printArea').innerHTML = html;
   printNow();
 }
 
-function exportDeportistaPDF(id){
+async function exportDeportistaPDF(id){
   const d = deportistas.find(x=>x.id===id); if(!d) return;
   const revTxt = d.proxima_revision ? new Date(d.proxima_revision+'T00:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'}) : 'Sin fecha establecida';
+  const revDays = daysUntil(d.proxima_revision);
+  const revBadgeClass = (revDays!==null && revDays<=0) ? 'pending' : 'ok';
+
+  let histHtml = '<p style="font-size:11.5px;color:#8a8578">Sin registros en el historial.</p>';
+  try{
+    const hist = await getHistorial(id) || [];
+    if(hist.length){
+      histHtml = hist.slice(0,6).map(r=>{
+        const dStr = new Date(r.fecha+'T00:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'short'});
+        return `<div class="pdf-hist-item"><span class="pdf-hist-date">${dStr}</span><span>${r.nota||'Contacto registrado'}</span></div>`;
+      }).join('');
+    }
+  }catch(e){}
+
   const html = `
     <div class="pdf-hero">
-      <p class="pdf-brand">Nutrición Deportiva · Ficha de deportista</p>
-      <h1>${d.nombre}</h1>
-      <p>${d.deporte||'Modalidad sin especificar'}</p>
+      ${pdfLogoHtml()}
+      <div class="pdf-hero-txt">
+        <p class="pdf-brand">Nutrición Deportiva · Ficha de deportista</p>
+        <h1>${d.nombre}</h1>
+        <p>${d.deporte||'Modalidad sin especificar'} · Generado el ${new Date().toLocaleDateString('es-ES')}</p>
+      </div>
     </div>
-    <div class="pdf-section">
-      <p class="pdf-section-title">Datos generales</p>
-      <div class="pdf-row"><span class="l">Objetivo</span><span class="v">${d.objetivo||'—'}</span></div>
-      <div class="pdf-row"><span class="l">Próxima revisión</span><span class="v">${revTxt}</span></div>
-      <div class="pdf-row"><span class="l">Plan nutricional</span><span class="v">${d.plan_url||'—'}</span></div>
+
+    <div class="pdf-two-col">
+      <div class="pdf-section">
+        <p class="pdf-section-title">Datos generales</p>
+        <div class="pdf-row"><span class="l">Objetivo</span><span class="v">${d.objetivo||'—'}</span></div>
+        <div class="pdf-row"><span class="l">Próxima revisión</span><span class="v"><span class="pdf-badge ${revBadgeClass}">${revTxt}</span></span></div>
+        <div class="pdf-row"><span class="l">Próxima acción</span><span class="v">${d.proxima_accion||'—'}</span></div>
+      </div>
+      <div class="pdf-section">
+        <p class="pdf-section-title">Historial reciente</p>
+        ${histHtml}
+      </div>
     </div>
+
     <div class="pdf-section">
       <p class="pdf-section-title">Descripción</p>
-      <div class="pdf-box">${(d.descripcion||'Sin descripción registrada.').replace(/\\n/g,'<br>')}</div>
+      <div class="pdf-box">${(d.descripcion||'Sin descripción registrada.').replace(/\n/g,'<br>')}</div>
     </div>
+
     <div class="pdf-section">
       <p class="pdf-section-title">Notas privadas</p>
-      <div class="pdf-box">${(d.notas||'Sin notas registradas.').replace(/\\n/g,'<br>')}</div>
+      <div class="pdf-box">${(d.notas||'Sin notas registradas.').replace(/\n/g,'<br>')}</div>
     </div>
-    <p class="pdf-foot">NutriLogos · Ciencia con propósito · Exportado el ${new Date().toLocaleDateString('es-ES')}</p>
+
+    <p class="pdf-foot">NutriLogos · Ciencia con propósito · Documento de uso interno — Nutrición Deportiva</p>
   `;
   document.getElementById('printArea').innerHTML = html;
   printNow();
@@ -2949,9 +3111,12 @@ function exportCalcPDF(){
   if(!lastCalc && !lastHidra){ alert('Introduce datos y calcula algo antes de exportar.'); return; }
   let html = `
     <div class="pdf-hero">
-      <p class="pdf-brand">Calculadora nutricional</p>
-      <h1>Informe de cálculo</h1>
-      <p>NutriLogos · Generado el ${new Date().toLocaleDateString('es-ES')}</p>
+      ${pdfLogoHtml()}
+      <div class="pdf-hero-txt">
+        <p class="pdf-brand">Calculadora nutricional</p>
+        <h1>Informe de cálculo</h1>
+        <p>NutriLogos · Generado el ${new Date().toLocaleDateString('es-ES')}</p>
+      </div>
     </div>`;
 
   if(lastCalc){
@@ -2960,10 +3125,20 @@ function exportCalcPDF(){
       <p class="pdf-section-title">Energía y macronutrientes</p>
       <div class="pdf-row"><span class="l">BMR (metabolismo basal)</span><span class="v">${lastCalc.bmr} kcal</span></div>
       <div class="pdf-row"><span class="l">TDEE (gasto total diario)</span><span class="v">${lastCalc.tdee} kcal</span></div>
-      <div class="pdf-row"><span class="l">Calorías objetivo</span><span class="v">${lastCalc.kcalObjetivo} kcal</span></div>
-      <div class="pdf-row"><span class="l">Proteína</span><span class="v">${lastCalc.proteinaG} g (${lastCalc.pctP}%)</span></div>
-      <div class="pdf-row"><span class="l">Grasa</span><span class="v">${lastCalc.grasaG} g (${lastCalc.pctF}%)</span></div>
-      <div class="pdf-row"><span class="l">Carbohidratos</span><span class="v">${lastCalc.carbosG} g (${lastCalc.pctC}%)</span></div>
+      <div class="pdf-row"><span class="l">Calorías objetivo</span><span class="v" style="color:#c19a6b">${lastCalc.kcalObjetivo} kcal</span></div>
+      <div class="pdf-macro-bar">
+        <div class="pdf-macro-p" style="width:${lastCalc.pctP}%"></div>
+        <div class="pdf-macro-f" style="width:${lastCalc.pctF}%"></div>
+        <div class="pdf-macro-c" style="width:${lastCalc.pctC}%"></div>
+      </div>
+      <div class="pdf-macro-legend">
+        <span><span class="dot" style="background:#c19a6b"></span>Proteína ${lastCalc.pctP}%</span>
+        <span><span class="dot" style="background:#6a9cc2"></span>Grasa ${lastCalc.pctF}%</span>
+        <span><span class="dot" style="background:#5a9c68"></span>Carbohidratos ${lastCalc.pctC}%</span>
+      </div>
+      <div class="pdf-row" style="margin-top:8px"><span class="l">Proteína</span><span class="v">${lastCalc.proteinaG} g</span></div>
+      <div class="pdf-row"><span class="l">Grasa</span><span class="v">${lastCalc.grasaG} g</span></div>
+      <div class="pdf-row"><span class="l">Carbohidratos</span><span class="v">${lastCalc.carbosG} g</span></div>
     </div>`;
   }
 
