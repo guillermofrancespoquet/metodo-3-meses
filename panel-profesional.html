@@ -260,6 +260,7 @@ body{font-family:var(--f);background:var(--bg);color:var(--g900);min-height:100v
 .hist-item:last-child{border-bottom:none}
 .hist-date{font-size:11px;font-weight:600;color:var(--gold-dk);white-space:nowrap;padding-top:1px}
 .hist-nota{font-size:12.5px;color:var(--g700);flex:1}
+.hist-tag{font-size:9.5px;font-weight:600;color:var(--t600);background:var(--t50);padding:2px 8px;border-radius:20px;flex-shrink:0;white-space:nowrap}
 .dep-obj-badge{font-size:9.5px;font-weight:600;color:var(--t600);background:var(--t50);padding:2px 8px;border-radius:20px;margin-top:6px;display:inline-block}
 .rev-badge{font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;margin-top:6px;display:inline-block}
 .rev-badge.urgent{background:#FEF2F2;color:var(--red)}
@@ -520,6 +521,12 @@ body.dark-mode img{opacity:.92}
 .accion-badge:hover{color:var(--gold)}
 .accion-badge::before{content:'';flex-shrink:0;width:12px;height:12px;background-color:currentColor;-webkit-mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.2"><path d="M4 22V4a1 1 0 0 1 1-1h13.5a1 1 0 0 1 .8 1.6l-3 4a1 1 0 0 0 0 1.2l3 4a1 1 0 0 1-.8 1.6H5"/></svg>') center/contain no-repeat;mask:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.2"><path d="M4 22V4a1 1 0 0 1 1-1h13.5a1 1 0 0 1 .8 1.6l-3 4a1 1 0 0 0 0 1.2l3 4a1 1 0 0 1-.8 1.6H5"/></svg>') center/contain no-repeat}
 .accion-badge.empty{color:var(--g400);font-weight:500;font-style:italic}
+/* Variante discreta, solo para las tarjetas de Nutrición Deportiva: mismo comportamiento,
+   pero sin el color dorado llamativo — gris neutro, texto más corto y letra algo más pequeña. */
+.accion-badge.subtle{font-size:10px;font-weight:500;color:var(--g500)}
+.accion-badge.subtle:hover{color:var(--g700)}
+.accion-badge.subtle.empty{color:var(--g400);font-weight:400}
+.accion-badge.subtle::before{width:10px;height:10px}
 
 
 .ref-jump{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
@@ -2947,7 +2954,7 @@ function renderDeportistas() {
       <div class="dep-sport">${d.deporte || '—'}</div>
       ${d.objetivo ? `<div class="dep-obj-badge">${d.objetivo}</div>` : ''}
       ${revisionBadge(d.proxima_revision)}
-      <div class="accion-badge${d.proxima_accion?'':' empty'}" onclick="event.stopPropagation();openAccion('deportista',${d.id},'${(d.proxima_accion||'').replace(/'/g,"\\'")}')">${d.proxima_accion || 'Añadir próxima acción'}</div>
+      <div class="accion-badge subtle${d.proxima_accion?'':' empty'}" onclick="event.stopPropagation();openAccion('deportista',${d.id},'${(d.proxima_accion||'').replace(/'/g,"\\'")}')">${d.proxima_accion || '+ próxima acción'}</div>
     </div>`;
   }).join('');
 }
@@ -3807,17 +3814,29 @@ function actividadTexto(ultima){
 const getHistorial = (depId) => sb(`historial_deportista?deportista_id=eq.${depId}&select=*&order=fecha.desc`);
 const insertHistorial = (d) => sb('historial_deportista', {method:'POST', body: JSON.stringify(d)});
 const deleteHistorialRow = (rowId) => sb(`historial_deportista?id=eq.${rowId}`, {method:'DELETE', headers:{'Prefer':'return=minimal'}});
+// Valoraciones de la calculadora de antropometría (si el deportista tiene perfil ahí). No es un
+// error si no existen — un deportista sin antropometría simplemente devuelve un array vacío.
+const getAntropometriaSesiones = (depId) => sb(`antropometria_valoraciones?deportista_id=eq.${depId}&select=id,fecha`).catch(()=>[]);
 
 async function loadHistorial(depId){
-  const rows = await getHistorial(depId) || [];
+  const [rows, antro] = await Promise.all([ getHistorial(depId), getAntropometriaSesiones(depId) ]);
+  // Se fusionan los registros manuales del panel con las valoraciones antropométricas (de solo
+  // lectura aquí — se gestionan desde la calculadora) en una única lista ordenada por fecha.
+  const merged = [
+    ...(rows||[]).map(r=>({fecha:r.fecha, nota:r.nota||'Contacto registrado', id:r.id, auto:false})),
+    ...(antro||[]).map(r=>({fecha:r.fecha, nota:'📏 Valoración antropométrica', id:r.id, auto:true}))
+  ].sort((a,b)=> new Date(b.fecha)-new Date(a.fecha));
   const el = document.getElementById('histList');
   if(!el) return;
-  if(!rows.length){ el.innerHTML = '<p style="font-size:12px;color:var(--g400);padding:6px 0">Sin sesiones registradas todavía.</p>'; return; }
-  el.innerHTML = rows.map(r => {
+  if(!merged.length){ el.innerHTML = '<p style="font-size:12px;color:var(--g400);padding:6px 0">Sin sesiones registradas todavía.</p>'; return; }
+  el.innerHTML = merged.map(r => {
     const dateStr = new Date(r.fecha+'T00:00:00').toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'});
-    return `<div class="hist-item"><span class="hist-date">${dateStr}</span><span class="hist-nota">${r.nota||'Contacto registrado'}</span><button class="hist-del" onclick="deleteHistorial(${r.id},${depId})" title="Eliminar">
+    const rightEl = r.auto
+      ? `<span class="hist-tag" title="Registrada automáticamente desde la calculadora de antropometría">Auto</span>`
+      : `<button class="hist-del" onclick="deleteHistorial(${r.id},${depId})" title="Eliminar">
       <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
-    </button></div>`;
+    </button>`;
+    return `<div class="hist-item"><span class="hist-date">${dateStr}</span><span class="hist-nota">${r.nota}</span>${rightEl}</div>`;
   }).join('');
 }
 
