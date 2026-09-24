@@ -1147,11 +1147,14 @@ function openClientForm(client, prefill){
   const c = client || Object.assign({ nombre:"",apellidos:"",sexo:"Hombre",nacionalidad:"",raza:"Caucásica",fechaNacimiento:"",
     deporte:"",posicion:"",actividad:"Activo",frecuenciaSemanal:"",compite:"No",
     lesiones:"",notas:"" }, prefill||{});
+  // Nombre completo en un único campo, igual que clientes_deportivos en Supabase
+  // (que no tiene "apellidos" separado). Si el cliente ya tenía apellidos guardados
+  // de antes de este cambio, se combinan aquí para no perderlos de vista.
+  const nombreCompletoActual = (c.nombre + (c.apellidos ? " "+c.apellidos : "")).trim();
   openModal(`
     <h3>${isNew?"Nuevo cliente":"Editar cliente"}</h3>
     <div class="grid cols2">
-      <div class="field"><label>Nombre</label><input id="f_nombre" value="${esc(c.nombre)}"></div>
-      <div class="field"><label>Apellidos</label><input id="f_apellidos" value="${esc(c.apellidos)}"></div>
+      <div class="field" style="grid-column:1/-1;"><label>Nombre completo</label><input id="f_nombre" value="${esc(nombreCompletoActual)}"></div>
       <div class="field"><label>Sexo</label>
         <select id="f_sexo"><option ${c.sexo==="Hombre"?"selected":""}>Hombre</option><option ${c.sexo==="Mujer"?"selected":""}>Mujer</option></select>
       </div>
@@ -1183,12 +1186,10 @@ function openClientForm(client, prefill){
   `);
   document.getElementById("btnCancelClient").addEventListener("click", ()=>{ PENDING_CLIENT_IMPORT = null; closeModal(); });
   document.getElementById("btnSaveClient").addEventListener("click", async ()=>{
-    const nombre = document.getElementById("f_nombre").value.trim();
-    if(!nombre){ toast("El nombre es obligatorio"); return; }
-    const apellidos = document.getElementById("f_apellidos").value.trim();
+    const nombreCompleto = document.getElementById("f_nombre").value.trim();
+    if(!nombreCompleto){ toast("El nombre es obligatorio"); return; }
     const deporte = document.getElementById("f_dep").value.trim();
     const perfilData = {
-      apellidos,
       sexo: document.getElementById("f_sexo").value,
       fecha_nacimiento: document.getElementById("f_fnac").value || null,
       nacionalidad: document.getElementById("f_nac").value.trim(),
@@ -1200,9 +1201,6 @@ function openClientForm(client, prefill){
       lesiones: document.getElementById("f_les").value.trim(),
       notas: document.getElementById("f_notas").value.trim()
     };
-    // clientes_deportivos (Panel Profesional) solo guarda un campo "nombre" único,
-    // así que aquí se combinan nombre+apellidos para ese registro compartido.
-    const nombreCompleto = (nombre+" "+apellidos).trim();
     const btnSave = document.getElementById("btnSaveClient");
     btnSave.disabled = true;
     try{
@@ -1211,7 +1209,6 @@ function openClientForm(client, prefill){
         const depRow = Array.isArray(inserted) ? inserted[0] : inserted;
         await sbUpsertPerfil(Object.assign({deportista_id: depRow.id}, perfilData));
         const newC = buildClientFromRows(depRow, Object.assign({deportista_id:depRow.id}, perfilData), []);
-        newC.nombre = nombre; newC.apellidos = apellidos;
         STATE.clients.push(newC);
         CURRENT_CLIENT_ID = newC.id;
         closeModal();
@@ -1235,7 +1232,7 @@ function openClientForm(client, prefill){
         await sbPatchDeportista(client.id, { nombre: nombreCompleto, deporte: deporte || null });
         await sbUpsertPerfil(Object.assign({deportista_id: client.id}, perfilData));
         Object.assign(client, {
-          nombre, apellidos, deporte,
+          nombre: nombreCompleto, apellidos: "", deporte,
           sexo: perfilData.sexo,
           fechaNacimiento: perfilData.fecha_nacimiento || "",
           nacionalidad: perfilData.nacionalidad,
