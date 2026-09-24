@@ -669,6 +669,10 @@ body.dark-mode img{opacity:.92}
         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         Nutrición Deportiva
       </button>
+      <button class="sb-item sb-subitem" id="sbAntropo" onclick="openAntropometria()">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.5"/><path d="M12 8v6"/><path d="M8 22l2-8"/><path d="M16 22l-2-8"/><path d="M6 12h12"/></svg>
+        Antropometría
+      </button>
     </div>
     <button class="sb-item" id="sbFact" onclick="navTo('facturacion')">
       <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
@@ -2862,6 +2866,13 @@ async function deleteFile(depId, index) {
 // ═══════════════ NUTRICIÓN DEPORTIVA ═══════════════
 let deportistas = [], currentDepId = null;
 
+// Abre la calculadora de antropometría (app satélite, mismo repo de GitHub Pages) en pestaña
+// nueva. Comparte los deportistas (clientes_deportivos) con esta app vía Supabase.
+function openAntropometria(){
+  const base = window.location.origin + window.location.pathname.replace('panel-profesional.html', 'calculadora_antropometria.html');
+  window.open(base, '_blank');
+  closeMobileSidebar();
+}
 const getDeportistas = () => sb('clientes_deportivos?select=*');
 const insertDep = (d) => sb('clientes_deportivos', {method:'POST', body: JSON.stringify(d)});
 const patchDep = (id, d) => sb(`clientes_deportivos?id=eq.${id}`, {method:'PATCH', headers:{'Prefer':'return=minimal'}, body: JSON.stringify(d)});
