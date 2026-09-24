@@ -418,11 +418,20 @@ const PERIM_LABELS = {
 const DIAM_KEYS = ["humero","biestiloideo","femur"];
 const DIAM_LABELS = { humero:"Húmero", biestiloideo:"Biestiloideo", femur:"Fémur" };
 
-const BASIC_KEYS = ["peso","talla","tallaSentado","envergadura"];
-const BASIC_LABELS = { peso:"Masa corporal (kg)", talla:"Talla (cm)", tallaSentado:"Talla sentado (cm)", envergadura:"Envergadura (cm)" };
+// Solo el peso se vuelve a medir en cada valoración. Talla, talla sentado y envergadura
+// son medidas estructurales fijas del cliente (como los diámetros óseos): se miden una
+// vez y se reutilizan en todas sus valoraciones — ver FIXED_KEYS más abajo.
+const BASIC_KEYS = ["peso"];
+const BASIC_LABELS = { peso:"Masa corporal (kg)" };
+
+const FIXED_KEYS = ["talla","tallaSentado","envergadura"];
+const FIXED_LABELS = { talla:"Talla", tallaSentado:"Talla sentado", envergadura:"Envergadura" };
+// Nombre de la columna correspondiente en antropometria_perfil (Supabase)
+const FIXED_DB_COL = { talla:"talla", tallaSentado:"talla_sentado", envergadura:"envergadura" };
 
 // Todas las variables "base" usadas en comparativas (anterior / objetivo) y en ETM
-// (los diámetros óseos no entran aquí: son fijos del cliente, no evolucionan entre valoraciones)
+// (los diámetros óseos y las medidas estructurales fijas no entran aquí: son fijos
+// del cliente, no evolucionan entre valoraciones)
 const ALL_COMPARE_KEYS = [...BASIC_KEYS, ...FOLD_KEYS.map(k=>"pl_"+k), ...PERIM_KEYS.map(k=>"pr_"+k)];
 const ALL_COMPARE_LABELS = {};
 BASIC_KEYS.forEach(k=>ALL_COMPARE_LABELS[k]=BASIC_LABELS[k]);
@@ -599,6 +608,9 @@ function buildClientFromRows(dep, perfil, valoraciones){
     lesiones: (perfil && perfil.lesiones) || "",
     notas: (perfil && perfil.notas) || "",
     diametrosOseos: (perfil && perfil.diametros_oseos && Object.keys(perfil.diametros_oseos).length) ? perfil.diametros_oseos : null,
+    talla: (perfil && perfil.talla!=null) ? perfil.talla : "",
+    tallaSentado: (perfil && perfil.talla_sentado!=null) ? perfil.talla_sentado : "",
+    envergadura: (perfil && perfil.envergadura!=null) ? perfil.envergadura : "",
     valoraciones: (valoraciones||[]).map(v=>({ id:v.id, fecha:v.fecha, medidas:v.medidas||{} }))
   };
 }
@@ -913,10 +925,34 @@ function resolveDiametros(client, valoracionFallback){
   return null;
 }
 
+// Resuelve talla / talla sentado / envergadura del cliente (medidas estructurales que,
+// como los diámetros óseos, se miden una vez y se reutilizan en todas sus valoraciones).
+// Si el cliente todavía no las tiene guardadas, cae en las de esa valoración concreta
+// (compatibilidad con valoraciones guardadas antes de este cambio).
+function resolveMedidasFijas(client, valoracionFallback){
+  if(client && FIXED_KEYS.every(k=> client[k]!==undefined && client[k]!==null && client[k]!=="")){
+    const out = {};
+    FIXED_KEYS.forEach(k=> out[k] = parseFloat(client[k]));
+    return out;
+  }
+  if(valoracionFallback && valoracionFallback.medidas){
+    const out = {}; let any=false;
+    FIXED_KEYS.forEach(k=>{
+      const val = valoracionFallback.medidas[k];
+      out[k] = (val!==undefined && val!==null) ? val : null;
+      if(out[k]!==null) any = true;
+    });
+    if(any) return out;
+  }
+  return null;
+}
+
 // Construye el objeto "valores" (medidas resueltas, planas) a partir del borrador de entrada
 function valoresDesdeValoracion(valoracion, client){
   const v = {};
   BASIC_KEYS.forEach(k=> v[k] = valoracion.medidas[k] && valoracion.medidas[k].value!==undefined ? valoracion.medidas[k].value : valoracion.medidas[k]);
+  const fijas = resolveMedidasFijas(client, valoracion);
+  FIXED_KEYS.forEach(k=> v[k] = fijas ? fijas[k] : null);
   FOLD_KEYS.forEach(k=> v["pl_"+k] = valoracion.medidas["pl_"+k]);
   PERIM_KEYS.forEach(k=> v["pr_"+k] = valoracion.medidas["pr_"+k]);
   const diam = resolveDiametros(client, valoracion);
@@ -1459,6 +1495,16 @@ function applyParsedValuesToDraft(client, draft, parsedValues){
     }
   });
   if(diamCount>0){ syncPerfilFields(client.id, {diametros_oseos: client.diametrosOseos}); count += diamCount; }
+  // Talla, talla sentado y envergadura también se guardan en el cliente (fijas), no en el borrador
+  let fixedCount = 0; const fixedUpdates = {};
+  FIXED_KEYS.forEach(k=>{
+    if(parsedValues[k]!==undefined){
+      client[k] = parsedValues[k];
+      fixedUpdates[FIXED_DB_COL[k]] = parsedValues[k];
+      fixedCount++;
+    }
+  });
+  if(fixedCount>0){ syncPerfilFields(client.id, fixedUpdates); count += fixedCount; }
   return count;
 }
 
@@ -1592,6 +1638,54 @@ function openDiametrosModal(client){
   });
 }
 
+/* --- Talla / talla sentado / envergadura: como los diámetros, se miden una vez y se
+   guardan en el cliente (no son valores triples ISAK, son una única medida cada uno) --- */
+function medidasFijasResumenHtml(client){
+  const fijas = resolveMedidasFijas(client, null);
+  if(!fijas || FIXED_KEYS.some(k=>fijas[k]===null||fijas[k]===undefined||isNaN(fijas[k]))){
+    return `<div class="empty" style="padding:10px 0;">Todavía no se han medido la talla, la talla sentado ni la envergadura de este cliente.</div>`;
+  }
+  return `<div class="basic-rows">
+    ${FIXED_KEYS.map(k=>`<div class="basic-cell"><label>${FIXED_LABELS[k]} (cm)</label><div style="font-weight:600;font-size:15px;color:var(--petroleo);">${fmt(fijas[k],1)}</div></div>`).join("")}
+  </div>`;
+}
+
+function openMedidasFijasModal(client){
+  openModal(`
+    <h3>Medidas estructurales — ${esc(client.nombre)} ${esc(client.apellidos||"")}</h3>
+    <p class="small-note">Se miden una sola vez y se reutilizan en todas las valoraciones de este cliente. Si las vuelves a medir aquí, se actualizará el valor para todo su historial.</p>
+    <div class="basic-rows">
+      ${FIXED_KEYS.map(k=>singleFieldHtml(k, FIXED_LABELS[k], "cm", client[k])).join("")}
+    </div>
+    <div class="btnbar">
+      <button class="btn camel" id="btnGuardarMedidasFijas"><span class="ic">💾</span> Guardar</button>
+      <button class="btn ghost" id="btnCancelMedidasFijas"><span class="ic">✕</span> Cancelar</button>
+    </div>
+  `, {wide:true});
+  document.querySelectorAll("#modalBody [data-single]").forEach(inp=>{
+    applyPlausibilityCheck(inp, inp.dataset.single);
+    inp.addEventListener("input", ()=> applyPlausibilityCheck(inp, inp.dataset.single));
+  });
+  document.getElementById("btnCancelMedidasFijas").addEventListener("click", closeModal);
+  document.getElementById("btnGuardarMedidasFijas").addEventListener("click", async ()=>{
+    const vals = {};
+    let allValid = true;
+    FIXED_KEYS.forEach(k=>{
+      const raw = document.getElementById("modalBody").querySelector(`[data-single="${k}"]`).value;
+      const v = raw!=="" ? parseFloat(raw) : NaN;
+      if(isNaN(v)) allValid = false;
+      vals[k] = v;
+    });
+    if(!allValid){ toast("⚠️ Rellena talla, talla sentado y envergadura"); return; }
+    const dbUpdates = {};
+    FIXED_KEYS.forEach(k=>{ client[k] = vals[k]; dbUpdates[FIXED_DB_COL[k]] = vals[k]; });
+    await syncPerfilFields(client.id, dbUpdates);
+    closeModal();
+    toast("Medidas estructurales guardadas");
+    renderView("valoracion");
+  });
+}
+
 function ensureDraft(client){
   if(!CURRENT_VALORACION_DRAFT || CURRENT_VALORACION_DRAFT._clientId!==client.id){
     CURRENT_VALORACION_DRAFT = { _clientId: client.id, fecha: new Date().toISOString().slice(0,10),
@@ -1656,9 +1750,15 @@ function viewValoracion(){
     <div class="measure-block-head"><span class="mi">⚖️</span><h3>Medidas básicas</h3></div>
     <div class="basic-rows">
       ${singleFieldHtml("peso","Masa corporal","kg", draft.basic.peso)}
-      ${singleFieldHtml("talla","Talla","cm", draft.basic.talla)}
-      ${singleFieldHtml("tallaSentado","Talla sentado","cm", draft.basic.tallaSentado)}
-      ${singleFieldHtml("envergadura","Envergadura","cm", draft.basic.envergadura)}
+    </div>
+  </div>
+
+  <div class="card measure-block">
+    <div class="measure-block-head"><span class="mi">📐</span><h3>Medidas estructurales</h3><span class="unit-tag">cm · se miden una sola vez</span></div>
+    <p class="small-note" style="margin-top:0;">Talla, talla sentado y envergadura no cambian de una valoración a otra, así que se guardan en la ficha del cliente y se reutilizan en todas sus valoraciones.</p>
+    ${medidasFijasResumenHtml(c)}
+    <div class="btnbar" style="margin-top:10px;">
+      <button class="btn ghost" id="btnEditarMedidasFijas"><span class="ic">✏️</span> ${FIXED_KEYS.every(k=>c[k]!==undefined&&c[k]!==null&&c[k]!=="")?"Editar medidas":"Medir talla / envergadura (primera vez)"}</button>
     </div>
   </div>
 
@@ -1716,6 +1816,9 @@ function wireValoracion(){
 
   const btnDiam = document.getElementById("btnEditarDiametros");
   if(btnDiam) btnDiam.addEventListener("click", ()=>openDiametrosModal(c));
+
+  const btnFijas = document.getElementById("btnEditarMedidasFijas");
+  if(btnFijas) btnFijas.addEventListener("click", ()=>openMedidasFijasModal(c));
 
   const pdfInput = document.getElementById("pdfImportInput");
   if(pdfInput) pdfInput.addEventListener("change", (e)=>{
@@ -1872,6 +1975,8 @@ async function guardarValoracion(client){
   RESULT_VALORACION_ID = valoracion.id;
   if(!resolveDiametros(client, valoracion)){
     toast("Valoración guardada — falta medir los diámetros óseos del cliente para ver resultados completos");
+  } else if(!resolveMedidasFijas(client, valoracion)){
+    toast("Valoración guardada — falta medir talla, talla sentado y envergadura del cliente para ver resultados completos");
   } else {
     toast("Valoración guardada");
   }
@@ -1917,6 +2022,9 @@ function viewResultados(){
   const prev = lastValoracion(c, v.id);
   const prevValores = prev ? valoresDesdeValoracion(prev, c) : null;
   const compAnterior = prevValores ? compararValores(valores, prevValores, STATE.settings.etm) : null;
+  // % grasa y % músculo son valores calculados (no medidas directas), así que no pasan por
+  // compararValores/ETM como el resto — se comparan aparte, calculando también la valoración anterior.
+  const Rprev = prev ? calcularResultados(prevValores, c, edadDecimal(prev.fecha, c.fechaNacimiento)) : null;
 
   const allVals = c.valoraciones.slice().sort((a,b)=>new Date(a.fecha)-new Date(b.fecha));
   const selectorOpts = allVals.map(vv=>`<option value="${vv.id}" ${vv.id==v.id?"selected":""}>${fmtDate(vv.fecha)}</option>`).join("");
@@ -2017,10 +2125,16 @@ function viewResultados(){
   ${compAnterior ? `
   <div class="card">
     <h3 style="margin-top:0;">Comparación con la valoración anterior (${fmtDate(prev.fecha)})</h3>
-    <p class="small-note">Si defines los ETM de cada variable en "Ajustes", aquí verás también el intervalo de confianza del cambio.</p>
+    <p class="small-note">Si defines los ETM de cada variable en "Ajustes", aquí verás también el intervalo de confianza del cambio. % grasa y % músculo son valores calculados a partir del resto, así que no llevan IC.</p>
     <table>
       <thead><tr><th>Variable</th><th>Anterior</th><th>Actual</th><th>Diferencia</th><th>IC 95%</th></tr></thead>
       <tbody>
+      ${Rprev ? `
+      <tr><td>% Masa grasa (${esc(R.grasaModeloPrimario)})</td><td>${fmt(Rprev.pctGrasaPrimaria,1)}%</td><td>${fmt(R.pctGrasaPrimaria,1)}%</td>
+        <td class="${diffClass(R.pctGrasaPrimaria-Rprev.pctGrasaPrimaria)}">${diffSign(R.pctGrasaPrimaria-Rprev.pctGrasaPrimaria)}</td><td>—</td></tr>
+      <tr><td>% Masa muscular</td><td>${fmt(Rprev.pctMasaMuscular,1)}%</td><td>${fmt(R.pctMasaMuscular,1)}%</td>
+        <td class="${diffClass(R.pctMasaMuscular-Rprev.pctMasaMuscular)}">${diffSign(R.pctMasaMuscular-Rprev.pctMasaMuscular)}</td><td>—</td></tr>
+      ` : ""}
       ${ALL_COMPARE_KEYS.filter(k=>compAnterior[k].diff!==null).map(k=>`
         <tr><td>${ALL_COMPARE_LABELS[k]}</td><td>${fmt(prevValores[k],1)}</td><td>${fmt(valores[k],1)}</td>
         <td class="${diffClass(compAnterior[k].diff)}">${diffSign(compAnterior[k].diff)}</td>
@@ -2680,9 +2794,13 @@ function buildReportHtml(c, v){
   const perimRows = PERIM_KEYS.map(k=>`<tr><td>${PERIM_LABELS[k]}</td><td>${fmt(valores["pr_"+k],1)} cm</td></tr>`).join("");
   const diamRows = DIAM_KEYS.map(k=>`<tr><td>${DIAM_LABELS[k]}</td><td>${fmt(valores["d_"+k],1)} cm</td></tr>`).join("");
 
-  const compRows = compAnterior ? ALL_COMPARE_KEYS.filter(k=>compAnterior[k].diff!==null).map(k=>
+  const compRowsExtra = prevR ? `
+    <tr><td>% Masa grasa (${esc(R.grasaModeloPrimario)})</td><td>${fmt(prevR.pctGrasaPrimaria,1)}%</td><td>${fmt(R.pctGrasaPrimaria,1)}%</td><td>${diffSign(R.pctGrasaPrimaria-prevR.pctGrasaPrimaria)}</td></tr>
+    <tr><td>% Masa muscular</td><td>${fmt(prevR.pctMasaMuscular,1)}%</td><td>${fmt(R.pctMasaMuscular,1)}%</td><td>${diffSign(R.pctMasaMuscular-prevR.pctMasaMuscular)}</td></tr>
+  ` : "";
+  const compRows = compRowsExtra + (compAnterior ? ALL_COMPARE_KEYS.filter(k=>compAnterior[k].diff!==null).map(k=>
     `<tr><td>${ALL_COMPARE_LABELS[k]}</td><td>${fmt(prevValores[k],1)}</td><td>${fmt(valores[k],1)}</td><td>${diffSign(compAnterior[k].diff)}</td></tr>`
-  ).join("") : "";
+  ).join("") : "");
 
   const repHeader = `
     <div class="rep-header">
