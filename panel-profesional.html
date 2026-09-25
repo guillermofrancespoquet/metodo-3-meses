@@ -2474,14 +2474,15 @@ async function loadDashboard(){
     return `<div class="dash-row"><div class="dash-row-dot ${atrasado?'red':'gold'}"></div><div class="dash-row-txt"><div class="dash-row-name">${c.cliente}</div><div class="dash-row-sub">${c.servicio||'Revisión'}</div></div><span class="dash-row-tag">${atrasado?'Atrasado':'Pendiente'}</span></div>`;
   }).join(''):'<p class="dash-empty">Sin pagos pendientes.</p>';
 
-  // ── Revisiones deportistas próximas (incluye atrasadas, hasta 7 días vista) ──
+  // ── Revisiones deportistas próximas (a partir de hoy, hasta 7 días vista; las atrasadas ya no
+  //    se muestran aquí — ese aviso lo cubre la sección de pagos) ──
   const revs=dashDeps.map(d=>({...d,_days:daysUntil(d.proxima_revision)}))
-    .filter(d=>d._days!==null&&d._days<=7)
+    .filter(d=>d._days!==null&&d._days>=0&&d._days<=7)
     .sort((a,b)=>a._days-b._days);
   document.getElementById('dashRevCount').textContent=revs.length;
   document.getElementById('dashRevisiones').innerHTML=revs.length?revs.slice(0,5).map(d=>{
-    const lbl=d._days<0?`Atrasada ${Math.abs(d._days)}d`:d._days===0?'Hoy':`En ${d._days}d`;
-    return `<div class="dash-row"><div class="dash-row-dot ${d._days<=0?'red':'gold'}"></div><div class="dash-row-txt"><div class="dash-row-name">${d.nombre}</div><div class="dash-row-sub">${d.deporte||''}</div></div><span class="dash-row-tag">${lbl}</span></div>`;
+    const lbl=d._days===0?'Hoy':`En ${d._days}d`;
+    return `<div class="dash-row"><div class="dash-row-dot ${d._days===0?'red':'gold'}"></div><div class="dash-row-txt"><div class="dash-row-name">${d.nombre}</div><div class="dash-row-sub">${d.deporte||''}</div></div><span class="dash-row-tag">${lbl}</span></div>`;
   }).join(''):'<p class="dash-empty">Sin revisiones próximas.</p>';
 
   // ── Inactividad 14+ días ──
