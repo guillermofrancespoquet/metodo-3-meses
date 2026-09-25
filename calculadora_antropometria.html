@@ -162,20 +162,27 @@ canvas.chart-square{width:100%;max-width:400px;height:auto;}
 }
 .toast.show{opacity:1;transform:translateY(0);}
 .report-actions{display:flex;gap:10px;margin-bottom:18px;}
+/* Tamaño de página real para impresión/PDF: sin esto el navegador añade sus propios
+   márgenes por defecto encima del padding de .rep-page, y el resultado impreso no
+   coincide con lo que se ve en la vista previa. */
+@page{size:A4;margin:0;}
 @media print{
   .sidebar,.no-print{display:none !important;}
   .main{padding:0;}
   body *{visibility:hidden;}
   #reportPreviewWrap, #reportPreviewWrap *{visibility:visible;}
   #reportPreviewWrap{position:absolute;left:0;top:0;width:100%;}
-  .rep-page{box-shadow:none !important;margin-bottom:0 !important;padding:10mm 12mm !important;}
+  .rep-page{box-shadow:none !important;margin:0 !important;border-radius:0 !important;}
   .rep-page-break{page-break-before:always;break-before:page;}
   .rep-sec{page-break-inside:avoid;break-inside:avoid;margin-bottom:10px;}
   .rep-table{page-break-inside:avoid;break-inside:avoid;}
   .rep-table td,.rep-table th{padding:3px 6px;}
   #repPieCurrent,#repPiePrevious{max-width:230px;width:100%;margin:0 auto;display:block;}
 }
-.rep-page{background:#fff;padding:14mm;max-width:210mm;margin:0 auto 20px auto;box-shadow:var(--shadow);border-radius:6px;}
+/* Misma medida en pantalla y en impresión (210x297mm, padding 14mm) para que la vista
+   previa sea 1:1 el PDF final — width fijo (no max-width) más min-height de página
+   completa, así se ve exactamente dónde corta cada hoja antes de imprimir. */
+.rep-page{background:#fff;padding:14mm;width:210mm;min-height:297mm;margin:0 auto 20px auto;box-shadow:var(--shadow);border-radius:6px;}
 .rep-table-kv td{font-size:11.5px;}
 .rep-table-kv td:nth-child(odd){color:var(--muted);white-space:nowrap;}
 .rep-table-kv td:nth-child(even){font-weight:700;color:var(--petroleo-d);}
